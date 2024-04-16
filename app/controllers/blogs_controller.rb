@@ -67,7 +67,7 @@ class BlogsController < ApplicationController
       :slug,
       :image_url,
       :image,
-      blog_subcategory_ids: []
+      blog_category_ids: []
     )
   end
 end
