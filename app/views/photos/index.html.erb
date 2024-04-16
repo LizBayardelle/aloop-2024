@@ -46,9 +46,9 @@
    <div class="portfolio-menu mt-2 mb-5">
       <ul>
          <li id="targetall" class="target btn btn-outline-dark active" data-filter="*">All</li>
-         <li id="target1" class="target btn btn-outline-dark">XR250/XR400</li>
-         <li id="target2" class="target btn btn-outline-dark">XR600</li>
-         <li id="target3" class="target btn btn-outline-dark">SuperMotard and XR650L</li>
+         <li id="target-kit1" class="target btn btn-outline-dark">XR250/XR400</li>
+         <li id="target-kit2" class="target btn btn-outline-dark">XR600</li>
+         <li id="target-kit3" class="target btn btn-outline-dark">SuperMotard and XR650L</li>
       </ul>
    </div>
 
@@ -67,39 +67,42 @@
 
 
 
-<script>
-  $(document).ready(function() {
-    $('#targetall').click(function(){
-      $('.target').removeClass('active');
-      $(this).addClass('active');
-      $('.item').removeClass('hidden');
-    });
+<script defer>
+document.addEventListener('DOMContentLoaded', function() {
+  // Select all targets and attach click event listeners
+  const targets = document.querySelectorAll('.target');
+  targets.forEach(target => {
+    target.addEventListener('click', function() {
+      // Remove 'active' class from all targets and add to the clicked one
+      targets.forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      
+      // Get filter type from data-filter attribute
+      const filter = this.dataset.filter;
 
-    $('#target1').click(function(){
-      $('.target').removeClass('active');
-      $(this).addClass('active');
-      $('.item').removeClass('hidden');
-      $('.kit2').addClass('hidden');
-      $('.kit3').addClass('hidden');
-    });
+      // Select all items
+      const items = document.querySelectorAll('.portfolio-item .item');
 
-    $('#target2').click(function(){
-      $('.target').removeClass('active');
-      $(this).addClass('active');
-      $('.item').removeClass('hidden');
-      $('.kit1').addClass('hidden');
-      $('.kit3').addClass('hidden');
-    });
-
-    $('#target3').click(function(){
-      $('.target').removeClass('active');
-      $(this).addClass('active');
-      $('.item').removeClass('hidden');
-      $('.kit1').addClass('hidden');
-      $('.kit2').addClass('hidden');
+      // Toggle visibility based on filter
+      if (filter === '*') {
+        // Show all items
+        items.forEach(item => item.style.display = '');
+      } else {
+        // Show only items that match the filter and hide others
+        items.forEach(item => {
+          if (item.classList.contains(filter)) {
+            item.style.display = '';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      }
     });
   });
+});
 </script>
+
+
 
 
 
