@@ -26,8 +26,8 @@
                 <!-- Post meta content-->
                 <div class="text-muted fst-italic mb-2"><%= @blog.published_at.strftime('%B %-d, %Y') %></div>
                 <!-- Post categories-->
-                <% @blog.blog_subcategories.each do |sub| %>
-                  <%= link_to sub.name, blog_subcategory_path(sub), class: "badge blue rounded-pill mb-2" %>
+                <% @blog.blog_categories.each do |category| %>
+                  <%= link_to category.name, blog_category_path(category), class: "badge blue rounded-pill mb-2" %>
                 <% end %>
               </header>
               <!-- Preview image figure-->

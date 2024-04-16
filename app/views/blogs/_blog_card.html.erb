@@ -2,8 +2,8 @@
     <div class="card h-100 shadow border-0">
         <img class="card-img-top" src="<%= blog.image_url %>" alt="<%= blog.title %>" />
         <div class="card-body p-4">
-            <% blog.blog_subcategories.each do |sub| %>
-                <%= link_to sub.name, blog_subcategory_path(sub), class: "badge blue rounded-pill mb-2" %>
+            <% blog.blog_categories.each do |category| %>
+                <%= link_to category.name, blog_category_path(category), class: "badge blue rounded-pill mb-2" %>
               <% end %>
             <a class="text-decoration-none link-dark stretched-link" href="#!"><div class="h5 card-title mb-3"><%= blog.title %></div></a>
             <p class="card-text mb-0"><%= blog.teaser %></p>

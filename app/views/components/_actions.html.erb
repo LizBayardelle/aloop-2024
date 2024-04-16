@@ -8,6 +8,7 @@
 
 <%= link_to "<i class='fas fa-trash-alt ps-1 color-white'></i>".html_safe, component_path(component), method: :delete, data: {confirm: "Are you sure you want to delete that product component?"} %>
 
-
-<%= render partial: "components/modal_new", locals: { component: Component.new, product: product } %>
-<%= render partial: "components/modal_edit", locals: { component: component, product: product } %>
+<span class="text-start color-black">
+    <%= render partial: "components/modal_new", locals: { component: Component.new, product: product } %>
+    <%= render partial: "components/modal_edit", locals: { component: component, product: product } %>
+</span>

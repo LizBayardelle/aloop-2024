@@ -1,5 +1,9 @@
 <span data-bs-toggle="modal" data-bs-target="#editProduct<%= product.id %>Modal">
     <i class="fas fa-pen px-1 linkish color-white"></i>
 </span>
-<%= render partial: "products/modal_edit", locals: { product: product } %>
 <%= link_to "<i class='fas fa-trash-alt ps-1 color-white'></i>".html_safe, product_path(product), method: :delete, data: {confirm: "Are you sure you want to delete that product?"} %>
+
+
+<span class="text-start color-black">
+    <%= render partial: "products/modal_edit", locals: { product: product } %>
+</span>

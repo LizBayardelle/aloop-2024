@@ -11,44 +11,44 @@
     <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
     <div class="form-inputs row spaced">
-      <div class="col-12">
-        <%= f.input :title %>
-        <%= f.input :teaser %>
-        <%= f.association :user, label: "Author", :include_blank => false, :label_method => lambda { |user| "#{user.full_name}" } %>
+      <div class="mb-3 col-12">
+        <%= f.input :title, input_html: { class: "form-control" }  %>
+        <%= f.input :teaser, input_html: { class: "form-control" }  %>
+        <%= f.association :user, label: "Author", :include_blank => false, :label_method => lambda { |user| "#{user.full_name}" }, input_html: { class: "form-control" }  %>
       </div>
 
-      <div class="col-12 form-group">
-        <%= f.label "Subategories" %><br>
+      <div class="mb-3 col-12 form-group">
+        <%= f.label "Categories" %><br>
         <div class="form-check">
-          <%= f.collection_check_boxes(:blog_subcategory_ids, BlogSubcategory.all, :id, :name ) %>
+          <%= f.collection_check_boxes(:blog_category_ids, BlogCategory.all, :id, :name ) %>
         </div>
       </div>
 
-      <div class="col-12 mb-3">
+      <div class="mb-3 col-12 mb-3">
         <%= f.text_area :body, label: "Blog Body", class: "tinymce" %>
       </div>
-      <div class="col-6">
-        <%= f.input :published, label: "Published" %>
+      <div class="mb-3 col-12">
+        <%= f.input :published, label: "Published"  %>
       </div> <!-- col -->
-      <div class="col-6">
-        <%= f.input :published_at, label: "Published On" %>
+      <div class="mb-3 col-12">
+        <%= f.input :published_at, label: "Published On", input_html: { class: "form-control" }  %>
       </div> <!-- col -->
 
 
-      <div class="text-center col-12">
+      <div class="text-center mb-3 col-12">
         <h3 class="mb-0 pb-0 mt-2">Images</h3>
         <p><small><em>Only one image is needed (URL or upload).  If both are present, the URL will be used.</em></small></p>
       </div>
 
-      <div class="col-sm-6">
-        <%= f.input :image_url %>
+      <div class="mb-3 col-sm-6">
+        <%= f.input :image_url, input_html: { class: "form-control" }  %>
       </div>
-      <div class="col-sm-6">
+      <div class="mb-3 col-sm-6">
         <%= f.label "Variant Images" %><br>
         <%= f.file_field :photos, :multiple => true, class: "mb-1" %>
       </div>
-      <div class="col-12">
-        <%= f.input :video_url, label: "Video URL" %>
+      <div class="mb-3 col-12">
+        <%= f.input :video_url, label: "Video URL", input_html: { class: "form-control" }  %>
       </div>
     </div>
   </div>

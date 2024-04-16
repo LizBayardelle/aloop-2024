@@ -26,7 +26,7 @@ Rails.application.routes.draw do
   resources :variant_models
 
   resources :blogs
-  resources :blog_subcategories
+  resources :blog_categories
 
   resources :photos
   post "photos/:id/approve_photo" => "photos#approve_photo", as: "approve_photo"

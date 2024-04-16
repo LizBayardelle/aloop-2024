@@ -8,6 +8,7 @@
     <i class="fas fa-pen ps-1 linkish"></i>
 </span>
 
-
-<%= render partial: "variants/modal_new", locals: { variant: Variant.new, component: component, product: product } %>
-<%= render partial: "variants/modal_edit", locals: { component: component, variant: variant } %>
+<span class="text-start color-black">
+    <%= render partial: "variants/modal_new", locals: { variant: Variant.new, component: component, product: product } %>
+    <%= render partial: "variants/modal_edit", locals: { component: component, variant: variant } %>
+</span>

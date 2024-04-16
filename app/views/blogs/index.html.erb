@@ -9,8 +9,8 @@
                             <% recent_blog = Blog.where(published: true).order("created_at DESC").limit(1).first %>
                             <div class="p-4 p-md-5">
                                 <div class="badge red rounded-pill mb-2">Most Recent Post</div>
-                                <% recent_blog.blog_subcategories.each do |sub| %>
-                                    <%= link_to sub.name, blog_subcategory_path(sub), class: "badge blue rounded-pill mb-2" %>
+                                <% recent_blog.blog_categories.each do |category| %>
+                                    <%= link_to category.name, blog_category_path(category), class: "badge blue rounded-pill mb-2" %>
                                   <% end %>
                                 <div class="h2 fw-bolder"><%= recent_blog.title %></div>
                                 <p><%= recent_blog.teaser %></p>

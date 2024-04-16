@@ -10,18 +10,18 @@
 
 
   <section class="text-center">
-    <% BlogSubcategory.all.each do |sub| %>
-      <div class="badge blue rounded-pill mb-2" data-bs-toggle="modal" data-bs-target="#editSubcategory<%= sub.id %>Modal">
-        <%= sub.name %> <i class="fas fa-pen ps-1 color-white"></i>
+    <% BlogCategory.all.each do |category| %>
+      <div class="badge blue rounded-pill mb-2" data-bs-toggle="modal" data-bs-target="#editCategory<%= category.id %>Modal">
+        <%= category.name %> <i class="fas fa-pen ps-1 color-white"></i>
       </div>
     <% end %>
-    <div class="badge blue-outline bg-gradient rounded-pill mb-2" data-bs-toggle="modal" data-bs-target="#newSubcategoryModal">
-      + Add a New Subcategory
+    <div class="badge blue-outline bg-gradient rounded-pill mb-2" data-bs-toggle="modal" data-bs-target="#newCategoryModal">
+      + Add a New Category
     </div>
   </section>
-  <%= render partial: "blog_subcategories/modal_new", locals: { sub: BlogSubcategory.new } %>
-  <% BlogSubcategory.all.each do |sub| %>
-    <%= render partial: "blog_subcategories/modal_edit", locals: { sub: sub } %>
+  <%= render partial: "blog_categories/modal_new", locals: { category: BlogCategory.new } %>
+  <% BlogCategory.all.each do |category| %>
+    <%= render partial: "blog_categories/modal_edit", locals: { category: category } %>
   <% end %>
 
   <section>
@@ -30,7 +30,7 @@
         <tr>
           <th scope="col">Actions</th>
           <th scope="col">Blog Title</th>
-          <th scope="col">Subcategories</th>
+          <th scope="col">Categories</th>
           <th scope="col">Author</th>
           <th scope="col">Published</th>
         </tr>
@@ -48,8 +48,8 @@
             </td>
             <td><%= blog.title %></td>
             <td>
-              <% blog.blog_subcategories.each do |sub| %>
-                <%= link_to sub.name, blog_subcategory_path(sub), class: "badge blue rounded-pill mb-2" %>
+              <% blog.blog_categories.each do |category| %>
+                <%= link_to category.name, blog_category_path(category), class: "badge blue rounded-pill mb-2" %>
               <% end %>
             </td>
             <td><%= blog.user.full_name %></td>
