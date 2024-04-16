@@ -241,13 +241,12 @@ transform: translateY(0);
 
 .btn-invisible, .btn-invisible:hover { background-color: rgba(0,0,0,0); color: black; border: none; }
 
-.btn-small {
-    border-radius: 8px;
+.btn-small, .btn-sm {
     font-size: 14px;
     padding: 8px 12px;  
 }
 
-.btn-small:hover {
+.btn-small:hover, .btn-sm:hover {
     padding: 8px 12px;  
 }
 
