@@ -14,7 +14,6 @@ import tinymce from 'tinymce/tinymce';
 // Import any plugins you might need
 import 'tinymce/icons/default';
 import 'tinymce/themes/silver';
-import 'tinymce/plugins/paste';
 import 'tinymce/plugins/link';
 
 // Initialize TinyMCE on any textarea with a specific class or ID
