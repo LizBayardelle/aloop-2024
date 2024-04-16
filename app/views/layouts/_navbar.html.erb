@@ -51,7 +51,7 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
               <%= link_to "My Account", user_path(current_user), class: "dropdown-item" %>
-              <%= link_to "Sign Out", destroy_user_session_path, :method => :delete, class: "dropdown-item" %>
+              <%= button_to "Sign Out", destroy_user_session_path, :method => :delete, class: "dropdown-item", style: "text-transform: uppercase" %>
             </div>
           </li>
         <% else %>
