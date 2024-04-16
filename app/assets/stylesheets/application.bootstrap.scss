@@ -1,2 +1,711 @@
 @import 'bootstrap/scss/bootstrap';
 @import 'bootstrap-icons/font/bootstrap-icons';
+
+
+
+
+
+
+$color-primary: #2e3d99 !important;
+$color-white: #ffffff !important;
+$color-grey: #f2f2f2 !important;
+$color-black: #000000 !important;
+
+$color-red: #cd2127 !important;  // rgba(205,33,39,1)
+$color-blue: #2e3d99 !important;
+
+$z-depth-1: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+$z-depth-2: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+$z-depth-3: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+$z-depth-4: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+$z-depth-5: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+
+$z-depth-1-y: 0 1px 3px rgba(0,0,0,0.12), 0 -5px 1px 3px rgba(0,0,0,0.12);
+$z-depth-2-y: 0 3px 6px rgba(0,0,0,0.16), 0 -5px 3px 6px rgba(0,0,0,0.16);
+$z-depth-3-y: 0 10px 20px rgba(0,0,0,0.19), 0 -5px 10px 20px rgba(0,0,0,0.19);
+$z-depth-4-y: 0 14px 28px rgba(0,0,0,0.25), 0 -5px 14px 28px rgba(0,0,0,0.25);
+$z-depth-5-y: 0 19px 38px rgba(0,0,0,0.30), 0 -5px 19px 38px rgba(0,0,0,0.30);
+
+
+
+
+
+
+/*-----------------------------
+------------BASICS-------------
+-----------------------------*/
+
+.hidden { display: none !important; }
+.non-footer { min-height: calc(100vh - 392px); }
+
+.linkish { color: $color-primary; cursor: pointer; }
+.inline-block { display: inline-block; }
+td { vertical-align: middle; }
+.text-link { color: $color-primary; }
+
+.box {
+    border: solid thin black;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.raised-box {
+    background-color: $color-white;
+    box-shadow: $z-depth-4;
+}
+
+.raised-box.hoverable{
+    cursor: pointer;
+    box-shadow: $z-depth-3;
+    border: solid thin $color-white;
+}
+
+.raised-box.hoverable:hover {
+    cursor: pointer;
+    box-shadow: $z-depth-1;
+}
+
+.raised-box.active {
+    border: solid thin $color-red;
+}
+
+
+td { vertical-align: top; }
+
+*, *:after, *:before {
+box-sizing: border-box;
+-moz-box-sizing: border-box;
+}
+
+* {
+margin: 0;
+padding: 0;
+border: 0 none;
+position: relative;
+outline: none;
+}
+
+html, body {
+width: 100%;
+}
+
+
+
+
+
+
+/*-----------------------------
+--------------TEXT-------------
+-----------------------------*/
+
+.uppercase { text-transform: uppercase; }
+.thin { font-weight: 200; }
+
+
+
+
+
+/*-----------------------------
+------------COLORS-------------
+-----------------------------*/
+
+textarea:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="time"]:focus,
+input[type="week"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="color"]:focus,
+.uneditable-input:focus,
+.accordion-button:focus {   
+border-color: rgba(205,33,39, 0.8);
+box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(205,33,39, 0.6);
+outline: 0 none;
+}
+
+
+
+
+
+/*-----------------------------
+-----------BUTTONS-------------
+-----------------------------*/
+
+.btn {
+    box-sizing: border-box;
+    appearance: none;
+    background-color: transparent;
+    border: 2px solid $color-black;
+    border-radius: 1px;
+    color: $color-black;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: normal;
+    outline: none;
+    padding: 16px 24px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    will-change: transform;
+    box-shadow: $z-depth-2;
+}
+
+.btn:disabled {
+pointer-events: none;
+}
+
+.btn:hover {
+    color: $color-white;
+    background-color: $color-black;
+    border-color: $color-black;
+    box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+}
+
+.btn:active {
+box-shadow: none;
+transform: translateY(0);
+}
+
+.btn-inactive, .btn-inactive-outline:hover { 
+    background-color: $color-grey; 
+    border: 2px solid $color-grey;
+    color: $color-white; 
+    pointer-events: none;
+}
+
+.btn-red, .btn-red-outline:hover { 
+    background-color: $color-red; 
+    border: 2px solid $color-red;
+    color: $color-white; 
+}
+
+.btn-red:hover, .btn-red-outline { 
+    background-color: $color-white; 
+    border: 2px solid $color-red;
+    color: $color-red; 
+}
+
+.btn-blue, .btn-blue-outline:hover { 
+    background-color: $color-blue; 
+    border: 2px solid $color-blue;
+    color: $color-white; 
+}
+
+.btn-blue:hover, .btn-blue-outline { 
+    background-color: $color-white; 
+    border: 2px solid $color-blue;
+    color: $color-blue; 
+}
+
+.btn-white, .btn-white-outline:hover { 
+    background-color: $color-white; 
+    border: 2px solid $color-white;
+    color: $color-black; 
+}
+
+.btn-white:hover, .btn-white-outline { 
+    background-color: none; 
+    border: 2px solid $color-white;
+    color: $color-white; 
+}
+
+.btn-white.hover-clear:hover {
+    background-color: none !important; 
+    border: 2px solid $color-white;
+    color: $color-white; 
+}
+
+.btn-black, .btn-black-outline:hover { 
+    background-color: $color-black; 
+    border: 2px solid $color-black;
+    color: $color-white; 
+}
+
+.btn-black:hover, .btn-black-outline { 
+    background-color: $color-white; 
+    border: 2px solid $color-black;
+    color: $color-black; 
+}
+
+.btn-invisible, .btn-invisible:hover { background-color: rgba(0,0,0,0); color: black; border: none; }
+
+.btn-small {
+    border-radius: 8px;
+    font-size: 14px;
+    padding: 8px 12px;  
+}
+
+.btn-small:hover {
+    padding: 8px 12px;  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*-----------------------------
+------------IMAGES-------------
+-----------------------------*/
+
+.bg-dirt {
+min-height: 600px;
+background: linear-gradient(
+    rgba(0,0,0,0.4),
+    rgba(0,0,0,0.4)
+),
+url("https://aloopphotobucket.s3.us-west-1.amazonaws.com/Images/Aloop+Race+Kit+2021+(1).jpg") no-repeat center center fixed;
+-webkit-background-size: cover;
+-moz-background-size: cover;
+-o-background-size: cover;
+background-size: cover;
+}
+
+
+.bg-tires {
+    background: linear-gradient(
+        rgba(0,0,0,0.5),
+        rgba(0,0,0,0.5)
+    ),
+    url("https://aloopphotobucket.s3.us-west-1.amazonaws.com/Images/Tire+Tracks.jpeg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+
+.bg-grate {
+    background: linear-gradient(
+        rgba(0,0,0,0.5),
+        rgba(0,0,0,0.5)
+    ),
+    url("https://aloopphotobucket.s3.us-west-1.amazonaws.com/Images/Steel+Grate.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.bg-gears {
+    background: linear-gradient(
+        rgba(0,0,0,0.5),
+        rgba(0,0,0,0.5)
+    ),
+    url("https://aloopphotobucket.s3.us-west-1.amazonaws.com/Images/Gears.jpeg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.bg-bike1 {
+    background: linear-gradient(
+        rgba(0,0,0,0.3),
+        rgba(0,0,0,0.3)
+    ),
+    url("https://aloopphotobucket.s3.us-west-1.amazonaws.com/Images/micks+xr400.jpeg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.bg-bike2 {
+    background: linear-gradient(
+        rgba(0,0,0,0.5),
+        rgba(0,0,0,0.5)
+    ),
+    url("https://aloopphotobucket.s3.us-west-1.amazonaws.com/Images/Bike2.jpeg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.bg-bike3 {
+    background: linear-gradient(
+        rgba(0,0,0,0.5),
+        rgba(0,0,0,0.5)
+    ),
+    url("https://aloopphotobucket.s3.us-west-1.amazonaws.com/Images/DSC_0120.JPG") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    min-height: 70vh;
+}
+
+.bg-key-guard {
+    background: linear-gradient(
+        rgba(0,0,0,0.5),
+        rgba(0,0,0,0.5)
+    ),
+    url("https://aloopphotobucket.s3.us-west-1.amazonaws.com/Products/Key+Guard+Background.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.profile-image {
+width: 50px;
+height: 50px;
+position: relative;
+overflow: hidden;
+border-radius: 50%;
+}
+
+.profile-image img {
+display: inline;
+margin: auto auto;
+height: 100%;
+width: auto;
+}
+
+.profile-image.large {
+width: 125px;
+height: 125px;
+}
+
+.blog-body img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 50vh;
+    box-shadow: $z-depth-3;
+}
+
+
+
+
+
+
+
+/*-----------------------------
+------------GALLERY------------
+-----------------------------*/
+
+.portfolio-menu{
+    text-align:center;
+}
+.portfolio-menu ul li{
+    display:inline-block;
+    margin:0;
+    list-style:none;
+    padding:10px 15px;
+    cursor:pointer;
+    -webkit-transition:all 05s ease;
+    -moz-transition:all 05s ease;
+    -ms-transition:all 05s ease;
+    -o-transition:all 05s ease;
+    transition:all .5s ease;
+}
+
+.portfolio-item{
+    /*width:100%;*/
+}
+.portfolio-item .item{
+    /*width:303px;*/
+    float:left;
+    margin-bottom:10px;
+}
+
+
+
+
+
+
+
+
+/*-----------------------------
+-------------ALERTS------------
+-----------------------------*/
+
+.alert { margin: 0px; border-radius: 0px; }
+
+
+
+
+
+
+/*-----------------------------
+------------NAVBARS------------
+-----------------------------*/
+
+/*  DROPDOWN HOVER  */
+@media all and (min-width: 992px) {
+.navbar .nav-item .dropdown-menu { display: none; }
+.navbar .nav-item:hover .nav-link {   }
+.navbar .nav-item:hover .dropdown-menu { display: block; }
+.navbar .nav-item .dropdown-menu { margin-top:0; }
+}
+
+
+/*  NAVBAR BRAND */
+.navbar-brand {
+    font-size: 1rem;
+    font-weight: 200;
+    color: $color-black;
+}
+
+
+/*  MAIN NAVBAR  */
+.nav-item {
+    text-transform: uppercase;
+    font-size: 1rem;
+    font-weight: 200;
+    text-align: center;
+    color: $color-black;
+    margin: 0px 8px;
+}
+
+.dropdown-item { font-weight: 200; }
+
+.nav-item > a {
+text-decoration: none;
+color: $color-black;
+z-index: 1;
+}
+
+.nav-item > a:before {
+content: "";
+background: $color-red;
+position: absolute;
+width: 100%;
+height: 5px;
+bottom: 0;
+left: 0;
+border-radius: 1px;
+transform: scaleX(0);
+animation: .5s forwards no-hover-v linear;
+animation-fill-mode: forwards;
+z-index: -1;
+}
+.nav-item > a:hover:before,
+.nav-item > a:focus:before {
+animation: .25s forwards hover-v linear;
+animation-fill-mode: forwards;
+}
+@keyframes hover-v {
+0% {
+    transform: scaleX(0);
+    height: 5px;
+    }
+65% {   
+    transform: scaleX(1.05);
+    height: 5px;
+    }
+100% {
+    transform: scaleX(1.05);
+    }
+}
+@keyframes no-hover-v {
+0% {
+    transform: scaleX(1.05);
+    }
+65% {   
+    transform: scaleX(1.05);
+    height: 5px;
+    opacity: 1;
+    }
+
+100% {
+    transform: scaleX(0);
+    height: 5px;
+    opacity: .02;
+    }
+}
+
+
+
+
+
+
+
+
+/*-----------------------------
+-------------FORMS-------------
+-----------------------------*/
+
+.form-inputs.spaced .form-group {
+    margin-bottom: 15px;
+}
+
+label { text-transform: capitalize; }
+
+input[type='checkbox'] { margin-right: 10px }
+.form-check span { display: block; }
+
+.modal-dialog { max-width: 95%; }
+@media only screen and (min-width: 700px) {
+    .modal-dialog { max-width: 75%; }
+}
+@media only screen and (min-width: 1200px) {
+    .modal-dialog { max-width: 65%; }
+}
+
+
+
+
+
+
+
+/*-----------------------------
+------------PRODUCTS-----------
+-----------------------------*/
+
+.product-box {
+    background-color: $color-white;
+    box-shadow: $z-depth-2;
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+.product-box img {
+    width: 100%;
+    height: auto;
+}
+
+.selectbox {
+    border: medium solid $color-grey;
+    border-radius: 5px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.selectbox img {
+    width: 100%;
+}
+
+.selectbox .text {
+    padding: 10px;
+}
+
+.selectbox.active {
+    border: medium solid $color-red;
+    box-shadow: $z-depth-3;
+}
+
+.table-small td {
+    font-size: 12px;
+}
+
+table#products-table tr.product-row { background-color: $color-blue; }
+
+
+
+
+
+
+
+
+
+
+/*-----------------------------
+--------------BLOG-------------
+-----------------------------*/
+
+.feature {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+height: 3rem;
+width: 3rem;
+font-size: 1.5rem;
+}
+
+.bg-featured-blog {
+height: 100%;
+width: 100%;
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+min-height: 15rem;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/*-----------------------------
+-------------FAQ---------------
+-----------------------------*/
+
+.accordion-body {
+    background-color: $color-grey;
+}
+
+.accordion-button:not(.collapsed) {
+    color: $color-white;
+    font-weight: 700;
+    background-color: $color-red;
+}
+
+
+
+
+
+.z-depth-1 { box-shadow: $z-depth-1; }
+.z-depth-2 { box-shadow: $z-depth-2; }
+.z-depth-3 { box-shadow: $z-depth-3; }
+.z-depth-4 { box-shadow: $z-depth-4; }
+.z-depth-5 { box-shadow: $z-depth-5; }
+.z-depth-1-y { box-shadow: $z-depth-1-y; }
+.z-depth-2-y { box-shadow: $z-depth-2-y; }
+.z-depth-3-y { box-shadow: $z-depth-3-y; }
+.z-depth-4-y { box-shadow: $z-depth-4-y; }
+.z-depth-5-y { box-shadow: $z-depth-5-y; }
+
+
+.color-grey { color: $color-grey; }
+.color-red { color: $color-red; }
+.color-blue { color: $color-blue; }
+.color-black { color: $color-black; }
+.color-white { color: $color-white; }
+
+
+.bg-grey { background-color: $color-grey; }
+.bg-red { background-color: $color-red; }
+.bg-blue, .bg-primary { background-color: $color-blue; }
+.bg-black { background-color: $color-black; }
+.bg-white { background-color: $color-white; }
+
+
+.badge { box-shadow: $z-depth-1; }
+.badge.blue { background-color: $color-blue; color: $color-white; border: solid medium $color-blue; }
+.badge.blue-outline { background-color: $color-white; color: $color-blue; border: solid medium $color-blue; }
+.badge.red { background-color: $color-red; color: $color-white; border: solid medium $color-red; }
+.badge.red-outline { background-color: $color-white; color: $color-red; border: solid medium $color-red; }
+.badge.black { background-color: $color-black; color: $color-white; border: solid medium $color-black; }
+.badge.black-outline { background-color: $color-white; color: $color-black; border: solid medium $color-black; }
+.badge { text-decoration: none; }

@@ -1,0 +1,49 @@
+      <%= simple_form_for(variant) do |f| %>
+        <div class="modal-body">
+          <%= f.error_notification %>
+          <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+          <div class="row form-inputs spaced">
+            <%= f.hidden_field :component_id, value: component.id %>
+            <div class="form-group col-8">
+              <%= f.input :name, input_html: { class: "form-control" } %>
+            </div> <!-- col -->
+            <div class="form-group col-4">
+              <%= f.input :price, label: "Price", input_html: { class: "form-control" } %>
+            </div> <!-- col -->
+
+            <div class="form-group col-4">
+              <%= f.input :sku, label: "Aloop Product Number", input_html: { class: "form-control" } %>
+            </div>
+            <div class="form-group col-4">
+              <%= f.input :vendor, label: "Vendor", input_html: { class: "form-control" } %>
+            </div>
+            <div class="form-group col-4">
+              <%= f.input :vendor_parts_number, label: "Vendor Parts Number", input_html: { class: "form-control" } %>
+            </div>
+
+
+            <div class="form-group col-6">
+              <%= f.label "Bike Models" %><br>
+              <div class="form-check">
+                <%= f.collection_check_boxes(:bike_model_ids, BikeModel.all, :id, :name ) %>
+              </div>
+            </div>
+
+            <div class="form-group col-12">
+              <%= f.input :description, input_html: { class: "form-control" } %>  
+            </div> <!-- col -->
+            <div class="form-group col-12">
+              <%= f.input :active, label: "Display on Website", input_html: { class: "mt-2" } %> 
+            </div> <!-- col -->
+            <div class="form-group col-12">
+              <%= f.label "Variant Images" %><br>
+              <%= f.file_field :photos, :multiple => true, class: "mb-1" %>
+            </div>         
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <%= f.submit "Save Variant", class: "btn" %>
+        </div>
+      <% end %>

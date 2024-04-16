@@ -1,0 +1,94 @@
+<nav class="navbar navbar-expand-md px-3 navbar-light bg-white">
+  <div class="container-fluid">
+
+    <div id="slide">
+    <%= link_to root_path, class: "navbar-brand" do %>
+      <img style="height: 35px; margin-right: 0px" src="https://aloopphotobucket.s3.us-west-1.amazonaws.com/Images/Logo/Logo+(Symbol).png" />
+      <img style="height: 40px" src="https://aloopphotobucket.s3.us-west-1.amazonaws.com/Images/Logo/Logo+(Text).png" />
+    <% end %>
+    </div>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+
+        <li class="nav-item dropdown">
+          <%= link_to "Kits", page_path("kits"), class: "nav-link dropdown-toggle", id: "navbarDropdownMenuLink", 'data-toggle': "dropdown", 'aria-haspopup': "true", 'aria-expanded': "false" %>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <%= link_to "XR250 and XR400", page_path("XR250_XR400"), class: "dropdown-item" %>
+            <%= link_to "XR600", page_path("XR600"), class: "dropdown-item" %>
+            <%= link_to "XR650XL", page_path("XR650L"), class: "dropdown-item" %>
+            <%= link_to "Graphics", page_path("graphics"), class: "dropdown-item" %>
+            <%= link_to "Color Coded Key Covers", products_path, class: "dropdown-item" %>
+            <%= link_to "Rear Fenders", products_path, class: "dropdown-item" %>
+            <%= link_to "Replacement Parts", products_path, class: "dropdown-item" %>
+          </div>
+        </li>
+
+        <li class="nav-item"><%= link_to "Gallery", photos_path, class: "nav-link" %></li>
+        <li class="nav-item"><%= link_to "Store", products_path, class: "nav-link" %></li>
+        <li class="nav-item"><%= link_to "FAQ", page_path("faq"), class: "nav-link" %></li>
+        <li class="nav-item"><%= link_to "Export", page_path("export"), class: "nav-link" %></li>
+        <li class="nav-item"><%= link_to "Blog", blogs_path, class: "nav-link" %></li>
+
+        <% if current_user && current_user.admin %>
+          <li class="nav-item dropdown">
+            <%= link_to "Admin", admin_dashboard_path, class: "nav-link dropdown-toggle", id: "navbarDropdownMenuLink", 'data-toggle': "dropdown", 'aria-haspopup': "true", 'aria-expanded': "false" %>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <%= link_to "Products", admin_products_path, class: "dropdown-item" %>
+              <%= link_to "Sales", admin_sales_path, class: "dropdown-item" %>
+              <%= link_to "Users", admin_users_path, class: "dropdown-item" %>
+              <%= link_to "Blog", admin_blog_path, class: "dropdown-item" %>
+            </div>
+          </li>
+        <% end %>
+
+        <% if current_user %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              My Account
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <%= link_to "My Account", user_path(current_user), class: "dropdown-item" %>
+              <%= link_to "Sign Out", destroy_user_session_path, :method => :delete, class: "dropdown-item" %>
+            </div>
+          </li>
+        <% else %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              My Account
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <%= link_to "Create an Account", new_user_registration_path, class: "dropdown-item" %>
+              <%= link_to "Sign In", new_user_session_path, class: "dropdown-item" %>
+            </div>
+          </li>
+        <% end %>
+
+        <li>
+          <button type="button" class="btn-invisible position-relative w-0">
+            <%= simple_form_for(@current_order, html: { id: "goToCart" }) do |f| %>
+              <%= f.hidden_field :move_to_checkout, value: false %>
+              <%= button_tag( :class => "btn-invisible mt-2") do %>
+                <i class='fas fa-shopping-cart'></i>
+              <% end %>
+            <% end %>
+            
+            <% if @current_order.order_number_of_items != 0 %>
+              <span class="position-absolute translate-middle badge rounded-pill bg-danger">
+                <%= @current_order.order_number_of_items %>
+              </span>
+            <% end %>
+          </button>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+
+
+

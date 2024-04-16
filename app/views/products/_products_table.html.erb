@@ -1,0 +1,75 @@
+<div class="table-responsive">
+  <table id="products-table" class="table table-hover table-small">
+
+
+    <thead>
+      <tr>
+        <th scope="col" data-field="product" data-sortable="true">Product</th>
+        <th scope="col" data-field="component" data-sortable="true">Component</th>
+        <th scope="col" data-field="variant" data-sortable="true">Variant</th>
+        <th scope="col" data-field="productNumber" data-sortable="true">Product Number</th>
+        <th scope="col" data-field="price" data-sortable="true">Price</th>
+        <th scope="col" data-field="models" data-sortable="true">Bike Model(s)</th>
+        <th scope="col" data-field="actions" data-sortable="true" class="text-end">Actions</th>
+      </tr>
+    </thead>
+
+
+    <tbody>
+
+      <% products.each do |product| %>
+        <tr class="product-row">
+          <td colspan="6" class="bg-blue color-white">
+            <% if product.active %>
+              <%= link_to product do %><i class="fas fa-eye px-1 color-white"></i><% end %>
+            <% else %>
+              <%= link_to product do %><i class="fas fa-eye-slash px-1 color-white"></i><% end %>
+            <% end %>
+            <%= product.name %>
+            <% product.product_categories.each do |category| %>
+              <span class="badge red rounded-pill ms-3"><%= category.name %></span>
+            <% end %>
+          </td>
+          <td class="bg-blue color-white text-end">
+            <div class="tableActions">
+              <%= render partial: "products/actions", locals: { product: product } %>
+            </div>
+          </td>
+        </tr>
+
+        <% product.components.each do |component| %>
+          <tr class="product-row">
+            <td></td>
+            <td colspan="5" class="bg-red color-white">
+              <%= component.name %>
+            </td>
+            <td class="bg-red text-end">
+              <div class="tableActions">
+                <%= render partial: "components/actions", locals: { product: product, component: component } %>
+              </div>
+            </td>
+          </tr>
+          <% component.variants.each do |variant| %>
+            <tr>
+              <td colspan="2"></td>
+              <td><%= variant.name %></td>
+              <td><%= variant.sku %></td>
+              <td><%= number_to_currency(variant.price) %></td>
+              <td>
+                <% variant.bike_models.each do |bike_model| %>
+                  <span class="badge blue rounded-pill"><%= bike_model.name %></span>
+                <% end %>
+              </td>
+              <td class="text-end">
+                <div class="tableActions">
+                  <%= render partial: "variants/actions", locals: { product: product, component: component, variant: variant } %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+
+      <% end %>
+    </tbody>
+  </table>
+</div>

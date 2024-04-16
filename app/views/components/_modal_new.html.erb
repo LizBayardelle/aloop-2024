@@ -1,0 +1,27 @@
+<div class="modal fade" id="newComponentProduct<%= product.id %>Modal" tabindex="-1" aria-labelledby="newComponentProduct<%= product.id %>ModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="newComponentProduct<%= product.id %>ModalLabel">Add a New Component</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <%= simple_form_for(component) do |f| %>
+        <div class="modal-body">
+          <%= f.error_notification %>
+          <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+          <div class="form-inputs spaced">
+            <%= f.hidden_field :product_id, value: product.id %>
+            <%= render partial: "components/form_fields", locals: { f: f, component: component } %>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <%= f.submit "Save Category", class: "btn" %>
+        </div>
+      <% end %>
+      
+    </div>
+  </div>
+</div>

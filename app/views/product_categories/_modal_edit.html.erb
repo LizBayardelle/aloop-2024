@@ -1,0 +1,11 @@
+<div class="modal fade" id="editCategory<%= category.id %>Modal" tabindex="-1" aria-labelledby="editCategory<%= category.id %>ModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editCategory<%= category.id %>ModalLabel">Edit <%= category.name %></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <%= render partial: "product_categories/modal_innards", locals: { category: category } %>
+    </div>
+  </div>
+</div>

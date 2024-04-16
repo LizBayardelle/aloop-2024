@@ -1,0 +1,47 @@
+<div class="w-75 ms-auto me-auto">
+  <div class="row justify-content-center mb-2 box" >
+    <div class="col-sm-6 col-md-4">
+      <h4 class="uppercase">Order Info</h4>
+
+      <table>
+        <% @order.order_items.each do |item| %>
+          <tr>
+            <td><%= item.product.name %></td>
+            <td><%= item.product.price %></td>
+          </tr>
+        <% end %>
+        <tr>
+          <td><%= item.product.name %></td>
+          <td><%= item.product.price %></td>
+        </tr>
+      </table>
+      <p>
+        <ul class="mb-1">
+          <% @order.order_items.each do |item| %>
+            <li><%= item.product.name %></li>
+          <% end %>
+            <li>Shipping
+        </ul>
+        <strong>Order Total: <%= number_to_currency(@order.order_total) %></strong>
+      </p>
+    </div>
+    <div class="col-sm-6 col-md-4">
+      <h4 class="uppercase">Shipping Info</h4>
+      <p class="mb-1">
+        <%= @order.ship_to_name %>
+        <br><%= @order.address_line_1 %>
+        <% if @order.address_line_2 && @order.address_line_2 != "" %>
+          <br><%= @order.address_line_2 %>
+        <% end %>
+        <br><%= @order.city %>, <%= @order.state %>  <%= @order.postal_code %>
+        <br><%= @order.country %>
+      </p>
+      <% if edit_shipping_possible %>
+        <%= simple_form_for(@order, html: { id: "formMoveToCheckout" }) do |f| %>
+          <%= f.hidden_field :shipping_info, value: false %>
+          <%= f.submit "Edit My Shipping Info", class: "btn-invisible text-link", style: "margin: 0px; padding: 0px; font-size: 0.8em; color: #c0c0c0" %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,89 @@
+<% photo_urls_array = [] %>
+
+<% @product.components.each do |component| %>
+  <% component.variants.each do |variant| %>
+    <% if variant.photos != [] %>
+      <% variant.photos.each do |photo| %>
+        <% photo_urls_array += [url_for(photo)] %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+
+<style>
+  .gallery-column {
+    float: left;
+    margin-bottom: 15px;
+    overflow-y: hidden;
+  }
+
+  .gallery-column img {
+    opacity: 0.8; 
+    cursor: pointer; 
+    height: 50px;
+    width:  auto;
+    padding-right: 10px;
+  }
+
+  .gallery-column img:hover, {
+    opacity: 1;
+  }
+
+  .activeImg {
+    opacity: 1 !important;
+  }
+
+  .gallery-row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  .gallery-container {
+    position: relative;
+  }
+
+  #imgtext {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    color: white;
+    font-size: 20px;
+  }
+</style>
+
+
+
+<div class="gallery-row">
+  <% photo_urls_array.each_with_index do |src, index| %>
+    <div class="gallery-column">
+      <img class="gallery-image" id="gallery<%= index %>" src="<%= src %>" alt="<%= @product.name %>" style="width:100%">
+    </div>
+  <% end %>
+</div>
+
+
+<div class="gallery-container">
+  <% photo_urls_array.each_with_index do |src, index| %>
+      <img id="expandedImg<%= index %>" class="hidden expandedImg" style="width:100%" src="<%= src %>">
+  <% end %>
+  <div id="imgtext"></div>
+</div>
+
+<script>
+  $( document ).ready(function() {
+    $("#expandedImg0").removeClass("hidden");
+    <% photo_urls_array.each_with_index do |src, index| %>
+      $("#gallery<%= index %>").click(function() {
+        $(".gallery-image").removeClass("activeImg");
+        $("#gallery<%= index %>").addClass("activeImg")
+        $(".expandedImg").addClass("hidden");
+        $("#expandedImg<%= index %>").removeClass("hidden");
+      });
+    <% end %>
+  });
+</script>
+
+
+

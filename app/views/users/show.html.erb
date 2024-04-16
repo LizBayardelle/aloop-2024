@@ -1,0 +1,15 @@
+<main class="my-5">
+	<header class="container text-center">
+		<% if @user.image.attached? %>
+			<div class="profile-image large mb-3 mx-auto">
+			  <img src="<%= url_for(@user.image) %>" />
+			</div>
+		<% end %>
+		<h1>My Profile</h1>
+		<small><%= link_to "Update My Information", edit_user_registration_path(@user) %></small>
+	</header>
+
+	<section>
+		
+	</section>
+</main>

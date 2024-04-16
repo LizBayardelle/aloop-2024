@@ -1,2 +1,62 @@
-<h1>Admin#blog</h1>
-<p>Find me in app/views/admin/blog.html.erb</p>
+<main class="container py-5">
+
+  <header class="text-center mb-3">
+    <h1>Blog Dashboard</h1>
+    <button type="button" class="btn btn-red-outline" data-bs-toggle="modal" data-bs-target="#newBlogModal">
+      Add a New Blog
+    </button>
+  </header>
+  <%= render partial: "blogs/modal_new", locals: { blog: Blog.new } %>
+
+
+  <section class="text-center">
+    <% BlogSubcategory.all.each do |sub| %>
+      <div class="badge blue rounded-pill mb-2" data-bs-toggle="modal" data-bs-target="#editSubcategory<%= sub.id %>Modal">
+        <%= sub.name %> <i class="fas fa-pen ps-1 color-white"></i>
+      </div>
+    <% end %>
+    <div class="badge blue-outline bg-gradient rounded-pill mb-2" data-bs-toggle="modal" data-bs-target="#newSubcategoryModal">
+      + Add a New Subcategory
+    </div>
+  </section>
+  <%= render partial: "blog_subcategories/modal_new", locals: { sub: BlogSubcategory.new } %>
+  <% BlogSubcategory.all.each do |sub| %>
+    <%= render partial: "blog_subcategories/modal_edit", locals: { sub: sub } %>
+  <% end %>
+
+  <section>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Actions</th>
+          <th scope="col">Blog Title</th>
+          <th scope="col">Subcategories</th>
+          <th scope="col">Author</th>
+          <th scope="col">Published</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% Blog.all.each do |blog| %>
+          <tr>
+            <td>
+              <%= link_to "<i class='fas fa-eye px-1'></i>".html_safe, blog_path(blog) %>
+              <span data-bs-toggle="modal" data-bs-target="#editBlog<%= blog.id %>Modal">
+                <i class="fas fa-pen px-1 linkish"></i>
+              </span>
+              <%= render partial: "blogs/modal_edit", locals: { blog: blog } %>
+              <%= link_to "<i class='fas fa-trash-alt'></i>".html_safe, blog_path(blog), method: :delete, data: {confirm: "Are you sure you want to delete that blog?"} %>
+            </td>
+            <td><%= blog.title %></td>
+            <td>
+              <% blog.blog_subcategories.each do |sub| %>
+                <%= link_to sub.name, blog_subcategory_path(sub), class: "badge blue rounded-pill mb-2" %>
+              <% end %>
+            </td>
+            <td><%= blog.user.full_name %></td>
+            <td><%= blog.published_at.strftime('%B %-d, %Y') %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </section>
+</main>

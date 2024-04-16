@@ -1,2 +1,51 @@
-<h1>Admin#users</h1>
-<p>Find me in app/views/admin/users.html.erb</p>
+<main class="container py-5">
+
+  <header class="text-center mb-3">
+    <h1>Admin & Users</h1>
+  </header>
+
+
+
+  <section id="admins" class="py-3">
+  	<h2>Administrators</h2>
+  	<% User.where(admin: true).each do |user| %>
+  		<div class="mb-2">
+	        <div class="profile-image me-3" style="display: inline-block;">
+	            <% if user.image.attached? %>
+		            <img src="<%= polymorphic_url(user.image) %>" />
+	            <% end %>
+	        </div>
+	        <div class="small" style="display: inline-block; top: -7px">
+	            <div class="fw-bold"><%= user.full_name %></div>
+	            <div class="text-muted"><%= user.job_title %> (<%= user.email %>)</div>
+	        </div>
+	    </div>
+  	<% end %>
+  </section>
+
+
+  <section class="py-3">
+	<h2>Users</h2>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Email</th>
+          <th scope="col">Phone</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% User.where(admin: false).each do |user| %>
+          <tr>
+            <td><%= user.full_name %></td>
+            <td><%= user.email %></td>
+            <td><%= user.phone %></td>
+            <td><%= link_to "Make Admin", authorize_user_path(user), method: :post %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </section>
+</main>

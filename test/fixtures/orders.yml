@@ -1,0 +1,43 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  paid: false
+  token: MyString
+  price: 9.99
+  user_id: 1
+  move_to_checkout: false
+  shipping_info: false
+  address_line_1: MyString
+  address_line_2: MyString
+  city: MyString
+  state: MyString
+  postal_code: MyString
+  country: MyString
+  ship_to_name: MyString
+  shipping_chosen: false
+  shipping_choice: MyString
+  shipping_choice_img: MyString
+  shipping_price: MyString
+  customer_email: MyString
+  final_price: 9.99
+
+two:
+  paid: false
+  token: MyString
+  price: 9.99
+  user_id: 1
+  move_to_checkout: false
+  shipping_info: false
+  address_line_1: MyString
+  address_line_2: MyString
+  city: MyString
+  state: MyString
+  postal_code: MyString
+  country: MyString
+  ship_to_name: MyString
+  shipping_chosen: false
+  shipping_choice: MyString
+  shipping_choice_img: MyString
+  shipping_price: MyString
+  customer_email: MyString
+  final_price: 9.99

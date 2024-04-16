@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @bike_model %>
+
+<div>
+  <%= link_to "Edit this bike model", edit_bike_model_path(@bike_model) %> |
+  <%= link_to "Back to bike models", bike_models_path %>
+
+  <%= button_to "Destroy this bike model", @bike_model, method: :delete %>
+</div>

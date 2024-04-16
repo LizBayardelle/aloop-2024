@@ -1,0 +1,11 @@
+<div class="modal fade" id="editModel<%= bike_model.id %>Modal" tabindex="-1" aria-labelledby="editModel<%= bike_model.id %>ModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModel<%= bike_model.id %>ModalLabel">Edit <%= bike_model.name %></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <%= render partial: "bike_models/modal_innards", locals: { bike_model: bike_model } %>
+    </div>
+  </div>
+</div>

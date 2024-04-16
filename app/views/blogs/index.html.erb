@@ -1,0 +1,72 @@
+<main class="flex-shrink-0">
+    <section class="py-5">
+        <div class="container px-5">
+            <h1 class="fw-bolder fs-5 mb-4">Aloop Blog</h1>
+            <div class="card border-0 shadow rounded-3 overflow-hidden">
+                <div class="card-body p-0">
+                    <div class="row gx-0">
+                        <div class="col-lg-6 col-xl-5 py-lg-5">
+                            <% recent_blog = Blog.where(published: true).order("created_at DESC").limit(1).first %>
+                            <div class="p-4 p-md-5">
+                                <div class="badge red rounded-pill mb-2">Most Recent Post</div>
+                                <% recent_blog.blog_subcategories.each do |sub| %>
+                                    <%= link_to sub.name, blog_subcategory_path(sub), class: "badge blue rounded-pill mb-2" %>
+                                  <% end %>
+                                <div class="h2 fw-bolder"><%= recent_blog.title %></div>
+                                <p><%= recent_blog.teaser %></p>
+                                <%= link_to blog_path(recent_blog), class: "stretched-link text-decoration-none" do %>
+                                    Read More
+                                    <i class="fas fa-arrow-right ms-1"></i>
+                                <% end %>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-xl-7">
+                            <%= link_to blog_path(recent_blog) do %>
+                                <div class="bg-featured-blog" style="background-image: url('<%= recent_blog.image_url %>')"></div>
+                            <% end %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="py-5 bg-grate">
+        <div class="container px-5">
+            <div class="row gx-5">
+                <div class="col-xl-4">
+                    <div class="card z-depth-5 border-0 h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex h-100 align-items-center justify-content-center">
+                                <div class="text-center">
+                                    <div class="h6 fw-bolder">Contact</div>
+                                    <p class="text-muted mb-4">
+                                        For press inquiries, email us at
+                                        <br />
+                                        <a href="#!">press@domain.com</a>
+                                    </p>
+                                    <div class="h6 fw-bolder">Follow us</div>
+                                    <a class="fs-5 px-2 link-dark" href="#!"><i class="bi-twitter"></i></a>
+                                    <a class="fs-5 px-2 link-dark" href="#!"><i class="bi-facebook"></i></a>
+                                    <a class="fs-5 px-2 link-dark" href="#!"><i class="bi-linkedin"></i></a>
+                                    <a class="fs-5 px-2 link-dark" href="#!"><i class="bi-youtube"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Blog preview section-->
+    <section class="py-5">
+        <div class="container px-5">
+            <h2 class="fw-bolder fs-5 mb-4">Featured Articles</h2>
+            <div class="row gx-5">
+
+              <% @blogs.each do |blog| %>
+                <%= render partial: "blogs/blog_card", locals: { blog: blog } %>
+              <% end %>
+        </div>
+    </section>
+</main>
+      

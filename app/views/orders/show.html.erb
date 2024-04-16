@@ -1,0 +1,25 @@
+<% if current_user && current_user.admin && @current_order.id != @order.id %>
+  <div class="container text-center mt-5">
+    <div class="box w-75 ms-auto me-auto">
+      <p class="uppercase mb-2">Admin Information</p>
+      <% if @order.move_to_checkout == false %><div class="badge mx-1">Cart Created</div><% end %>
+      <% if @order.move_to_checkout == true %><div class="badge mx-1">Moved to Checkout</div><% end %>
+      <% if @order.shipping_info == true %><div class="badge mx-1">Shipping Info Entered</div><% end %>
+      <% if @order.paid == true %><div class="badge mx-1">Paid</div><% end %>
+      <% if @order.move_to_checkout == true %><div class="badge mx-1">Moved to Checkout</div><% end %>
+    </div>
+  </div>
+<% end %>
+
+
+<% if @order.move_to_checkout == false && @order.shipping_info == false && @order.paid == false %>
+  <%= render partial: "orders/step_1_cart", locals: { order: @order } %>
+<% elsif @order.shipping_info == false && @order.paid == false %>
+  <%= render partial: "orders/step_2_shipping", locals: { order: @order } %>
+<% elsif @order.shipping_info == true && @order.shipping_chosen == false %>
+  <%= render partial: "orders/step_3_shipping_options", locals: { order: @order } %>
+<% elsif @order.paid == false %>
+  <%= render partial: "orders/step_4_payment", locals: { order: @order } %>
+<% elsif @order.paid %>
+  <%= render partial: "orders/step_5_confirmation", locals: { order: @order } %>
+<% end %>

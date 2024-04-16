@@ -1,0 +1,93 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.1.2/tinymce.min.js" integrity="sha512-cJ2vUNryvHzgNJfmFTtZ2VX5EMT5JOU1i8nm+L1kwoHQ9bSqSYdswxyk++9Gi27p3BG2rXZXLMsTsluY4RZSSw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+  tinymce.init({
+    selector: '.tinymce'
+  });
+</script>
+
+
+<%= simple_form_for(product) do |f| %>
+  <div class="modal-body">
+    <%= f.error_notification %>
+    <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+    <div class="form-inputs spaced">
+
+      <div class="row">
+        <div class="form-group col-12">
+          <%= f.input :name, label: "Product Name", input_html: { class: "form-control" } %>
+        </div>
+        <div class="form-group col-12">
+          <%= f.input :subtitle, label: "Subtitle Details", input_html: { class: "form-control" } %>
+        </div>
+
+
+        <div class="form-group col-6">
+          <%= f.label "Categories" %><br>
+          <div class="form-check">
+            <%= f.collection_check_boxes(:product_category_ids, ProductCategory.all, :id, :name ) %>
+          </div>
+        </div>
+        <div class="form-group col-6 mt-4">
+          <%= f.input :active, label: "This is an active product.", class: "mt-2" %>
+        </div>
+
+
+        <div class="form-group col-12">
+          <%= f.label "Full Product Description", class: "mt-2" %>
+          <%= f.text_area :description, label: "Full Description", class: "tinymce" %>
+        </div>
+      </div> <!-- row -->
+
+
+
+
+      <div class="row pt-4">
+        <h3 class="text-center thin color-blue">Backend Details</h3>
+
+        <div class="form-group col-12">
+          <%#= f.input :size, label: "Product Size", input_html: { class: "form-control" } %>
+        </div>
+
+        <div class="form-group col-12">
+          <%= f.input :application_notes, label: "Application Notes", input_html: { class: "form-control" } %>
+        </div>
+
+        <div class="form-group col-4">
+          <%= f.input :height, label: "Shipping Box Height", input_html: { class: "form-control" } %>
+        </div>
+
+        <div class="form-group col-4">
+          <%= f.input :width, label: "Shipping Box Width", input_html: { class: "form-control" } %>
+        </div>
+
+        <div class="form-group col-4">
+          <%= f.input :depth, label: "Shipping Box Depth", input_html: { class: "form-control" } %>
+        </div>
+      </div> <!-- row -->
+
+
+
+      <div class="bg-grey my-3 z-depth-3 py-5">
+        <div class="row px-4">
+          <h3 class="text-center thin color-blue">SEO Information</h3>
+
+          <div class="form-group col-6">
+            <%= f.input :meta_title, label: "Meta Title", input_html: { class: "form-control" } %>
+          </div>
+
+          <div class="form-group col-6">
+            <%= f.input :meta_keywords, label: "Meta Keywords", input_html: { class: "form-control" } %>
+          </div>
+        </div>
+      </div>
+
+
+
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+     <%= f.button :submit %>
+  </div>
+<% end %>

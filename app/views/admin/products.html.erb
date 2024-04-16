@@ -1,2 +1,65 @@
-<h1>Admin#products</h1>
-<p>Find me in app/views/admin/products.html.erb</p>
+<main class="container py-5">
+
+  <header class="text-center mb-3">
+    <h1>Products</h1>
+    <button type="button" class="btn btn-black-outline" data-bs-toggle="modal" data-bs-target="#newProductModal">
+      Add a New Product
+    </button>
+    <button type="button" class="btn btn-red-outline" data-bs-toggle="modal" data-bs-target="#newCategoryModal">
+      Add a New Category
+    </button>
+    <button type="button" class="btn btn-blue-outline" data-bs-toggle="modal" data-bs-target="#newModelModal">
+      Add a New Model
+    </button>
+  </header>
+  <%= render partial: "products/modal_new", locals: { product: Product.new } %>
+  <%= render partial: "product_categories/modal_new", locals: { category: ProductCategory.new } %>
+  <%= render partial: "bike_models/modal_new", locals: { bike_model: BikeModel.new } %>
+
+
+
+  <div id="categories" class="text-center mb-4">
+    <% ProductCategory.all.each do |category| %>
+      <button type="button" class="btn btn-small btn-red" data-bs-toggle="modal" data-bs-target="#editCategory<%= category.id %>Modal">
+        <%= category.name %>
+      </button>
+      <%= render partial: "product_categories/modal_edit", locals: { category: category } %>
+    <% end %>
+    <% BikeModel.all.each do |bike_model| %>
+      <button type="button" class="btn btn-small btn-blue" data-bs-toggle="modal" data-bs-target="#editModel<%= bike_model.id %>Modal">
+        <%= bike_model.name %>
+      </button>
+      <%= render partial: "bike_models/modal_edit", locals: { bike_model: bike_model } %>
+    <% end %>
+  </div>
+
+
+
+  <h2 class="mb-0">Active Products</h2>
+  <%= render partial: "products/products_table", locals: { products: @products.where(active: true) } %>
+
+
+
+
+  
+
+
+
+  <div class="pt-5">
+    <h2>Inactive Products</h2>
+    <ul>
+      <% @products.where(active: false).each do |product| %>
+        <li>
+          <%= product.name %>
+            <span data-bs-toggle="modal" data-bs-target="#editProduct<%= product.id %>Modal">
+              <i class="fas fa-pen px-1 linkish"></i>
+            </span>
+            <%= render partial: "products/modal_edit", locals: { product: product } %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+</main>
+
+

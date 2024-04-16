@@ -1,0 +1,38 @@
+<section class="bg-grate p-5">
+
+  <header class="text-center">
+    <h1 class="display-1 thin color-white py-5">Log In</h1>
+  </header>
+
+  <div class="raised-box p-5 mb-5">
+    <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+      <div class="form-inputs spaced row">
+        <div class="form-group col-sm-6">
+          <%= f.input :email,
+                    required: false,
+                    autofocus: true,
+                    input_html: { autocomplete: "email", class: "form-control" } %>
+        </div> <!-- form group -->
+        <div class="form-group col-sm-6">
+          <%= f.input :password,
+                    required: false,
+                    input_html: { autocomplete: "current-password", class: "form-control" } %>
+        </div> <!-- form group -->
+        <div class="form-group col-12">
+          <%= f.input :remember_me, as: :boolean if devise_mapping.rememberable? %>
+        </div> <!-- form group -->
+      </div>
+
+      <div class="form-actions text-center">
+        <%= f.button :submit, "Log in", class: "mb-3" %><br>
+        <%= render "users/shared/links" %>
+      </div>
+    <% end %>
+
+  </div>
+
+</section>
+
+
+
+

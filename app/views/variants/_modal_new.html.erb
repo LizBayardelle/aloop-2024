@@ -1,0 +1,13 @@
+<div class="modal fade" id="newVariantComponent<%= component.id %>Modal" tabindex="-1" aria-labelledby="newVariantComponent<%= component.id %>ModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="newVariantComponent<%= component.id %>ModalLabel">Add a New Variant to <%= product.name %> (<%= component.name %>)</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <%= render partial: "variants/modal_innards", locals: { variant: variant, component: component } %>
+      
+    </div>
+  </div>
+</div>

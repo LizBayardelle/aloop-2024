@@ -1,0 +1,67 @@
+<main class="bg-grate p-5">
+
+  <header class="text-center">
+    <h1 class="display-1 thin color-white py-5">Update My Information</h1>
+  </header>
+
+  <section class="raised-box p-5 mb-5">
+    <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+      <%= f.error_notification %>
+
+      <div class="form-inputs row">
+
+        <div class="form-group col-sm-6 pb-3">
+          <%= f.input :first_name, input_html: { class: "form-control" } %>
+        </div> <!-- col -->
+        <div class="form-group col-sm-6 pb-3">
+          <%= f.input :last_name, input_html: { class: "form-control" } %>
+        </div> <!-- col -->
+
+        <div class="form-group col-sm-6 pb-3">
+          <%= f.input :email, required: true, autofocus: true, input_html: { class: "form-control" } %>
+          <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+            <p>Currently waiting confirmation for: <%= resource.unconfirmed_email %></p>
+          <% end %>
+        </div> <!-- col -->
+        <div class="form-group col-sm-6 pb-3">
+          <%= f.input :current_password,
+                    hint: "We need your current password to confirm your changes.",
+                    required: true,
+                    input_html: { autocomplete: "current-password", class: "form-control" } %>
+        </div> <!-- col -->
+        <div class="form-group col-sm-6 pb-3">
+          <%= f.label "Job Title" %>
+          <%= f.input :job_title, label: false, input_html: { class: "form-control" } %>
+        </div>
+        <div class="form-group col-sm-6 pb-3">
+          <%= f.label "Profile Image" %>
+          <%= f.input :image, label: false, input_html: { class: "form-control" } %>
+        </div>
+
+        <div class="col-12 text-center">
+          <h3 class="mb-0 pb-0 mt-3">Change My Password</h3>
+          <p><small><em>
+            Leave these blank to keep your current password.
+          </em></small></p>
+        </div>
+
+        <div class="form-group col-sm-6 pb-3">
+          <%= f.input :password,
+                      hint: "Leave it blank if you don't want to change it.",
+                      required: false,
+                      input_html: { autocomplete: "new-password", class: "form-control" } %>
+        </div> <!-- col -->
+        <div class="form-group col-sm-6 pb-3">
+          <%= f.input :password_confirmation,
+                    required: false,
+                    input_html: { autocomplete: "new-password", class: "form-control" } %>
+        </div> <!-- col -->
+      </div>
+
+      <div class="form-actions mt-3 text-center">
+        <%= f.button :submit, "Save My Info" %>
+      </div>
+    <% end %>
+  </section>
+
+</main>

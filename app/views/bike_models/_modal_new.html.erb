@@ -1,0 +1,11 @@
+<div class="modal fade" id="newModelModal" tabindex="-1" aria-labelledby="newModelModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="newModelModalLabel">Add a New Model</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <%= render partial: "bike_models/modal_innards", locals: { bike_model: bike_model } %>
+    </div>
+  </div>
+</div>

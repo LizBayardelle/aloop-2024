@@ -1,0 +1,33 @@
+<%= simple_form_for(photo) do |f| %>
+
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Submit a Photo</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+
+  <div class="modal-body">
+      <%= f.error_notification %>
+      <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+      <div class="form-inputs spaced row">
+        <div class="form-group col-sm-6">
+          <%= f.label "What model is your bike?" %>
+          <%= f.select :kit, options_for_select([['XR250/XR400' ,'kit1'], ['XR600', 'kit2'], ['SuperMotard and XR650L', 'kit3']]), class: "form-control" %>
+        </div>
+        <div class="form-group col-sm-6">
+          <%= f.label "Image" %><br>
+          <%= f.file_field :image %>
+        </div>
+        <div class="form-group col-12">
+          <%= f.input :comments %>
+        </div>
+      </div>
+
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    <%= f.submit "Submit Photo", class: "btn btn-black-outline" %>
+  </div>
+
+<% end %>

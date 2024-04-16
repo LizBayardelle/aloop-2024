@@ -1,0 +1,13 @@
+<span data-bs-toggle="modal" data-bs-target="#newVariantComponent<%= component.id %>Modal">
+    <i class="fas fa-plus px-1 linkish"></i>
+</span>
+
+<%= link_to "<i class='fas fa-trash-alt px-1'></i>".html_safe, variant_path(variant), method: :delete, data: {confirm: "Are you sure you want to delete that variant?"} %>
+
+<span class="linkish" data-bs-toggle="modal" data-bs-target="#editVariant<%= variant.id %>Modal">
+    <i class="fas fa-pen ps-1 linkish"></i>
+</span>
+
+
+<%= render partial: "variants/modal_new", locals: { variant: Variant.new, component: component, product: product } %>
+<%= render partial: "variants/modal_edit", locals: { component: component, variant: variant } %>

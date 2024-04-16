@@ -1,0 +1,17 @@
+<!-- flash notice area -->
+<div class="flash-notice-area">
+  <% if flash[:notice] %>
+    <div class="alert alert-success">
+      <%= flash[:notice] %>
+    </div>
+  <% elsif flash.now[:alert] %>
+    <div class="alert alert-danger">
+      <%= flash.now[:alert] %>
+    </div>
+  <% elsif flash[:warning] %>
+    <div class="alert alert-warning">
+      <%= flash[:warning] %>
+    </div>
+  <% end %>
+</div>
+<!-- flash notice area -->

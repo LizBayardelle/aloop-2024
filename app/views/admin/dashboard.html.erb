@@ -1,2 +1,18 @@
-<h1>Admin#dashboard</h1>
-<p>Find me in app/views/admin/dashboard.html.erb</p>
+<main class="py-5">
+	<header class="text-center">
+		<h1 class="display-3">Admin Dashboard</h1>
+	</header>
+
+	<section class="container">
+		<div class="row">
+			<div class="col-sm-6">
+				<%= link_to "Products", admin_products_path, class: "btn btn-red-outline w-100 my-2" %>
+				<%= link_to "Sales", admin_sales_path, class: "btn btn-red-outline w-100 my-2" %>
+			</div>
+			<div class="col-sm-6">
+				<%= link_to "Users", admin_users_path, class: "btn btn-red-outline w-100 my-2" %>
+				<%= link_to "Blog", admin_blog_path, class: "btn btn-red-outline w-100 my-2" %>
+			</div>
+		</div>
+	</section>
+</main>

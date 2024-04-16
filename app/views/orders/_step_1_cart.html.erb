@@ -1,0 +1,76 @@
+<main id="notPaid" class="py-5 container">
+  <header class="text-center">
+
+    <% if current_user && current_user.admin && @order != @current_order %>
+      <h1>Ongoing Shopping Cart</h1>
+    <% else %>
+      <h1>Your Cart</h1>
+    <% end %>
+
+  </header>
+
+  <% if @order.order_items.count == 0 %>
+    <p class="text-center">Nothing here yet!  You should head to our <%= link_to "store", products_path %> and fix that...</p>
+  <% else %>
+
+    <section id="cart-details" class="text-left pt-4">
+      <table class="table">
+        <tbody>
+          <% @order.order_items.each do |item| %>
+            <% product = Product.find(item.product_id) %>
+            <tr>
+              <td>
+                <h4><%= product.name %></h4>
+                <p class="mb-0 pb-0"><%= item.specs.html_safe %></p>
+                <p class="mb-0 pb-0"><em><%= item.notes %></em></p>
+                <br>
+                <small><em>
+                  <%= link_to "Remove", order_item_path(item), method: :delete, style: "text-decoration: none", data: {confirm: "Are you sure you want to remove that product from your cart?"} %>
+                </em></small>
+              </td>
+              <td>
+                <%= item.quantity %>
+              </td>
+              <td><%= number_to_currency(item.total_price) %></td>
+            </tr>
+          <% end %>
+          <tr style="border-bottom: solid thin white">
+            <th></th>
+            <th style="text-align: right;">Total</th>
+            <th>
+              <% total_quantity = 0 %>
+              <% @order.order_items.each do |item| %>
+                <% total_quantity += item.quantity %>
+              <% end %>
+              <%= total_quantity %>
+            </th>
+            <th>
+              <% total_price = 0 %>
+              <% @order.order_items.each do |item| %>
+                <% total_price += ( item.total_price * item.quantity )%>
+              <% end %>
+              <%= number_to_currency(total_price) %>
+            </th>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="actions" class="text-center mt-5">
+      <h4>Ready to checkout?</h4>
+      <% if current_user %>
+
+        <%= simple_form_for(@order, html: { id: "formMoveToCheckout" }) do |f| %>
+          <%= f.hidden_field :move_to_checkout, value: true %>
+          <%= f.submit "Checkout", class: "btn" %>
+        <% end %>
+
+      <% else %>
+        <%= link_to "Checkout", new_user_registration_path(order_id: order.id), class: "btn" %>
+      <% end %>
+    </section>
+
+  <% end %>
+
+</main>
+

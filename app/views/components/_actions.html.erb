@@ -1,0 +1,13 @@
+<span data-bs-toggle="modal" data-bs-target="#newComponentProduct<%= product.id %>Modal">
+    <i class="fas fa-plus px-1 linkish color-white"></i>
+</span>
+
+<span class="linkish" data-bs-toggle="modal" data-bs-target="#editComponent<%= component.id %>Modal">
+    <i class="fas fa-pen px-1 linkish color-white"></i>
+</span>
+
+<%= link_to "<i class='fas fa-trash-alt ps-1 color-white'></i>".html_safe, component_path(component), method: :delete, data: {confirm: "Are you sure you want to delete that product component?"} %>
+
+
+<%= render partial: "components/modal_new", locals: { component: Component.new, product: product } %>
+<%= render partial: "components/modal_edit", locals: { component: component, product: product } %>

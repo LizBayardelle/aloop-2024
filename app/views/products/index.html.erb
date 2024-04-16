@@ -1,0 +1,24 @@
+<main class="my-5 mx-4">
+
+  <header class="container text-center">
+    <h1>Aloop Store</h1>
+  </header>
+
+  <section class="container">
+    <div class="row g-4">
+      <% @products.each do |product| %>
+        <%= render partial: "products/product_box", locals: { product: product } %>
+      <% end %>
+    </div> <!-- row -->
+  </section>
+
+</main>
+
+
+
+
+<script>
+  $( document ).ready(function() {
+    $('.match-height').matchHeight();
+  });
+</script>

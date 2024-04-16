@@ -3,6 +3,23 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  # ACTION MAILER GOODIES
+  config.action_mailer.default_url_options = { :host => "aloop.com" }
+  config.action_mailer.perform_caching = false
+
+  # ADDED
+  config.action_mailer.default_url_options = { host: 'aloop.com', protocol: 'https' }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: 'smtp.sendgrid.net',
+    port: 587,
+    authentication: :plain,
+    user_name: ENV['SENDGRID_USERNAME'],
+    password: ENV['SENDGRID_PASSWORD'],
+    domain: 'aloop.com',
+    enable_starttls_auto: true
+  }
+  
   # Code is not reloaded between requests.
   config.enable_reloading = false
 
@@ -37,7 +54,7 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = "X-Accel-Redirect" # for NGINX
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :local
+  config.active_storage.service = :amazon
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil

@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  component: one
+  name: MyString
+  description: MyText
+  price: 9.99
+  active: false
+  sku: MyString
+  vendor: MyString
+  vendor_parts_number: MyString
+
+two:
+  component: two
+  name: MyString
+  description: MyText
+  price: 9.99
+  active: false
+  sku: MyString
+  vendor: MyString
+  vendor_parts_number: MyString

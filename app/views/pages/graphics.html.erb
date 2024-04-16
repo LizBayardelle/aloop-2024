@@ -1,0 +1,110 @@
+<main class="flex-shrink-0">
+
+
+    <section class="py-5">
+        <div class="container px-5">
+            <div class="text-center mb-5">
+                <h1 class="fw-bolder">
+                    Aloop Graphics
+                </h1>
+                <p class="fw-normal text-muted">
+                    Here's a look at our Aloop Graphic kits, past and present...
+                </p>
+            </div>
+
+            <div class="row gx-5">
+                <div class="col-lg-6">
+                    <div class="position-relative mb-5">
+                        <img class="w-100 rounded-3 my-3" src="https://aloopphotobucket.s3.us-west-1.amazonaws.com/Products/Gen+V+Graphics.jpeg" alt="..." />
+                        <a class="h3 fw-bolder text-decoration-none link-dark stretched-link" href="#!">
+                            Generation 5 (aka Race Kit)
+                        </a>
+                        <p class="fw-normal text-muted">
+                            Our newest design, a slightly retro look that goes well on white plastic. Optional, available on request with a new Aloop kit. You can also order these sets separately <%= link_to "in our store", products_path %>.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="position-relative mb-5">
+                        <img class="w-100 rounded-3 my-3" src="https://aloopphotobucket.s3.us-west-1.amazonaws.com/Products/graphics_gen4.jpg" alt="..." />
+                        <a class="h3 fw-bolder text-decoration-none link-dark stretched-link" href="#!">
+                            Generation 4
+                        </a>
+                        <p class="fw-normal text-muted">
+                            Our current design: this is what ships with our kits today, and when you order replacement graphics, this is the style you'll receive. We call this design Gen 4. <strong>You can purchase these on our <%= link_to "online store", products_path %>.</strong>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="position-relative mb-5">
+                        <img class="w-100 rounded-3 my-3" src="https://aloopphotobucket.s3.us-west-1.amazonaws.com/Products/graphics_gen3.jpg" alt="..." />
+                        <a class="h3 fw-bolder text-decoration-none link-dark stretched-link" href="#!">
+                            Generation 3
+                        </a>
+                        <p class="fw-normal text-muted">
+                            This is the preceding version of our graphics, Gen 3. This style is <strong>no longer available as a set</strong>, but if you need some right side decals only, let us know, somehow we ended up with a dozen or so.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="position-relative mb-5 mb-lg-0">
+                        <img class="w-100 rounded-3 my-3" src="https://aloopphotobucket.s3.us-west-1.amazonaws.com/Products/graphics_gen2.jpg" alt="..." />
+                        <a class="h3 fw-bolder text-decoration-none link-dark stretched-link" href="#!">
+                            Generation 2
+                        </a>
+                        <p class="fw-normal text-muted">
+                            Gen 2 graphics had more white in the design, and were a transitional design that went well with a newer style black gripper seat or the earlier slick sided seats. <strong>No longer available.</strong>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="position-relative">
+                        <img class="w-100 rounded-3 my-3" src="https://aloopphotobucket.s3.us-west-1.amazonaws.com/Products/graphics_gen1.jpg" alt="..." />
+                        <a class="h3 fw-bolder text-decoration-none link-dark stretched-link" href="#!">
+                            Generation 1
+                        </a>
+                        <p class="fw-normal text-muted">
+                            This is the original Gen 1 graphics kit, designed in 1997. The decals blended with the seat cover, which continued the design along the sides of the seat on slick sublimated vinyl panels. The seats looked great but weathered quickly, and we discontinued this style after about a year. <strong>No longer available.</strong>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="position-relative">
+                        <img class="w-100 rounded-3 my-3" src="https://aloopphotobucket.s3.us-west-1.amazonaws.com/Products/xr4002.jpg" alt="..." />
+                        <a class="h3 fw-bolder text-decoration-none link-dark stretched-link" href="#!">
+                            May 1998 Motocross Action Cover Bike
+                        </a>
+                        <p class="fw-normal text-muted">
+                            The May 1998 Motocross Action cover bike. For a list of parts that we used to make this modified monster, <%= link_to "click here", page_path("project_bike") %>.
+                        </p>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+
+    <section class="py-5 bg-light">
+        <div class="container px-5 my-5 text-center">
+            <h2 class="display-4 fw-bolder mb-4">Important Information</h2>
+            <p class="fw-normal">
+                The Aloop 4SMX kit uses radiator plastic from a 1999 CR250. This means that any graphics that will fit the 99 CR will also fit our plastic shrouds.
+            </p>
+            <p class="fw-normal">
+                There is no difference between the graphics for any of our 4SMX kits. The 250, 400, 600 and 650 kits all use the same graphics. The 250/400 kit dies use a different seat cover from the 600/650.
+            </p>
+            <p class="fw-normal">
+                Our seat is designed to have the same profile as a Honda CR250, very long and flat across the top. But since the subframe of an XR is wider than that of a CR, we've made the bottom portion of the seat wide enough to span the wider frame. This means we also had to make a special cover that has a CR profile up top, but has much more material on the sides. Some aftermarket CR250 seat covers will fit, but only if they have a generous cut with plenty of material to reach our wider seat bottom. You're probably better off buying our replacement Aloop seat cover, since they're definitely wide enough to fit perfectly.
+            </p>
+            <p class="h3 mt-5">Questions? Want more info or to get in touch?</p>
+            <%= link_to "Contact Us", root_path, class: "btn btn-lg btn-blue-outline mt-3" %>
+        </div>
+    </section>
+
+
+    <%= render partial: "layouts/ways_to_order" %>
+
+</main>

@@ -1,0 +1,11 @@
+<div class="modal fade" id="newBlogModal" tabindex="-1" aria-labelledby="newBlogModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="newBlogModalLabel">Write a New Blog</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <%= render partial: "blogs/modal_innards", locals: { blog: blog } %>
+    </div>
+  </div>
+</div>

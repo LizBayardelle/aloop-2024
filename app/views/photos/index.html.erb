@@ -1,0 +1,109 @@
+<header class="container">
+
+  <div class="w-100 mt-3" style="text-align: right">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      Submit a Photo
+    </button>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <%= render partial: "photos/modal_innards", locals: { photo: Photo.new } %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-12 text-center">
+     <h1 class="display-3 thin">Customer Images</h1>
+     <h4>See real photos from hundreds of our happy customers...</h4>
+  </div>
+</header>
+
+
+<% if current_user && current_user.admin && @photos.where(approved: false).count != 0 %>
+  <section class="bg-blue py-3">
+    <div class="container">
+      <h3 class="text-center color-white">Photos to Approve</h3>
+       <div class="portfolio-item row">
+        <% @photos.where(approved: false).each do |photo| %>
+          <div class="item <%= photo.kit %> col-lg-3 col-md-4 col-6 col-sm">
+            <div data-bs-toggle="modal" data-bs-target="#photoModal<%= photo.id %>" style="height: 130px; overflow-y: hidden;">
+             <img class="w-100" src="<%= rails_blob_url(photo.image) %>" alt="">
+            </div>
+          </div>
+          <%= render partial: "photos/display_popup", locals: { photo: photo } %>
+        <% end %>
+      </div>
+    </div> <!-- container -->
+  </section>
+<% end %>
+
+
+
+<section class="container">
+   <div class="portfolio-menu mt-2 mb-5">
+      <ul>
+         <li id="targetall" class="target btn btn-outline-dark active" data-filter="*">All</li>
+         <li id="target1" class="target btn btn-outline-dark">XR250/XR400</li>
+         <li id="target2" class="target btn btn-outline-dark">XR600</li>
+         <li id="target3" class="target btn btn-outline-dark">SuperMotard and XR650L</li>
+      </ul>
+   </div>
+
+  <div class="portfolio-item row mb-5">
+    <% @photos.where(approved: true).each do |photo| %>
+      <div class="item <%= photo.kit %> col-lg-3 col-md-4 col-6 col-sm">
+        <div data-bs-toggle="modal" data-bs-target="#photoModal<%= photo.id %>" style="height: 130px; overflow-y: hidden;">
+         <img class="w-100" src="<%= rails_blob_url(photo.image) %>" alt="">
+        </div>
+      </div>
+      <%= render partial: "photos/display_popup", locals: { photo: photo } %>
+    <% end %>
+  </div>
+
+</section>
+
+
+
+<script>
+  $(document).ready(function() {
+    $('#targetall').click(function(){
+      $('.target').removeClass('active');
+      $(this).addClass('active');
+      $('.item').removeClass('hidden');
+    });
+
+    $('#target1').click(function(){
+      $('.target').removeClass('active');
+      $(this).addClass('active');
+      $('.item').removeClass('hidden');
+      $('.kit2').addClass('hidden');
+      $('.kit3').addClass('hidden');
+    });
+
+    $('#target2').click(function(){
+      $('.target').removeClass('active');
+      $(this).addClass('active');
+      $('.item').removeClass('hidden');
+      $('.kit1').addClass('hidden');
+      $('.kit3').addClass('hidden');
+    });
+
+    $('#target3').click(function(){
+      $('.target').removeClass('active');
+      $(this).addClass('active');
+      $('.item').removeClass('hidden');
+      $('.kit1').addClass('hidden');
+      $('.kit2').addClass('hidden');
+    });
+  });
+</script>
+
+
+
+
+
+
+
