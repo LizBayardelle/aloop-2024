@@ -12,7 +12,11 @@
             <div class="d-flex align-items-end justify-content-between">
                 <div class="d-flex align-items-center">
                     <div class="profile-image me-3">
-                        <img src="<%= url_for(blog.user.image) %>" />
+                        <% if blog.user&.image.attached? %>
+                            <img src="<%= url_for(blog.user.image) %>" alt="<%= blog.user.full_name %>" />
+                        <% else %>
+                            <img src="https://t4.ftcdn.net/jpg/02/23/50/73/360_F_223507349_F5RFU3kL6eMt5LijOaMbWLeHUTv165CB.jpg" alt="Default User Image" />
+                        <% end %>
                     </div>
                     <div class="small">
                         <div class="fw-bold"><%= blog.user.full_name %></div>
