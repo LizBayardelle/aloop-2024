@@ -128,24 +128,34 @@
 
 
 
-
     <section>
         <div class="container">
             <h2 class="text-center pb-4">Aloop Bikes from Around the Web</h2>
 
-            <!-- Place <div> tag where you want the feed to appear -->
-            <div id="curator-feed-aloop-offroad-layout"><a href="https://curator.io" target="_blank" class="crt-logo crt-tag">Powered by Curator.io</a></div>
-            <!-- The Javascript can be moved to the end of the html page before the </body> tag -->
-            <script type="text/javascript">
-            /* curator-feed-aloop-offroad-layout */
-            (function(){
-            var i, e, d = document, s = "script";i = d.createElement("script");i.async = 1;
-            i.src = "https://cdn.curator.io/published/65414202-ebc8-4b03-90ae-5b54dab3ee4d.js";
-            e = d.getElementsByTagName(s)[0];e.parentNode.insertBefore(i, e);
-            })();
-            </script>
+            <iframe id="curator-feed-frame" style="width: 100%; height: 500px; border: none;"></iframe>
 
-        </div> <!-- container -->
+            <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                var iframe = document.getElementById('curator-feed-frame');
+                var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+                iframeDoc.open();
+                iframeDoc.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"><\/script>
+                        <script src="https://cdn.curator.io/published/65414202-ebc8-4b03-90ae-5b54dab3ee4d.js"><\/script>
+                    </head>
+                    <body>
+                        <div id="curator-feed-aloop-offroad-layout"></div>
+                    </body>
+                    </html>
+                `);
+                iframeDoc.close();
+            });
+            </script>
+        </div>
     </section>
 
 

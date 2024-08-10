@@ -8,7 +8,11 @@ class Product < ApplicationRecord
 	has_many :orders, through: :order_items
 
 	has_many :components, dependent: :destroy
+    has_many :variants, through: :components
 
+    def cheapest_variant_price
+        variants.minimum(:price) || price
+    end
 
 	def undertitle
 		strings_array = []

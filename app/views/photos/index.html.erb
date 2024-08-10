@@ -67,39 +67,40 @@
 
 
 
+
 <script defer>
-document.addEventListener('DOMContentLoaded', function() {
-  // Select all targets and attach click event listeners
-  const targets = document.querySelectorAll('.target');
-  targets.forEach(target => {
-    target.addEventListener('click', function() {
-      // Remove 'active' class from all targets and add to the clicked one
-      targets.forEach(t => t.classList.remove('active'));
-      this.classList.add('active');
-      
-      // Get filter type from data-filter attribute
-      const filter = this.dataset.filter;
+  document.addEventListener('DOMContentLoaded', function() {
+    // Select all targets and attach click event listeners
+    const targets = document.querySelectorAll('.target');
+    targets.forEach(target => {
+      target.addEventListener('click', function() {
+        // Remove 'active' class from all targets and add to the clicked one
+        targets.forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        
+        // Get filter type from data-filter attribute
+        const filter = this.dataset.filter;
 
-      // Select all items
-      const items = document.querySelectorAll('.portfolio-item .item');
+        // Select all items
+        const items = document.querySelectorAll('.portfolio-item .item');
 
-      // Toggle visibility based on filter
-      if (filter === '*') {
-        // Show all items
-        items.forEach(item => item.style.display = '');
-      } else {
-        // Show only items that match the filter and hide others
-        items.forEach(item => {
-          if (item.classList.contains(filter)) {
-            item.style.display = '';
-          } else {
-            item.style.display = 'none';
-          }
-        });
-      }
+        // Toggle visibility based on filter
+        if (filter === '*') {
+          // Show all items
+          items.forEach(item => item.style.display = '');
+        } else {
+          // Show only items that match the filter and hide others
+          items.forEach(item => {
+            if (item.classList.contains(filter)) {
+              item.style.display = '';
+            } else {
+              item.style.display = 'none';
+            }
+          });
+        }
+      });
     });
   });
-});
 </script>
 
 

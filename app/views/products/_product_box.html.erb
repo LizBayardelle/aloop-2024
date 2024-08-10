@@ -1,3 +1,5 @@
+<% cheapest_price = product.cheapest_variant_price %>
+
 <div class="col-sm-6 col-md-3">
 	<div class="product-box h-100">
 		<%= link_to product_path(product) do %>
@@ -16,9 +18,9 @@
 		<div class="p-3">
 			<h3 class="h4 mt-3 mb-0"><%= product.name %></h3>
 			<p><small><em><%= product.undertitle %></em></small></p>
-			<p class="h3 color-blue mb-2"><%= number_to_currency(product.price, precision: 2) %></p>
-			<% if product.price %>
-				<%= link_to number_to_currency(product.price), product_path(product), class: "btn btn-redmt-2" %>
+			<p class="h3 color-blue mb-2"><%= number_to_currency(cheapest_price, precision: 2) %></p>
+				<% if cheapest_price %>
+				<%= link_to number_to_currency(cheapest_price), product_path(product), class: "btn btn-red mt-2" %>
 			<% else %>
 				<%= link_to "Buy Now", product_path(product), class: "btn btn-redmt-2" %>
 			<% end %>

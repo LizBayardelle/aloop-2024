@@ -1,9 +1,14 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_action :set_current_order
- 
+  before_action :set_active_storage_current_host
+
   private
  
+  def set_active_storage_current_host
+    ActiveStorage::Current.url_options = { host: request.base_url }
+  end
+  
   def set_current_order
     @current_order = Order.find(session[:order_id])
     rescue ActiveRecord::RecordNotFound
