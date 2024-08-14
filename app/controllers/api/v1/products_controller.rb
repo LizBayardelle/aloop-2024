@@ -22,7 +22,10 @@ class Api::V1::ProductsController < ApplicationController
     end
   
     def update
+      @product = Product.find(params[:id])
       if @product.update(product_params)
+        # If the update is successful, update the product categories
+        @product.product_category_ids = params[:product][:product_category_ids] if params[:product][:product_category_ids]
         render json: @product
       else
         render json: @product.errors, status: :unprocessable_entity

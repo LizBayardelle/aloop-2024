@@ -24,6 +24,10 @@
     <% unless Rails.env.test? %>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.1.2/tinymce.min.js" integrity="sha512-cJ2vUNryvHzgNJfmFTtZ2VX5EMT5JOU1i8nm+L1kwoHQ9bSqSYdswxyk++9Gi27p3BG2rXZXLMsTsluY4RZSSw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <% end %>
+
+    <%= javascript_tag do %>
+      window.TINY_MCE_API_KEY = '<%= ENV['TINY_MCE_API_KEY'] %>';
+    <% end %>
   </head>
 
   <body>

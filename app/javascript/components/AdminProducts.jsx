@@ -56,15 +56,23 @@ const AdminProducts = () => {
     }
   };
 
-  const handleEdit = (item) => {
-    setEditingItem(item);
-    if ('subtitle' in item) {
-      setShowProductForm(true);
-    } else if ('product_id' in item) {
-      setShowComponentForm(true);
-    } else {
-      setShowVariantForm(true);
-    }
+  const handleEditProduct = (product) => {
+    setEditingItem(product);
+    setShowProductForm(true);
+  };
+
+  const handleEditComponent = (component) => {
+    setEditingItem(component);
+    setShowComponentForm(true);
+  };
+
+  const handleEditVariant = (variant) => {
+    const variantWithComponent = {
+      ...variant,
+      component_id: variant.component_id || variant.component?.id
+    };
+    setEditingItem(variantWithComponent);
+    setShowVariantForm(true);
   };
 
   const handleFormSubmit = () => {
@@ -96,7 +104,9 @@ const AdminProducts = () => {
       <AdminProductList 
         products={products} 
         onUpdate={fetchProducts} 
-        onEdit={handleEdit}
+        onEditProduct={handleEditProduct}
+        onEditComponent={handleEditComponent}
+        onEditVariant={handleEditVariant}
         csrfToken={csrfToken}
       />
 

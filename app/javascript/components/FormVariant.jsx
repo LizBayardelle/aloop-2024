@@ -16,12 +16,16 @@ const FormVariant = ({ onSubmit, onCancel, bikeModels, components, initialData, 
 
   useEffect(() => {
     if (initialData) {
-      setVariant(prevVariant => ({
-        ...prevVariant,
-        ...initialData,
-        active: initialData.active ?? false,
-        bike_model_ids: initialData.bike_model_ids || []
-      }));
+      setVariant(prevVariant => {
+        const updatedVariant = {
+          ...prevVariant,
+          ...initialData,
+          component_id: initialData.component_id ? initialData.component_id.toString() : '',
+          active: initialData.active ?? false,
+          bike_model_ids: initialData.bike_model_ids || []
+        };
+        return updatedVariant;
+      });
     }
   }, [initialData]);
 
@@ -82,43 +86,52 @@ const FormVariant = ({ onSubmit, onCancel, bikeModels, components, initialData, 
     }
   };
 
+
   return (
     <form onSubmit={handleSubmit} className="modal-content">
       <div className="modal-body">
         <div className="row form-inputs spaced">
+
           <div className="form-group col-8">
             <label htmlFor="name">Name</label>
             <input type="text" className="form-control" id="name" name="name" value={variant.name} onChange={handleChange} required />
           </div>
+
           <div className="form-group col-4">
             <label htmlFor="component_id">Component</label>
             <select className="form-control" id="component_id" name="component_id" value={variant.component_id} onChange={handleChange} required>
               <option value="">Select a component</option>
               {components.map(component => (
-                <option key={component.id} value={component.id}>{component.name}</option>
+                <option key={component.id} value={component.id.toString()}>{component.name}</option>
               ))}
             </select>
           </div>
-          <div className="form-group col-4">
+
+          <div className="form-group col-6">
             <label htmlFor="price">Price</label>
             <input type="number" step="0.01" className="form-control" id="price" name="price" value={variant.price} onChange={handleChange} required />
           </div>
-          <div className="form-group col-4">
+
+          <div className="form-group col-6">
             <label htmlFor="sku">Aloop Product Number</label>
             <input type="text" className="form-control" id="sku" name="sku" value={variant.sku} onChange={handleChange} />
           </div>
-          <div className="form-group col-4">
+          
+          <div className="form-group col-6">
             <label htmlFor="vendor">Vendor</label>
             <input type="text" className="form-control" id="vendor" name="vendor" value={variant.vendor} onChange={handleChange} />
           </div>
-          <div className="form-group col-4">
+
+          <div className="form-group col-6">
             <label htmlFor="vendor_parts_number">Vendor Parts Number</label>
             <input type="text" className="form-control" id="vendor_parts_number" name="vendor_parts_number" value={variant.vendor_parts_number} onChange={handleChange} />
           </div>
+
           <div className="form-group col-12">
             <label htmlFor="description">Description</label>
             <textarea className="form-control" id="description" name="description" value={variant.description} onChange={handleChange}></textarea>
           </div>
+
           <div className="form-group col-6">
             <label>Bike Models</label>
             {bikeModels.map(model => (

@@ -1,8 +1,6 @@
 import React from 'react';
 
 const AdminVariant = ({ variant, onUpdate, onEdit, csrfToken }) => {
-  console.log('Variant data:', variant);  // Add this line
-
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this variant?')) {
       try {
@@ -32,7 +30,8 @@ const AdminVariant = ({ variant, onUpdate, onEdit, csrfToken }) => {
           <div className="photo-thumbnails">
             {variant.photo_urls.map(photo => (
               <img 
-                src={variant.photo_urls[0].thumbnail} 
+                key={photo.id}
+                src={photo.thumbnail} 
                 alt={`${variant.name} thumbnail`}
                 style={{ width: '30px', height: '30px', objectFit: 'cover' }}
               />

@@ -1,7 +1,7 @@
 class VariantSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
 
-  attributes :id, :name, :description, :price, :active, :sku, :vendor, :vendor_parts_number, :photo_urls
+  attributes :id, :name, :description, :price, :active, :sku, :vendor, :vendor_parts_number, :component_id, :photo_urls
 
   has_many :bike_models
 

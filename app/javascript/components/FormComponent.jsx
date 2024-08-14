@@ -11,7 +11,10 @@ const FormComponent = ({ onSubmit, onCancel, products, initialData, csrfToken })
   useEffect(() => {
     if (initialData) {
       const { id, created_at, updated_at, variants, ...rest } = initialData;
-      setComponent(rest);
+      setComponent({
+        ...rest,
+        product_id: rest.product_id ? rest.product_id.toString() : ''
+      });
     }
   }, [initialData]);
 
@@ -52,29 +55,34 @@ const FormComponent = ({ onSubmit, onCancel, products, initialData, csrfToken })
     <form onSubmit={handleSubmit} className="modal-content">
       <div className="modal-body">
         <div className="form-inputs spaced">
+
           <div className="form-group">
             <label htmlFor="name">Name</label>
             <input type="text" className="form-control" id="name" name="name" value={component.name} onChange={handleChange} required />
           </div>
+
           <div className="form-group">
             <label htmlFor="product_id">Product</label>
             <select className="form-control" id="product_id" name="product_id" value={component.product_id} onChange={handleChange} required>
               <option value="">Select a product</option>
               {products.map(product => (
-                <option key={product.id} value={product.id}>{product.name}</option>
+                <option key={product.id} value={product.id.toString()}>{product.name}</option>
               ))}
             </select>
           </div>
+
           <div className="form-group">
             <label htmlFor="description">Description</label>
             <textarea className="form-control" id="description" name="description" value={component.description} onChange={handleChange}></textarea>
           </div>
+
           <div className="form-group">
             <div className="form-check">
               <input type="checkbox" className="form-check-input" id="active" name="active" checked={component.active} onChange={handleChange} />
               <label className="form-check-label" htmlFor="active">Display on Website</label>
             </div>
           </div>
+
         </div>
       </div>
       <div className="modal-footer">

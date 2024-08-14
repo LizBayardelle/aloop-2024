@@ -25,7 +25,7 @@ const AdminComponent = ({ component, onUpdate, onEdit, csrfToken }) => {
     </td>,
     <td key="sku" className="bg-grey"></td>,
     <td key="photos" className="bg-grey"></td>,
-    <td key="active" className="bg-grey"></td>,
+    <td key="active" className="bg-grey">{component.active ? 'Yes' : 'No'}</td>,
     <td key="price" className="bg-grey"></td>,
     <td key="vendor" className="bg-grey"></td>,
     <td key="vendor-parts" className="bg-grey"></td>,
