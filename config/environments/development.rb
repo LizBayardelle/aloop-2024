@@ -8,6 +8,10 @@ Rails.application.configure do
   # since you don't have to restart the web server when you make code changes.
   config.enable_reloading = true
 
+  # FOR URL GENERATION
+  config.action_controller.default_url_options = { host: 'localhost:3000' }
+  Rails.application.routes.default_url_options[:host] = 'localhost:3000'
+
   # Do not eager load code on boot.
   config.eager_load = false
 
