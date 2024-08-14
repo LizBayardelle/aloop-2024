@@ -103,10 +103,9 @@ const ProductDetails = ({ product }) => {
                                     >
                                         <div className="row">
                                             <div className="col-4">
-                                                { console.log( variant.photos_urls) }
-                                                {variant.photos_urls && variant.photos_urls.length > 0 && (
-                                                    <img src={variant.photos_urls[0]} alt={variant.name} style={{ height: '70px', width: 'auto' }} />
-                                                )}
+                                            {variant.photo_urls && variant.photo_urls.length > 0 && variant.photo_urls[0].url && (
+                                                <img src={variant.photo_urls[0].url} alt={variant.name} style={{ height: '70px', width: 'auto' }} />
+                                            )}
                                             </div>
                                             <div className="col-8 text-left">
                                                 <strong>{variant.name}</strong>
