@@ -31,4 +31,18 @@ Rails.application.routes.draw do
   resources :photos
   post "photos/:id/approve_photo" => "photos#approve_photo", as: "approve_photo"
 
+
+
+  namespace :api do
+    namespace :v1 do
+      resources :products
+      resources :components
+      resources :variants
+      resources :product_categories, only: [:index]
+      resources :bike_models, only: [:index]
+    end
+  end
+
+
+
 end

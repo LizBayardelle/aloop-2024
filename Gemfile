@@ -12,6 +12,7 @@ gem "jbuilder"
 gem "redis", ">= 4.0.1"
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "bootsnap", require: false
+gem 'active_model_serializers', '~> 0.10.0'
 
 # ESSENTIALS
 gem 'devise'
@@ -34,6 +35,7 @@ gem 'country_select'
 gem 'shippo'
 
 # FOR IMAGES
+gem 'image_processing', '~> 1.2'
 gem 'mini_magick'
 gem 'aws-sdk' , '~> 3'
 gem 'aws-sdk-s3', require: false

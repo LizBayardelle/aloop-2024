@@ -9,4 +9,8 @@ class Variant < ApplicationRecord
   def price_adjustment
     # self.price - Product.find(Component.find(self.component_id).product_id).price
   end
+
+  def photos_urls
+    photos.map { |photo| Rails.application.routes.url_helpers.rails_blob_url(photo, only_path: false) }
+  end
 end

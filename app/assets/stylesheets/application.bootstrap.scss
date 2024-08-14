@@ -9,6 +9,7 @@
 $color-primary: #2e3d99 !important;
 $color-white: #ffffff !important;
 $color-grey: #f2f2f2 !important;
+$color-grey-darker: #d5d4d4 !important;
 $color-black: #000000 !important;
 
 $color-red: #cd2127 !important;  // rgba(205,33,39,1)
@@ -36,7 +37,7 @@ $z-depth-5-y: 0 19px 38px rgba(0,0,0,0.30), 0 -5px 19px 38px rgba(0,0,0,0.30);
 -----------------------------*/
 
 .hidden { display: none !important; }
-.non-footer { min-height: calc(100vh - 392px); }
+.non-footer { min-height: calc(100vh - 360px); }
 
 .linkish { color: $color-primary; cursor: pointer; }
 .inline-block { display: inline-block; }
@@ -674,6 +675,160 @@ min-height: 15rem;
 
 
 
+
+
+
+/*-----------------------------
+------------MODALS-------------
+-----------------------------*/
+
+.modal {
+    padding: 10px;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 4px;
+    max-width: 1100px;
+    width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+  }
+  
+  .modal-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+
+
+
+
+/*-----------------------------
+----------GALLERY CSS-------------
+-----------------------------*/
+.image-gallery {
+    max-width: 100%;
+  }
+  
+  .main-image-container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 75%; /* 4:3 aspect ratio */
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .main-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  
+  .no-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #6c757d;
+    font-size: 1.2rem;
+  }
+  
+  .thumbnails-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    padding: 10px 0;
+  }
+  
+  .thumbnail {
+    flex: 0 0 auto;
+    width: 80px;
+    height: 80px;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s ease-in-out;
+  }
+  
+  .thumbnail:hover {
+    border-color: #007bff;
+  }
+  
+  .thumbnail.active {
+    border-color: #007bff;
+  }
+  
+  .thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+
+
+
+
+
+//   ADMIN THINGY
+
+  .photo-thumbnails {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  
+  .thumbnail {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+  
+  .no-photo {
+    font-style: italic;
+    color: #999;
+  }
+
+
+
+
+
+
+
+
+
+
 .z-depth-1 { box-shadow: $z-depth-1; }
 .z-depth-2 { box-shadow: $z-depth-2; }
 .z-depth-3 { box-shadow: $z-depth-3; }
@@ -687,17 +842,20 @@ min-height: 15rem;
 
 
 .color-grey { color: $color-grey; }
+.color-grey-darker { color: $color-grey-darker; }
 .color-red { color: $color-red; }
 .color-blue { color: $color-blue; }
 .color-black { color: $color-black; }
 .color-white { color: $color-white; }
 
 
+.bg-grey-darker { background-color: $color-grey-darker; }
 .bg-grey { background-color: $color-grey; }
 .bg-red { background-color: $color-red; }
 .bg-blue, .bg-primary { background-color: $color-blue; }
 .bg-black { background-color: $color-black; }
 .bg-white { background-color: $color-white; }
+.bg-transparent { background-color: none !important;}
 
 
 .badge { box-shadow: $z-depth-1; }

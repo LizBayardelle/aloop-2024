@@ -3,24 +3,43 @@ import tinymce from 'tinymce/tinymce';
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import ProductDetails from './components/ProductDetails'
+import AdminProducts from './components/AdminProducts'
 
 
 
 try {
+
+	document.addEventListener('DOMContentLoaded', () => {
+		const adminProductsContainer = document.getElementById('admin-products-root');
+		if (adminProductsContainer) {
+		  const products = JSON.parse(adminProductsContainer.getAttribute('data-products'));
+		  const categories = JSON.parse(adminProductsContainer.getAttribute('data-categories'));
+		  const bikeModels = JSON.parse(adminProductsContainer.getAttribute('data-bike-models'));
+	  
+		  const root = createRoot(adminProductsContainer);
+		  root.render(
+			<AdminProducts 
+			  initialProducts={products} 
+			  initialCategories={categories} 
+			  initialBikeModels={bikeModels} 
+			/>
+		  );
+		} else {
+		  console.warn('Admin products container not found');
+		}
+	});
 
 	const renderReactComponent = () => {
 		
 		try {
 			const productDetailsContainer = document.getElementById('productDetails');
 			if (productDetailsContainer) {
-				
 				const productData = JSON.parse(productDetailsContainer.getAttribute('data-product'));
 				const root = createRoot(productDetailsContainer);
 				root.render(React.createElement(ProductDetails, { product: productData }));
-				
-			} else {
-				console.warn('Product details container not found');
-			}
+			} 
+
+
 		} catch (error) {
 			console.error('Error in renderReactComponent:', error);
 		}
@@ -30,7 +49,6 @@ try {
 		
 		try {
 			// TinyMCE initialization (if you're using it)
-			/*
 			if (typeof tinymce !== 'undefined') {
 				const tinymceElements = document.querySelectorAll('.tinymce');
 				if (tinymceElements.length > 0) {
@@ -47,7 +65,6 @@ try {
 			} else {
 				console.warn('TinyMCE is not defined');
 			}
-			*/
 
 			// React component rendering
 			renderReactComponent();
@@ -59,7 +76,6 @@ try {
 	// Use both DOMContentLoaded and load events
 	['DOMContentLoaded', 'load'].forEach(event => {
 		window.addEventListener(event, () => {
-		
 		initializePage();
 		});
 	});
