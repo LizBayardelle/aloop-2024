@@ -49,7 +49,16 @@ const CheckoutCart = ({ order, onUpdateOrder, onNext }) => {
   };
 
   const formatPrice = (price) => {
-    return parseFloat(price).toFixed(2);
+    const numPrice = parseFloat(price);
+    return isNaN(numPrice) ? '0.00' : numPrice.toFixed(2);
+  };
+
+  const calculateTotalItems = () => {
+    return order.order_items.reduce((sum, item) => sum + (item.quantity || 0), 0);
+  };
+
+  const calculateTotalPrice = () => {
+    return order.order_items.reduce((sum, item) => sum + parseFloat(item.total_price || 0), 0);
   };
 
   return (
@@ -85,7 +94,7 @@ const CheckoutCart = ({ order, onUpdateOrder, onNext }) => {
                     {item.notes && <p className="mb-0"><small className="text-muted"><em>{item.notes}</em></small></p>}
                   </div>
                   <div className="col-md-2 text-center">
-                    <span className="badge bg-secondary">{item.quantity}</span>
+                    <span className="badge bg-secondary">{item.quantity || 1}</span>
                   </div>
                   <div className="col-md-2 text-center">
                     <strong>${formatPrice(item.total_price)}</strong>
@@ -101,10 +110,10 @@ const CheckoutCart = ({ order, onUpdateOrder, onNext }) => {
             <div className="card-footer">
               <div className="row align-items-center">
                 <div className="col-md-6">
-                  <h5 className="mb-0">Total Items: {order.order_items.reduce((sum, item) => sum + item.quantity, 0)}</h5>
+                  <h5 className="mb-0">Total Items: {calculateTotalItems()}</h5>
                 </div>
                 <div className="col-md-6 text-end">
-                  <h4 className="mb-0">Total: ${formatPrice(order.total_price)}</h4>
+                  <h4 className="mb-0">Total: ${formatPrice(calculateTotalPrice())}</h4>
                 </div>
               </div>
             </div>
