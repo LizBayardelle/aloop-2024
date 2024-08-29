@@ -10,12 +10,15 @@ class ApplicationController < ActionController::Base
   end
   
   def set_current_order
-    @current_order = Order.find(session[:order_id])
-    rescue ActiveRecord::RecordNotFound
-    @current_order = Order.create!
-    session[:order_id] = @current_order.id
+    @current_order = Order.find_by(id: session[:order_id])
+    if @current_order.nil?
+      @current_order = Order.create!
+      session[:order_id] = @current_order.id
+    end
     @current_order
   end
+
+
 
   def admin_only
     unless current_user && current_user.admin

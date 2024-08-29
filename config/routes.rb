@@ -40,6 +40,13 @@ Rails.application.routes.draw do
       resources :variants
       resources :product_categories, only: [:index]
       resources :bike_models, only: [:index]
+      resources :order_items
+      resources :orders do
+        member do
+          post 'calculate_shipping_rates'
+          get 'shipping_rates'
+        end
+      end
     end
   end
 

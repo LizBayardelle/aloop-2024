@@ -6,50 +6,7 @@
 
 
 
-  <div id="orders">
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">Date</th>
-          <th scope="col">Status</th>
-          <th scope="col">Customer</th>
-          <th scope="col"># of Items</th>
-          <th scope="col">Price</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% Order.order("created_at DESC").each do |order| %>
-          <tr>
-            <td>
-              <%= link_to order.created_at, order_path(order) %>
-            </td>
-            <td>
-              <% if !order.move_to_checkout && !order.shipping_info && !order.paid %>
-                Cart Created
-              <% elsif order.move_to_checkout && !order.shipping_info && !order.paid %>
-                Moved to Checkout
-              <% elsif order.move_to_checkout && order.shipping_info && !order.paid %>
-                Shipping Info Entered
-              <% elsif order.paid %>
-                Paid
-              <% end %>
-            </td>
-            <td>
-              <%= order.user %>
-              <% if order.user && (( order.user.first_name && order.user.first_name != "" ) || ( order.user.last_name && order.user.last_name != "" )) %>
-                <%= order.user.full_name %>
-              <% elsif order.user %>
-                <%= order.user.email %>
-              <% else %>
-                <%= order.ship_to_name %>
-              <% end %>
-            </td>
-            <td><%= order.order_number_of_items %></td>
-            <td><%= number_to_currency(order.order_total) %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
+  <div id="admin-sales-root" data-orders="<%= @orders.to_json(include: :order_items) %>"></div>
+
 
 </main>

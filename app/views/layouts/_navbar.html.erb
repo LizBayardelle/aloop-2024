@@ -67,20 +67,14 @@
         <% end %>
 
         <li>
-          <button type="button" class="btn-invisible position-relative w-0">
-            <%= simple_form_for(@current_order, html: { id: "goToCart" }) do |f| %>
-              <%= f.hidden_field :move_to_checkout, value: false %>
-              <%= button_tag( :class => "btn-invisible mt-2") do %>
-                <i class='fas fa-shopping-cart'></i>
-              <% end %>
-            <% end %>
-            
+          <%= link_to page_path("cart"), class: "position-relative w-0" do %>
+            <i class='fas fa-shopping-cart'></i>            
             <% if @current_order.order_number_of_items != 0 %>
               <span class="position-absolute translate-middle badge rounded-pill bg-danger">
                 <%= @current_order.order_number_of_items %>
               </span>
             <% end %>
-          </button>
+          <% end %>
         </li>
 
       </ul>

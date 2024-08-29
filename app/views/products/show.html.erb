@@ -1,4 +1,4 @@
-<div id="productDetails" data-product="<%= @product.to_json(
+<div id="product-details-root" data-product="<%= @product.to_json(
   include: { 
     components: { 
       include: { 
@@ -10,3 +10,4 @@
   }
 ).gsub('"', '&quot;').html_safe %>">
 </div>
+

@@ -13,7 +13,7 @@ class AdminController < ApplicationController
   end
 
   def sales
-    @orders = Order.order("created_at DESC").all
+    @orders = Order.includes(:order_items).order(created_at: :desc)
   end
 
   def blog

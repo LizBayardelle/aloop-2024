@@ -5,6 +5,16 @@ class Order < ApplicationRecord
   has_many :order_items
  
  
+  def shipping_info_complete?
+    ship_to_name.present? &&
+    customer_email.present? &&
+    address_line_1.present? &&
+    city.present? &&
+    state.present? &&
+    postal_code.present? &&
+    country.present?
+  end
+  
   def order_number_of_items
     order_number_of_items = 0
     self.order_items.each do |item|

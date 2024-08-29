@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_16_195330) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_28_211134) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -115,7 +115,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_16_195330) do
   create_table "orders", force: :cascade do |t|
     t.boolean "paid"
     t.string "token"
-    t.decimal "price"
+    t.decimal "price", precision: 10, scale: 2
     t.integer "user_id"
     t.boolean "move_to_checkout"
     t.boolean "shipping_info"
@@ -129,11 +129,20 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_16_195330) do
     t.boolean "shipping_chosen"
     t.string "shipping_choice"
     t.string "shipping_choice_img"
-    t.string "shipping_price"
     t.string "customer_email"
-    t.decimal "final_price"
+    t.decimal "final_price", precision: 10, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "paypal_order_id"
+    t.string "paypal_payer_id"
+    t.string "paypal_payer_email"
+    t.string "paypal_payment_status"
+    t.string "paypal_transaction_id"
+    t.string "order_status"
+    t.decimal "shipping_cost", precision: 10, scale: 2
+    t.datetime "paid_at"
+    t.string "shipping_method_name"
+    t.index ["paid_at"], name: "index_orders_on_paid_at"
   end
 
   create_table "photos", force: :cascade do |t|

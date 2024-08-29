@@ -1,0 +1,8 @@
+<main class="container pb-5">
+
+	<div id="checkout-root" 
+		data-order="<%= @current_order.to_json(include: { order_items: { include: :product } }) %>" 
+		data-user="<%= current_user.to_json %>">
+	</div>
+  
+</main>

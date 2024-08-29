@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import ImageGallery from './ImageGallery';  // Make sure to create this file
-
+import axios from 'axios';
 
 const ProductDetails = ({ product }) => {
     const productElement = document.getElementById('productDetails');
@@ -9,10 +9,14 @@ const ProductDetails = ({ product }) => {
     const [selectedVariants, setSelectedVariants] = useState({});
     const [totalPrice, setTotalPrice] = useState(0);
     const [notes, setNotes] = useState('');
+    const [csrfToken, setCsrfToken] = useState('');
 
     useEffect(() => {
         initializeVariantsAndPrice();
+        const token = document.querySelector('meta[name="csrf-token"]')?.content;
+        setCsrfToken(token);
     }, [product]);
+
 
     const initializeVariantsAndPrice = () => {
         const initialVariants = {};
@@ -46,21 +50,41 @@ const ProductDetails = ({ product }) => {
         setTotalPrice(price);
     };
 
-    const handleAddToCart = () => {
+    const handleAddToCart = async () => {
         const orderItem = {
-        product_id: product.id,
-        quantity: 1,
-        specs: Object.entries(selectedVariants).map(([componentId, variantId]) => {
-            const component = product.components.find(c => c.id === parseInt(componentId));
-            const variant = component.variants.find(v => v.id === variantId);
-            return `${component.name}: ${variant.name}`;
-        }).join('\n'),
-        notes: notes,
-        total_price: totalPrice
+            product_id: product.id,
+            quantity: 1,
+            specs: Object.entries(selectedVariants).map(([componentId, variantId]) => {
+                const component = product.components.find(c => c.id === parseInt(componentId));
+                const variant = component.variants.find(v => v.id === variantId);
+                return `${component.name}: ${variant.name}`;
+            }).join('\n'),
+            notes: notes,
+            total_price: totalPrice
         };
-        // Here you would typically dispatch an action or call a function to add the item to the cart
-        console.log('Adding to cart:', orderItem);
-        setShowModal(false);
+
+        try {
+            const response = await axios.post('/api/v1/order_items', 
+                { order_item: orderItem },
+                {
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': csrfToken
+                    }
+                }
+            );
+            if (response.data.status === 'success') {
+                console.log('Added to cart successfully:', response.data.order_item);
+                // You might want to update the UI here, e.g., show a success message
+                setShowModal(false);
+            } else {
+                console.error('Error adding to cart:', response.data.errors);
+                // Handle the error, e.g., show an error message to the user
+            }
+        } catch (error) {
+            console.error('Error adding to cart:', error);
+            // Handle the error, e.g., show an error message to the user
+        }
     };
 
     // Helper function to format price

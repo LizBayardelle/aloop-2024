@@ -1,9 +1,15 @@
 import 'bootstrap'
-import tinymce from 'tinymce/tinymce';
 import React from 'react'
+import axios from 'axios';
 import { createRoot } from 'react-dom/client'
 import ProductDetails from './components/ProductDetails'
 import AdminProducts from './components/AdminProducts'
+import AdminSales from './components/AdminSales';
+import Checkout from './components/Checkout'
+
+
+const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+axios.defaults.headers.common['X-CSRF-Token'] = token;
 
 
 
@@ -24,61 +30,51 @@ try {
 			  initialBikeModels={bikeModels} 
 			/>
 		  );
-		} else {
-		  console.warn('Admin products container not found');
 		}
 	});
 
-	const renderReactComponent = () => {
-		
-		try {
-			const productDetailsContainer = document.getElementById('productDetails');
-			if (productDetailsContainer) {
-				const productData = JSON.parse(productDetailsContainer.getAttribute('data-product'));
-				const root = createRoot(productDetailsContainer);
-				root.render(React.createElement(ProductDetails, { product: productData }));
-			} 
-
-
-		} catch (error) {
-			console.error('Error in renderReactComponent:', error);
+	document.addEventListener('DOMContentLoaded', () => {
+		const checkoutContainer = document.getElementById('checkout-root');
+		if (checkoutContainer) {
+		  const order = JSON.parse(checkoutContainer.getAttribute('data-order'));
+		  const user = JSON.parse(checkoutContainer.getAttribute('data-user'));
+	  
+		  const root = createRoot(checkoutContainer);
+		  root.render(
+			<Checkout 
+			  initialOrder={order} 
+			  initialUser={user}
+			/>
+		  );
 		}
-	}
-
-	const initializePage = () => {
-		
-		try {
-			// TinyMCE initialization (if you're using it)
-			if (typeof tinymce !== 'undefined') {
-				const tinymceElements = document.querySelectorAll('.tinymce');
-				if (tinymceElements.length > 0) {
-				tinymce.init({
-					selector: '.tinymce',
-					plugins: 'paste link',
-					toolbar: 'undo redo | styleselect | bold italic | link image',
-					menubar: 'file edit view insert format tools table help',
-				});
-				
-				} else {
-				console.warn('No elements found for TinyMCE initialization');
-				}
-			} else {
-				console.warn('TinyMCE is not defined');
-			}
-
-			// React component rendering
-			renderReactComponent();
-		} catch (error) {
-			console.error('Error during initialization:', error);
-		}
-	}
-
-	// Use both DOMContentLoaded and load events
-	['DOMContentLoaded', 'load'].forEach(event => {
-		window.addEventListener(event, () => {
-		initializePage();
-		});
 	});
+
+	document.addEventListener('DOMContentLoaded', () => {
+		const productDetailsContainer = document.getElementById('product-details-root');
+		if (productDetailsContainer) {
+			const product = JSON.parse(productDetailsContainer.getAttribute('data-product'));
+			const root = createRoot(productDetailsContainer);
+		  root.render(
+			<ProductDetails 
+			  product={product} 
+			/>
+		  );
+		}
+	});
+
+	document.addEventListener('DOMContentLoaded', () => {
+	const adminSalesContainer = document.getElementById('admin-sales-root');
+	if (adminSalesContainer) {
+		const orders = JSON.parse(adminSalesContainer.getAttribute('data-orders'));
+		const root = createRoot(adminSalesContainer);
+		root.render(
+		<AdminSales initialOrders={orders} />
+		);
+	}
+	});
+
+
+
 
 } catch (error) {
 	console.error('Error in application.js:', error);
