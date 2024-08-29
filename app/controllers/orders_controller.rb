@@ -140,7 +140,7 @@ class OrdersController < ApplicationController
       :country,
       :shipping_chosen,
       :shipping_choice,
-      ::shipping_method_name,
+      :shipping_method_name,
       :shipping_choice_img,
       :shipping_cost,
       :final_price,
