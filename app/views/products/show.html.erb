@@ -1,13 +1,3 @@
-<div id="product-details-root" data-product="<%= @product.to_json(
-  include: { 
-    components: { 
-      include: { 
-        variants: { 
-          methods: :photos_urls
-        } 
-      } 
-    } 
-  }
-).gsub('"', '&quot;').html_safe %>">
+<div id="product-details-root" 
+     data-product="<%= @prepared_product.to_json.gsub('"', '&quot;').html_safe %>">
 </div>
-

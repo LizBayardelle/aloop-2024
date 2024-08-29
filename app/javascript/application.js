@@ -52,8 +52,8 @@ try {
 	document.addEventListener('DOMContentLoaded', () => {
 		const productDetailsContainer = document.getElementById('product-details-root');
 		if (productDetailsContainer) {
-			const product = JSON.parse(productDetailsContainer.getAttribute('data-product'));
-			const root = createRoot(productDetailsContainer);
+		  const product = JSON.parse(productDetailsContainer.getAttribute('data-product'));
+		  const root = createRoot(productDetailsContainer);
 		  root.render(
 			<ProductDetails 
 			  product={product} 

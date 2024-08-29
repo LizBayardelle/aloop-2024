@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-
 const ImageGallery = ({ product }) => {
   const [mainImage, setMainImage] = useState('');
   const [allImages, setAllImages] = useState([]);

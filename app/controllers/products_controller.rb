@@ -10,6 +10,7 @@ class ProductsController < ApplicationController
 
   def show
     @new_order_item = OrderItem.new
+    @prepared_product = prepare_product_data(@product)
   end
 
 
@@ -61,6 +62,37 @@ class ProductsController < ApplicationController
   end
 
   private
+
+    def prepare_product_data(product)
+      {
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        active: product.active,
+        meta_title: product.meta_title,
+        meta_keywords: product.meta_keywords,
+        height: product.height,
+        width: product.width,
+        depth: product.depth,
+        subtitle: product.subtitle,
+        size: product.size,
+        application_notes: product.application_notes,
+        components: product.components.map do |component|
+          {
+            id: component.id,
+            name: component.name,
+            variants: component.variants.map do |variant|
+              {
+                id: variant.id,
+                name: variant.name,
+                price: variant.price,
+                photos_urls: variant.photos.map { |photo| url_for(photo) }
+              }
+            end
+          }
+        end
+      }
+    end
 
     def set_product
       @product = Product.find(params[:id])
