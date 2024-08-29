@@ -86,7 +86,7 @@ class ProductsController < ApplicationController
                 id: variant.id,
                 name: variant.name,
                 price: variant.price,
-                photos_urls: variant.photos.map { |photo| url_for(photo) }
+                photos_urls: variant.photos.map { |photo| rails_blob_url(photo) }
               }
             end
           }
