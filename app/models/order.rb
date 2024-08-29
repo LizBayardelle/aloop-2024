@@ -4,7 +4,16 @@ class Order < ApplicationRecord
   has_many :products, through: :order_items
   has_many :order_items
  
- 
+  def total_price
+    order_items.sum(&:total_price)
+  end
+  
+  def price
+    order_items.sum do |item|
+      (item.product.price || 0) * (item.quantity || 0)
+    end
+  end
+
   def shipping_info_complete?
     ship_to_name.present? &&
     customer_email.present? &&
