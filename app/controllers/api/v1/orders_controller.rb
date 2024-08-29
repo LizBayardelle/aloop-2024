@@ -10,9 +10,11 @@ class Api::V1::OrdersController < ApplicationController
 		render json: @orders
 	end
 
-
 	def show
-		render json: @order, include: ['order_items', 'order_items.product']
+		@order = Order.find(params[:id])
+		serialized_order = OrderSerializer.new(@order).as_json
+		Rails.logger.debug "Serialized Order: #{serialized_order.inspect}"
+		render json: serialized_order
 	end
 
   

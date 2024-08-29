@@ -4,14 +4,14 @@ class Order < ApplicationRecord
   has_many :products, through: :order_items
   has_many :order_items
  
-  def total_price
-    order_items.sum(&:total_price)
+  def calculate_total_price
+    total = order_items.sum(&:total_price)
+    update(price: total)
+    total
   end
-  
-  def price
-    order_items.sum do |item|
-      (item.product.price || 0) * (item.quantity || 0)
-    end
+
+  def total_price
+    price || calculate_total_price
   end
 
   def shipping_info_complete?
@@ -42,12 +42,7 @@ class Order < ApplicationRecord
   end
 
   def price
-    order_total = 0
-    self.order_items.each do |item|
-      product = Product.find(item.product_id)
-      order_total += ( product.price * item.quantity )
-    end
-    order_total
+    order_items.sum(&:total_price)
   end
 
 

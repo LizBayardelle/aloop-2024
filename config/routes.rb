@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
- 
+
   root 'home#index'
   
   devise_for :users, :controllers => { registrations: 'registrations' }
@@ -37,7 +37,11 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :products
       resources :components
-      resources :variants
+      resources :variants do
+        collection do
+          get 'images'
+        end
+      end
       resources :product_categories, only: [:index]
       resources :bike_models, only: [:index]
       resources :order_items

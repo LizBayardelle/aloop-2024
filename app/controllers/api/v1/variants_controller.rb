@@ -25,6 +25,16 @@ class Api::V1::VariantsController < ApplicationController
       end
     end
   
+    def images
+      variant_ids = params[:variant_ids].split(',')
+      variants = Variant.where(id: variant_ids)
+      
+      image_urls = variants.each_with_object({}) do |variant, hash|
+        hash[variant.id] = variant.photos_urls.first if variant.photos_urls.present?
+      end
+    
+      render json: image_urls
+    end
     
     def update
       if @variant.update(variant_params)

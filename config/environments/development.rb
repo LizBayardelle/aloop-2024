@@ -15,8 +15,17 @@ Rails.application.configure do
   # Do not eager load code on boot.
   config.eager_load = false
 
-  # FOR DEVISE
+  # Set host for URL generation
+  config.active_storage.service = :local
+  config.action_controller.default_url_options = { host: 'localhost', port: 3000 }
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+
+  # For ActiveStorage URL generation
+  Rails.application.routes.default_url_options = { host: 'localhost', port: 3000 }
+
+
+  # Add this line to allow ActiveStorage URL generation in serializers
+  config.active_storage.resolve_model_to_route = :rails_storage_proxy
 
   # Show full error reports.
   config.consider_all_requests_local = true
@@ -39,12 +48,6 @@ Rails.application.configure do
 
     config.cache_store = :null_store
   end
-
-  # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :local
-  Rails.application.routes.default_url_options[:host] = 'localhost:3000'
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
-  
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false

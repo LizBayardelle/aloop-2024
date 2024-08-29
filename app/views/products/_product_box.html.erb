@@ -1,31 +1,31 @@
-<% cheapest_price = product.cheapest_variant_price %>
-
-<div class="col-sm-6 col-md-3">
-	<div class="product-box h-100">
-		<%= link_to product_path(product) do %>
-			<div class="">
-				<% demo_picture_url = "" %>
-				<% product.components.each do |component| %>
-					<% component.variants.each do |variant| %>
-						<% if variant.photos.count != 0 %>
-							<% demo_picture_url = url_for(variant.photos.first) %>
-						<% end %>
-					<% end %>
-				<% end %>
-				<img src="<%= demo_picture_url %>">
-			</div>
-		<% end %>
-		<div class="p-3">
-			<h3 class="h4 mt-3 mb-0"><%= product.name %></h3>
-			<p><small><em><%= product.undertitle %></em></small></p>
-			<p class="h3 color-blue mb-2"><%= number_to_currency(cheapest_price, precision: 2) %></p>
-				<% if cheapest_price %>
-				<%= link_to number_to_currency(cheapest_price), product_path(product), class: "btn btn-red mt-2" %>
-			<% else %>
-				<%= link_to "Buy Now", product_path(product), class: "btn btn-redmt-2" %>
-			<% end %>
-		</div> <!-- text padding -->
-	</div> <!-- product box -->
-</div> <!-- box -->
-
-
+<div class="col-sm-6 col-md-3 mb-4">
+  <div class="card h-100 shadow-sm">
+    <%= link_to product_path(product), class: "text-decoration-none" do %>
+      <div class="position-relative">
+        <% demo_picture_url = "" %>
+        <% product.components.each do |component| %>
+          <% component.variants.each do |variant| %>
+            <% if variant.photos.count != 0 %>
+              <% demo_picture_url = url_for(variant.photos.first) %>
+            <% end %>
+          <% end %>
+        <% end %>
+        <%= image_tag demo_picture_url, class: "card-img-top", alt: product.name, style: "height: 200px; object-fit: cover;" %>
+        <div class="position-absolute top-0 end-0 p-2">
+          <span class="badge bg-red"><%= product.display_price %></span>
+        </div>
+      </div>
+      <div class="card-body d-flex flex-column">
+        <h3 class="card-title h5 mb-1"><%= product.name %></h3>
+        <p class="card-text small text-muted mb-2"><em><%= product.undertitle %></em></p>
+        <div class="mt-auto">
+          <% if product.display_price.include?(" - ") %>
+            <%= link_to "Customize It", product_path(product), class: "btn btn-outline-red btn-sm w-100" %>
+          <% else %>
+            <%= link_to product.display_price, product_path(product), class: "btn btn-outline-red btn-sm w-100" %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

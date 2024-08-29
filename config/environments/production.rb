@@ -28,6 +28,9 @@ Rails.application.configure do
     domain: 'aloop.com',
     enable_starttls_auto: true
   }
+
+  # Add this line to allow ActiveStorage URL generation in serializers
+  config.active_storage.resolve_model_to_route = :rails_storage_proxy
   
   # Code is not reloaded between requests.
   config.enable_reloading = false

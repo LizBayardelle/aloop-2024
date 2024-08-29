@@ -31,7 +31,7 @@ const CheckoutProgressBar = ({ currentStep, totalSteps }) => {
         {steps.map((step, index) => (
           <div
             key={index}
-            className={`text-center fw-light uppercase ${index < currentStep ? 'text-primary fw-bold' : 'text-muted'}`}
+            className={`text-center fw-light uppercase ${index < currentStep ? 'text-blue fw-bold' : 'text-muted'}`}
             style={{ flex: 1 }}
           >
             <small>{step}</small>
