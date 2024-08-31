@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .section { margin-bottom: 20px; }
+        h2 { color: #333; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h1>New Order Received - #<%= @order['id'] %></h1>
+
+    <div class="section">
+        <h2>Customer Information</h2>
+        <table>
+        <tr><th>Name</th><td><%= @order['ship_to_name'] %></td></tr>
+        <tr><th>Email</th><td><%= @order['customer_email'] %></td></tr>
+        <tr><th>Address</th><td>
+            <%= @order['address_line_1'] %><br>
+            <%= @order['address_line_2'] if @order['address_line_2'].present? %>
+            <%= @order['city'] %>, <%= @order['state'] %> <%= @order['postal_code'] %><br>
+            <%= @order['country'] %>
+        </td></tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Order Information</h2>
+        <table>
+        <tr><th>Order Status</th><td><%= @order['order_status'] %></td></tr>
+        <tr><th>Payment Status</th><td><%= @order['paypal_payment_status'] %></td></tr>
+        <tr><th>Total Price</th><td>$<%= @order['final_price'] %></td></tr>
+        <tr><th>Shipping Cost</th><td>$<%= @order['shipping_cost'] %></td></tr>
+        <tr><th>Shipping Method</th><td><%= @order['shipping_method_name'] %></td></tr>
+        <tr><th>PayPal Order ID</th><td><%= @order['paypal_order_id'] %></td></tr>
+        <tr><th>PayPal Transaction ID</th><td><%= @order['paypal_transaction_id'] %></td></tr>
+        <tr><th>Paid At</th><td><%= @order['paid_at'] %></td></tr>
+        </table>
+    </div>
+
+
+    <div class="section">
+        <h2>Ordered Items</h2>
+        <% @order_items.each do |item| %>
+            <h3><%= item['product_name'] %> (Quantity: <%= item['quantity'] %>)</h3>
+            <table>
+                <tr><th>Specs</th><td><%= item['specs'] %></td></tr>
+                <tr><th>Notes</th><td><%= item['notes'] %></td></tr>
+                <tr><th>Total Price</th><td>$<%= item['total_price'] %></td></tr>
+            </table>
+            
+            <h4>Selected Variants</h4>
+            <% if item['variants'].present? %>
+                <table>
+                    <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>SKU</th>
+                    <th>Vendor</th>
+                    <th>Vendor Parts Number</th>
+                    </tr>
+                    <% item['variants'].each do |variant| %>
+                        <tr>
+                            <td><%= variant.name %></td>
+                            <td>$<%= variant.price %></td>
+                            <td><%= variant.sku %></td>
+                            <td><%= variant.vendor %></td>
+                            <td><%= variant.vendor_parts_number %></td>
+                        </tr>
+                    <% end %>
+                </table>
+            <% else %>
+                <p>No variant information available for this item.</p>
+            <% end %>
+        <% end %>
+    </div>
+    </body>
+</html>

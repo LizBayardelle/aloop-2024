@@ -6,7 +6,7 @@ class Api::V1::OrdersController < ApplicationController
   
 
 	def index
-		@orders = Order.order(created_at: :desc)
+		@orders = Order.where(paypal_payment_status: "COMPLETED").order(created_at: :desc)
 		render json: @orders
 	end
 

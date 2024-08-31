@@ -77,7 +77,12 @@ const CheckoutCart = ({ order, onUpdateOrder, onNext }) => {
                 <div key={item.id} className="row mb-4 align-items-center">
                   <div className="col-md-6">
                     <h5 className="mb-1">{item.product.name}</h5>
-                    {item.specs && <p className="mb-0 text-muted small">{item.specs}</p>}
+                    {item.specs && (
+                      <p
+                        className="mb-0 text-muted small"
+                        dangerouslySetInnerHTML={{ __html: item.specs.replace(/\n/g, '<br />') }}
+                      />
+                    )}
                     {item.notes && <p className="mb-0"><small className="text-muted"><em>{item.notes}</em></small></p>}
                   </div>
                   <div className="col-md-2 text-center">

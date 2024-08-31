@@ -106,6 +106,80 @@ const CheckoutPayment = ({ order, onUpdateOrder, onNext, onBack }) => {
     console.log('Shipping price:', order.shipping_price);
   }, [order]);
 
+
+  const sendAdminNotification = async (orderDetails) => {
+    try {
+      const response = await fetch('/api/v1/notify_admin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({
+          order: {
+            id: orderDetails.id,
+            paid: orderDetails.paid,
+            token: orderDetails.token,
+            price: orderDetails.price,
+            user_id: orderDetails.user_id,
+            move_to_checkout: orderDetails.move_to_checkout,
+            shipping_info: orderDetails.shipping_info,
+            address_line_1: orderDetails.address_line_1,
+            address_line_2: orderDetails.address_line_2,
+            city: orderDetails.city,
+            state: orderDetails.state,
+            postal_code: orderDetails.postal_code,
+            country: orderDetails.country,
+            ship_to_name: orderDetails.ship_to_name,
+            shipping_chosen: orderDetails.shipping_chosen,
+            shipping_choice: orderDetails.shipping_choice,
+            shipping_choice_img: orderDetails.shipping_choice_img,
+            customer_email: orderDetails.customer_email,
+            final_price: orderDetails.final_price,
+            paypal_order_id: orderDetails.paypal_order_id,
+            paypal_payer_id: orderDetails.paypal_payer_id,
+            paypal_payer_email: orderDetails.paypal_payer_email,
+            paypal_payment_status: orderDetails.paypal_payment_status,
+            paypal_transaction_id: orderDetails.paypal_transaction_id,
+            order_status: orderDetails.order_status,
+            shipping_cost: orderDetails.shipping_cost,
+            paid_at: orderDetails.paid_at,
+            shipping_method_name: orderDetails.shipping_method_name,
+          },
+          order_items: orderDetails.order_items.map(item => ({
+            id: item.id,
+            product_id: item.product_id,
+            quantity: item.quantity,
+            specs: item.specs,
+            notes: item.notes,
+            total_price: item.total_price,
+            selected_variant_ids: item.selected_variant_ids,
+            product_name: item.product.name, // Assuming product name is available
+            variants: item.selected_variant_ids.map(variantId => {
+              const variant = item.product.variants.find(v => v.id === variantId);
+              return {
+                id: variant.id,
+                name: variant.name,
+                price: variant.price,
+                sku: variant.sku,
+                vendor: variant.vendor,
+                vendor_parts_number: variant.vendor_parts_number,
+              };
+            }),
+          })),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send admin notification');
+      }
+
+      console.log('Admin notification sent successfully');
+    } catch (error) {
+      console.error('Error sending admin notification:', error);
+    }
+  };
+
   return (
     <div className="container my-5">
       <h1 className="text-center mb-4">Complete Your Payment</h1>

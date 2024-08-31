@@ -88,15 +88,15 @@ const AdminSales = () => {
           <tbody>
             {orders.map(order => (
               <tr key={order.id}>
-                <td>{new Date(order.created_at).toLocaleString()}</td>
-                <td>{order.paid_at ? new Date(order.paid_at).toLocaleString() : 'Not paid'}</td>
-                <td>{order.ship_to_name || order.customer_email}</td>
-                <td>${parseFloat(order.final_price).toFixed(2)}</td>
-                <td>${parseFloat(order.shipping_cost).toFixed(2)}</td>
-                <td>{order.shipping_method_name || 'N/A'}</td>
-                <td>{order.paypal_order_id}</td>
-                <td>{order.paypal_transaction_id}</td>
-                <td>{order.paypal_payment_status}</td>
+                <td className="small">{new Date(order.created_at).toLocaleString()}</td>
+                <td className="small">{order.paid_at ? new Date(order.paid_at).toLocaleString() : 'Not paid'}</td>
+                <td className="small">{order.ship_to_name || order.customer_email}</td>
+                <td className="small">${parseFloat(order.final_price).toFixed(2)}</td>
+                <td className="small">${parseFloat(order.shipping_cost).toFixed(2)}</td>
+                <td className="small">{order.shipping_method_name || 'N/A'}</td>
+                <td className="small">{order.paypal_order_id}</td>
+                <td className="small">{order.paypal_transaction_id}</td>
+                <td className="small">{order.paypal_payment_status}</td>
               </tr>
             ))}
           </tbody>
