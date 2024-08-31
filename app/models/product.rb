@@ -9,6 +9,14 @@ class Product < ApplicationRecord
     has_many :components, dependent: :destroy
     has_many :variants, through: :components
   
+    def full_image_urls
+      components.flat_map do |component|
+        component.variants.flat_map do |variant|
+          variant.photos.map { |photo| rails_blob_url(photo) }
+        end
+      end
+    end
+    
     def display_price
       min_price = calculate_min_price
       max_price = calculate_max_price

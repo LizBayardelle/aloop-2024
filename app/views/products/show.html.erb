@@ -1,3 +1,219 @@
-<div id="product-details-root" 
-     data-product="<%= @prepared_product.to_json.gsub('"', '&quot;').html_safe %>">
+<%# app/views/products/show.html.erb %>
+
+<div class="container py-5">
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="image-gallery">
+        <div class="main-image-container">
+          <% main_image = @product.components.flat_map(&:variants).flat_map(&:photos).first %>
+          <% if main_image %>
+            <%= image_tag url_for(main_image), alt: "Main product", class: "img-fluid main-image", id: "mainImage" %>
+          <% else %>
+            <div class="no-image">
+              <span>No image available</span>
+            </div>
+          <% end %>
+        </div>
+        <div class="thumbnails-container mt-3">
+          <% @product.components.each do |component| %>
+            <% component.variants.each do |variant| %>
+              <% if variant.photos.attached? %>
+                <% variant.photos.each_with_index do |photo, index| %>
+                  <div class="thumbnail <%= 'active' if photo == main_image %>" data-full-image="<%= url_for(photo) %>">
+                    <%= image_tag url_for(photo), alt: "Thumbnail #{index + 1}", class: "img-fluid" %>
+                  </div>
+                <% end %>
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+      <p class="h2 mt-4"><%= @product.display_price %></p>
+    </div>
+    <div class="col-sm-6">
+      <h1 class="pb-2"><%= @product.name %></h1>
+      <p class="h4"><%= @product.description.html_safe %></p>
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#customizeModal">
+        Customize and Add to Cart
+      </button>
+    </div>
+  </div>
 </div>
+
+<div class="modal fade" id="customizeModal" tabindex="-1" aria-labelledby="customizeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="customizeModalLabel">Customize Your <%= @product.name %></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h3 class="text-center">Total Price: <span id="totalPrice"><%= @product.display_price %></span></h3>
+        
+        <%= form_with(model: OrderItem.new, url: order_items_path, local: false, id: 'addToCartForm') do |form| %>
+          <%= form.hidden_field :product_id, value: @product.id %>
+          <%= form.hidden_field :quantity, value: 1 %>
+          <%= form.hidden_field :specs, id: 'specsField' %>
+          <%= form.hidden_field :selected_variant_ids, id: 'selectedVariantIdsField' %>
+          
+          <% @product.components.each do |component| %>
+            <div class="component-section" data-component-id="<%= component.id %>">
+              <h4 class="mt-3">Choose a <span class="font-weight-bold"><%= component.name %></span></h4>
+              <div class="row">
+                <% component.variants.each do |variant| %>
+                  <div class="col-6 mb-3">
+                    <div class="selectbox" data-variant-id="<%= variant.id %>" data-price="<%= variant.price %>" data-name="<%= variant.name %>">
+                      <div class="row">
+                        <div class="col-4">
+                          <% if variant.photos.attached? && variant.photos.first.present? %>
+                            <%= image_tag url_for(variant.photos.first), class: 'img-fluid', style: 'height: 70px; width: auto; object-fit: cover;', alt: variant.name %>
+                          <% else %>
+                            <%= image_tag 'placeholder.jpg', class: 'img-fluid', style: 'height: 70px; width: auto; object-fit: cover;', alt: 'Placeholder' %>
+                          <% end %>
+                        </div>
+                        <div class="col-8 text-left">
+                          <strong><%= variant.name %></strong>
+                          <p><%= number_to_currency(variant.price) %></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+          
+          <div class="mb-3">
+            <%= form.label :notes, "Tell Us About Your Project!", class: "form-label" %>
+            <%= form.text_area :notes, class: "form-control" %>
+          </div>
+          
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <%= form.submit "Add to Cart", class: "btn btn-primary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('addToCartForm');
+    const totalPriceElement = document.getElementById('totalPrice');
+    const selectboxes = document.querySelectorAll('.selectbox');
+    const specsField = document.getElementById('specsField');
+    const selectedVariantIdsField = document.getElementById('selectedVariantIdsField');
+    const customizeModal = document.getElementById('customizeModal');
+      const mainImage = document.getElementById('mainImage');
+      const thumbnails = document.querySelectorAll('.thumbnail');
+      
+      // Image gallery functionality
+      thumbnails.forEach(thumbnail => {
+        thumbnail.addEventListener('click', function() {
+          mainImage.src = this.dataset.fullImage;
+          thumbnails.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+      
+      // Variant selection functionality
+      selectboxes.forEach(box => {
+        box.addEventListener('click', function() {
+          console.log("CLICKY")
+          const componentSection = this.closest('.component-section');
+          componentSection.querySelectorAll('.selectbox').forEach(b => {
+            b.classList.remove('active');
+            b.style.border = 'none';
+          });
+          this.classList.add('active');
+          this.style.border = '3px solid blue';
+          updateTotalPrice();
+          updateSpecs();
+          updateSelectedVariantIds();
+        });
+      });
+      
+      function updateTotalPrice() {
+        let total = 0;
+        document.querySelectorAll('.selectbox.active').forEach(box => {
+          total += parseFloat(box.dataset.price);
+        });
+        totalPriceElement.textContent = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(total);
+      }
+      
+      function updateSpecs() {
+        const specs = [];
+        document.querySelectorAll('.component-section').forEach(section => {
+          const componentName = section.querySelector('h4 span').textContent;
+          const selectedVariant = section.querySelector('.selectbox.active');
+          if (selectedVariant) {
+            specs.push(`${componentName}: ${selectedVariant.dataset.name}`);
+          }
+        });
+        specsField.value = specs.join('\n');
+      }
+      
+      function updateSelectedVariantIds() {
+        const ids = [];
+        document.querySelectorAll('.selectbox.active').forEach(box => {
+          ids.push(box.dataset.variantId);
+        });
+        selectedVariantIdsField.value = ids.join(',');
+      }
+      
+      function closeModal() {
+        customizeModal.style.display = 'none';
+        document.body.classList.remove('modal-open');
+        const modalBackdrop = document.querySelector('.modal-backdrop');
+        if (modalBackdrop) {
+          modalBackdrop.remove();
+        }
+      }
+      
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        
+        // Convert selected_variant_ids to an array
+        const selectedVariantIds = formData.get('order_item[selected_variant_ids]').split(',');
+        formData.delete('order_item[selected_variant_ids]');
+        selectedVariantIds.forEach(id => {
+          formData.append('order_item[selected_variant_ids][]', id);
+        });
+        
+        fetch(this.action, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
+            'Accept': 'application/json'
+          }
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.status === 'success') {
+            console.log('Added to cart successfully:', data.order_item);
+            closeModal();
+            // Show a success message
+            alert('Item added to cart successfully!');
+            // Redirect to the order page
+            window.location.href = '<%= page_path("cart") %>';
+          } else {
+            console.error('Error adding to cart:', data.errors);
+            alert('There was a problem adding this item to your order: ' + (data.errors ? data.errors.join(', ') : 'Unknown error'));
+          }
+        })
+        .catch(error => {
+          console.error('Error adding to cart:', error);
+          alert('There was a problem adding this item to your order. Please try again.');
+        });
+      });
+    });
+  </script>

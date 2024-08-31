@@ -3,9 +3,6 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import ImageGallery from './ImageGallery';
 import axios from 'axios';
 
-// If using Webpacker or another modern JS bundler, uncomment the next line:
-// import placeholderImage from '/app/assets/images/placeholder.jpg';
-
 const ProductDetails = ({ product }) => {
     const [showModal, setShowModal] = useState(false);
     const [selectedVariants, setSelectedVariants] = useState({});
@@ -15,10 +12,12 @@ const ProductDetails = ({ product }) => {
     const [variantImages, setVariantImages] = useState({});
 
     useEffect(() => {
-        initializeVariants();
-        const token = document.querySelector('meta[name="csrf-token"]')?.content;
-        setCsrfToken(token);
-        initializeImages();
+        if (product) {
+            initializeVariants();
+            const token = document.querySelector('meta[name="csrf-token"]')?.content;
+            setCsrfToken(token);
+            initializeImages();
+        }
     }, [product]);
 
     const initializeVariants = () => {
@@ -101,6 +100,10 @@ const ProductDetails = ({ product }) => {
         const number = parseFloat(price);
         return isNaN(number) ? 'N/A' : `$${number.toFixed(2)}`;
     };
+
+    if (!product) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="container py-5">

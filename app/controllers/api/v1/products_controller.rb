@@ -8,7 +8,7 @@ class Api::V1::ProductsController < ApplicationController
   
     def show
       @product = Product.includes(components: { variants: [:bike_models, photos_attachments: :blob] }).find(params[:id])
-      render json: @product, serializer: ProductSerializer, include: ['components', 'components.variants']
+      @product_json = ProductSerializer.new(@product, include: ['components', 'components.variants']).to_json
     end
   
     def create

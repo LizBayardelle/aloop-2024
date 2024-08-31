@@ -75,20 +75,7 @@ const CheckoutCart = ({ order, onUpdateOrder, onNext }) => {
             <div className="card-body">
               {order.order_items.map(item => (
                 <div key={item.id} className="row mb-4 align-items-center">
-                  <div className="col-md-2">
-                    <img 
-                      src={itemImages[item.id] || PLACEHOLDER_IMAGE_URL}
-                      alt={item.product.name || 'Product image'} 
-                      className="img-fluid rounded"
-                      style={{ height: '100px', width: '100px', objectFit: 'cover' }}
-                      onError={(e) => {
-                        console.error(`Failed to load image: ${e.target.src}`);
-                        e.target.src = PLACEHOLDER_IMAGE_URL;
-                        setItemImages(prev => ({ ...prev, [item.id]: PLACEHOLDER_IMAGE_URL }));
-                      }}
-                    />
-                  </div>
-                  <div className="col-md-4">
+                  <div className="col-md-6">
                     <h5 className="mb-1">{item.product.name}</h5>
                     {item.specs && <p className="mb-0 text-muted small">{item.specs}</p>}
                     {item.notes && <p className="mb-0"><small className="text-muted"><em>{item.notes}</em></small></p>}

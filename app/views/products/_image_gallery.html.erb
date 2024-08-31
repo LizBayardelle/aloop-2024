@@ -1,89 +1,42 @@
-<% photo_urls_array = [] %>
+<%# app/views/products/_image_gallery.html.erb %>
 
-<% @product.components.each do |component| %>
-  <% component.variants.each do |variant| %>
-    <% if variant.photos != [] %>
-      <% variant.photos.each do |photo| %>
-        <% photo_urls_array += [url_for(photo)] %>
+<div class="image-gallery">
+  <div class="main-image-container">
+    <% main_image = find_main_image(product) %>
+    <% if main_image %>
+      <%= image_tag url_for(main_image), alt: "Main product", class: "img-fluid main-image", id: "mainImage" %>
+    <% else %>
+      <div class="no-image">
+        <span>No image available</span>
+      </div>
+    <% end %>
+  </div>
+  <div class="thumbnails-container mt-3">
+    <% product.components.each do |component| %>
+      <% component.variants.each do |variant| %>
+        <% if variant.photos.attached? %>
+          <% variant.photos.each_with_index do |photo, index| %>
+            <div class="thumbnail <%= 'active' if photo == main_image %>" data-full-image="<%= url_for(photo) %>">
+              <%= image_tag url_for(photo), alt: "Thumbnail #{index + 1}", class: "img-fluid" %>
+            </div>
+          <% end %>
+        <% end %>
       <% end %>
     <% end %>
-  <% end %>
-<% end %>
-
-
-<style>
-  .gallery-column {
-    float: left;
-    margin-bottom: 15px;
-    overflow-y: hidden;
-  }
-
-  .gallery-column img {
-    opacity: 0.8; 
-    cursor: pointer; 
-    height: 50px;
-    width:  auto;
-    padding-right: 10px;
-  }
-
-  .gallery-column img:hover, {
-    opacity: 1;
-  }
-
-  .activeImg {
-    opacity: 1 !important;
-  }
-
-  .gallery-row:after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-
-  .gallery-container {
-    position: relative;
-  }
-
-  #imgtext {
-    position: absolute;
-    bottom: 15px;
-    left: 15px;
-    color: white;
-    font-size: 20px;
-  }
-</style>
-
-
-
-<div class="gallery-row">
-  <% photo_urls_array.each_with_index do |src, index| %>
-    <div class="gallery-column">
-      <img class="gallery-image" id="gallery<%= index %>" src="<%= src %>" alt="<%= @product.name %>" style="width:100%">
-    </div>
-  <% end %>
-</div>
-
-
-<div class="gallery-container">
-  <% photo_urls_array.each_with_index do |src, index| %>
-      <img id="expandedImg<%= index %>" class="hidden expandedImg" style="width:100%" src="<%= src %>">
-  <% end %>
-  <div id="imgtext"></div>
+  </div>
 </div>
 
 <script>
-  $( document ).ready(function() {
-    $("#expandedImg0").removeClass("hidden");
-    <% photo_urls_array.each_with_index do |src, index| %>
-      $("#gallery<%= index %>").click(function() {
-        $(".gallery-image").removeClass("activeImg");
-        $("#gallery<%= index %>").addClass("activeImg")
-        $(".expandedImg").addClass("hidden");
-        $("#expandedImg<%= index %>").removeClass("hidden");
+  document.addEventListener('DOMContentLoaded', function() {
+    const mainImage = document.getElementById('mainImage');
+    const thumbnails = document.querySelectorAll('.thumbnail');
+    
+    thumbnails.forEach(thumbnail => {
+      thumbnail.addEventListener('click', function() {
+        mainImage.src = this.dataset.fullImage;
+        thumbnails.forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
       });
-    <% end %>
+    });
   });
 </script>
-
-
-

@@ -3,19 +3,27 @@ class OrderItemsController < ApplicationController
   def create
     puts params.inspect
     
-    # if OrderItem.where(order_id: @current_order.id, product_id: params[:order_item][:product_id]).count != 0
-    #   @order_item = OrderItem.where(order_id: @current_order.id, product_id: params[:order_item][:product_id]).first
-    #   @order_item.quantity += params[:order_item][:quantity].to_i
-    #   @order_item.save
-    # else
-      @order_item = OrderItem.new(order_params)
-    # end
+    @order_item = OrderItem.new(order_params)
+    @order_item.order = @current_order
+    
+    # Convert the comma-separated string to an array of integers
+    if params[:order_item][:selected_variant_ids].is_a?(String)
+      @order_item.selected_variant_ids = params[:order_item][:selected_variant_ids].split(',').map(&:to_i)
+    end
 
     if @order_item.save
-      redirect_to order_path(@current_order)
+      respond_to do |format|
+        format.html { redirect_to order_path(@current_order) }
+        format.json { render json: { status: 'success', order_item: @order_item } }
+      end
     else
-      flash[:error] = 'There was a problem adding this item to your order.'
-      redirect_to products_path
+      respond_to do |format|
+        format.html do
+          flash[:error] = 'There was a problem adding this item to your order.'
+          redirect_to products_path
+        end
+        format.json { render json: { status: 'error', errors: @order_item.errors.full_messages }, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -27,7 +35,6 @@ class OrderItemsController < ApplicationController
       format.html { redirect_to order_path(@current_order), notice: "Poof!  All gone." }
       format.json { head :no_content }
     end
-    
   end
 
   private
@@ -35,14 +42,12 @@ class OrderItemsController < ApplicationController
   def order_params
     params.require(:order_item).permit(
       :id,
-      :order_id,
       :product_id,
       :quantity,
       :specs,
       :notes,
-      :total_price
+      :total_price,
+      selected_variant_ids: []
     )
   end
-
 end
-
