@@ -35,6 +35,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      post 'notify_admin', to: 'admin_notifications#create'
       resources :products
       resources :components
       resources :variants do

@@ -1,4 +1,4 @@
-class Api::AdminNotificationsController < ApplicationController
+class Api::V1::AdminNotificationsController < ApplicationController
     def create
       order = Order.includes(:order_items).find(params[:order][:id])
       order_data = order.attributes
