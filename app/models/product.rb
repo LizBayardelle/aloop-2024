@@ -50,7 +50,7 @@ class Product < ApplicationRecord
   private
 
   def format_price(price)
-    "$#{sprintf('%.2f', price)}"
+    price.nil? ? "N/A" : "$#{sprintf('%.2f', price)}"
   end
 end
 

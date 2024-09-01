@@ -43,9 +43,6 @@ const FormProduct = ({ onSubmit, onCancel, categories, initialData, csrfToken })
     }
   }, [initialData]);
 
-  useEffect(() => {
-    console.log("Updated product object:", product);
-  }, [product]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;

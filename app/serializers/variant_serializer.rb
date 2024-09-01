@@ -1,7 +1,7 @@
 class VariantSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
 
-  attributes :id, :name, :description, :price, :active, :sku, :vendor, :vendor_parts_number, :component_id, :photo_urls
+  attributes :id, :name, :description, :price, :active, :sku, :vendor, :vendor_parts_number, :component_id, :photo_urls, :photos_count
 
   has_many :bike_models
 
@@ -16,6 +16,10 @@ class VariantSerializer < ActiveModel::Serializer
   rescue => e
     Rails.logger.error "Error generating photo_urls for variant #{object.id}: #{e.message}"
     []
+  end
+
+  def photos_count
+    object.photos.count
   end
 
   private

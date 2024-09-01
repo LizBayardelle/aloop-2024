@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const AdminVariant = ({ variant, onUpdate, onEdit, csrfToken }) => {
   const handleDelete = async () => {
@@ -18,6 +18,9 @@ const AdminVariant = ({ variant, onUpdate, onEdit, csrfToken }) => {
     }
   };
 
+
+  
+
   return (
     <tr>
       <td>
@@ -25,7 +28,7 @@ const AdminVariant = ({ variant, onUpdate, onEdit, csrfToken }) => {
         {variant.name}
       </td>
       <td>{variant.sku}</td>
-      <td>*pics*</td>
+      <td>{variant.photos_count || 0}</td>
       <td>{variant.active ? 'Yes' : 'No'}</td>
       <td>${variant.price}</td>
       <td>{variant.vendor}</td>
