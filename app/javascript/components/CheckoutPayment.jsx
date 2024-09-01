@@ -6,34 +6,22 @@ const CheckoutPayment = ({ order, onUpdateOrder, onNext, onBack }) => {
   const [paypalLoaded, setPaypalLoaded] = useState(false);
 
   const calculateTotalPrice = useCallback(() => {
-    const itemsTotal = order.order_items.reduce((sum, item) => {
-      const itemPrice = parseFloat(item.total_price || 0);
-      console.log(`Item: ${item.product.name}, Price: ${itemPrice}`);
-      return sum + itemPrice;
-    }, 0);
+    const itemsTotal = order.order_items.reduce((sum, item) => sum + parseFloat(item.total_price || 0), 0);
     const shippingCost = parseFloat(order.shipping_cost || 0);
-    console.log(`Items Total: ${itemsTotal}, Shipping Cost: ${shippingCost}`);
-    const calculatedTotal = itemsTotal + shippingCost;
-    console.log(`Calculated Total: ${calculatedTotal}`);
-    return Math.max(calculatedTotal, 0.01).toFixed(2);
+    return Math.max(itemsTotal + shippingCost, 0.01).toFixed(2);
   }, [order]);
 
   useEffect(() => {
-    const newTotalPrice = calculateTotalPrice();
-    setTotalPrice(newTotalPrice);
-    console.log('Total price set:', newTotalPrice);
+    setTotalPrice(calculateTotalPrice());
   }, [calculateTotalPrice]);
 
   const initializePayPalButton = useCallback(() => {
     if (window.paypal && !document.querySelector('#paypal-button-container button')) {
-      console.log('Initializing PayPal button with total:', totalPrice);
       window.paypal.Buttons({
         createOrder: (data, actions) => {
           if (parseFloat(totalPrice) <= 0) {
-            const errorMsg = "Total price must be greater than zero.";
-            console.error(errorMsg);
-            setError(errorMsg);
-            return Promise.reject(new Error(errorMsg));
+            setError("Total price must be greater than zero.");
+            return Promise.reject(new Error("Total price must be greater than zero."));
           }
           return actions.order.create({
             purchase_units: [{
@@ -44,9 +32,7 @@ const CheckoutPayment = ({ order, onUpdateOrder, onNext, onBack }) => {
           });
         },
         onApprove: async (data, actions) => {
-          console.log('PayPal order approved');
           return actions.order.capture().then(async function(details) {
-            console.log('Transaction completed by ' + details.payer.name.given_name);
             const paypalDetails = {
               paypal_order_id: details.id,
               paypal_payer_id: details.payer.payer_id,
@@ -64,6 +50,7 @@ const CheckoutPayment = ({ order, onUpdateOrder, onNext, onBack }) => {
               ...paypalDetails
             };
             await onUpdateOrder(updatedOrder);
+            await sendAdminNotification(updatedOrder);
             onNext();
           });
         },
@@ -80,12 +67,8 @@ const CheckoutPayment = ({ order, onUpdateOrder, onNext, onBack }) => {
       const script = document.createElement('script');
       script.src = `https://www.paypal.com/sdk/js?client-id=ATJK2vV0aAd9g8iShFQ2LccUACGyFaKJ0fn0nj9skdi506uCQFDrMF5mAil5P7JSBGGaIDUQcbFQkULD&currency=USD`;
       script.async = true;
-      script.onload = () => {
-        console.log('PayPal SDK script loaded');
-        setPaypalLoaded(true);
-      };
+      script.onload = () => setPaypalLoaded(true);
       document.body.appendChild(script);
-
       return () => {
         if (document.body.contains(script)) {
           document.body.removeChild(script);
@@ -100,13 +83,6 @@ const CheckoutPayment = ({ order, onUpdateOrder, onNext, onBack }) => {
     }
   }, [paypalLoaded, totalPrice, initializePayPalButton]);
 
-  useEffect(() => {
-    console.log('Order received:', order);
-    console.log('Shipping cost:', order.shipping_cost);
-    console.log('Shipping price:', order.shipping_price);
-  }, [order]);
-
-
   const sendAdminNotification = async (orderDetails) => {
     try {
       const response = await fetch('/api/v1/notify_admin', {
@@ -115,66 +91,12 @@ const CheckoutPayment = ({ order, onUpdateOrder, onNext, onBack }) => {
           'Content-Type': 'application/json',
           'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
         },
-        body: JSON.stringify({
-          order: {
-            id: orderDetails.id,
-            paid: orderDetails.paid,
-            token: orderDetails.token,
-            price: orderDetails.price,
-            user_id: orderDetails.user_id,
-            move_to_checkout: orderDetails.move_to_checkout,
-            shipping_info: orderDetails.shipping_info,
-            address_line_1: orderDetails.address_line_1,
-            address_line_2: orderDetails.address_line_2,
-            city: orderDetails.city,
-            state: orderDetails.state,
-            postal_code: orderDetails.postal_code,
-            country: orderDetails.country,
-            ship_to_name: orderDetails.ship_to_name,
-            shipping_chosen: orderDetails.shipping_chosen,
-            shipping_choice: orderDetails.shipping_choice,
-            shipping_choice_img: orderDetails.shipping_choice_img,
-            customer_email: orderDetails.customer_email,
-            final_price: orderDetails.final_price,
-            paypal_order_id: orderDetails.paypal_order_id,
-            paypal_payer_id: orderDetails.paypal_payer_id,
-            paypal_payer_email: orderDetails.paypal_payer_email,
-            paypal_payment_status: orderDetails.paypal_payment_status,
-            paypal_transaction_id: orderDetails.paypal_transaction_id,
-            order_status: orderDetails.order_status,
-            shipping_cost: orderDetails.shipping_cost,
-            paid_at: orderDetails.paid_at,
-            shipping_method_name: orderDetails.shipping_method_name,
-          },
-          order_items: orderDetails.order_items.map(item => ({
-            id: item.id,
-            product_id: item.product_id,
-            quantity: item.quantity,
-            specs: item.specs,
-            notes: item.notes,
-            total_price: item.total_price,
-            selected_variant_ids: item.selected_variant_ids,
-            product_name: item.product.name, // Assuming product name is available
-            variants: item.selected_variant_ids.map(variantId => {
-              const variant = item.product.variants.find(v => v.id === variantId);
-              return {
-                id: variant.id,
-                name: variant.name,
-                price: variant.price,
-                sku: variant.sku,
-                vendor: variant.vendor,
-                vendor_parts_number: variant.vendor_parts_number,
-              };
-            }),
-          })),
-        }),
+        body: JSON.stringify({ order: orderDetails })
       });
 
       if (!response.ok) {
         throw new Error('Failed to send admin notification');
       }
-
-      console.log('Admin notification sent successfully');
     } catch (error) {
       console.error('Error sending admin notification:', error);
     }

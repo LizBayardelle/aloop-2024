@@ -15,7 +15,7 @@ class AdminMailer < ApplicationMailer
         item.merge('variants' => variants, 'product_name' => product.name)
       end
       mail(
-        to: 'admin@yourstore.com',
+        to: 'lizbayardelle@gmail.com',
         subject: "New Order Received - ##{@order['id']}"
       )
     end
