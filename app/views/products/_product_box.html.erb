@@ -2,14 +2,12 @@
   <div class="card h-100 shadow-sm">
     <%= link_to product_path(product), class: "text-decoration-none" do %>
       <div class="position-relative">
-        <% demo_picture_url = "" %>
-        <% product.components.each do |component| %>
-          <% component.variants.each do |variant| %>
-            <% if variant.photos.count != 0 %>
-              <% demo_picture_url = url_for(variant.photos.first) %>
-            <% end %>
-          <% end %>
+        <% if product.main_photos_count == 0 %>
+          <% demo_picture_url = url_for(assets/placeholder.jpg) %>
+        <% else %>
+          <% demo_picture_url = url_for(product.main_photos.first) %>
         <% end %>
+
         <%= image_tag demo_picture_url, class: "card-img-top", alt: product.name, style: "height: 200px; object-fit: cover;" %>
         <div class="position-absolute top-0 end-0 p-2">
           <span class="badge bg-red"><%= product.display_price %></span>

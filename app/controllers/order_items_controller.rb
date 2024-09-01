@@ -10,8 +10,17 @@ class OrderItemsController < ApplicationController
     if params[:order_item][:selected_variant_ids].is_a?(String)
       @order_item.selected_variant_ids = params[:order_item][:selected_variant_ids].split(',').map(&:to_i)
     end
+  
+    # Explicitly set the total_price if it's provided in the params
+    if params[:order_item][:total_price].present?
+      @order_item.total_price = params[:order_item][:total_price].to_f
+    end
+  
+    puts "Total price from params: #{params[:order_item][:total_price]}"
+    puts "Order item total price before save: #{@order_item.total_price}"
 
     if @order_item.save
+      puts "Order item total price after save: #{@order_item.total_price}" 
       respond_to do |format|
         format.html { redirect_to order_path(@current_order) }
         format.json { render json: { status: 'success', order_item: @order_item } }

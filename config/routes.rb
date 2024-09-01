@@ -36,7 +36,11 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       post 'notify_admin', to: 'admin_notifications#create'
-      resources :products
+      resources :products do
+        member do
+          delete :remove_photo
+        end
+      end
       resources :components
       resources :variants do
         collection do

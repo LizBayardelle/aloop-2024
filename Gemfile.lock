@@ -1640,6 +1640,8 @@ GEM
       rouge (>= 1.0.0)
     bigdecimal (3.1.8)
     bindex (0.8.1)
+    binding_of_caller (1.0.1)
+      debug_inspector (>= 1.2.0)
     bootsnap (1.18.4)
       msgpack (~> 1.2)
     builder (3.3.0)
@@ -1667,6 +1669,7 @@ GEM
     debug (1.9.2)
       irb (~> 1.10)
       reline (>= 0.3.8)
+    debug_inspector (1.2.0)
     devise (4.9.4)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -1903,6 +1906,7 @@ DEPENDENCIES
   aws-sdk (~> 3)
   aws-sdk-s3
   better_errors
+  binding_of_caller
   bootsnap
   capybara
   country_select

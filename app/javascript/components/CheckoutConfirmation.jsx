@@ -15,7 +15,7 @@ const CheckoutConfirmation = ({ order }) => {
               {order.order_items.map((item, index) => (
                 <div key={index} className="d-flex justify-content-between mb-2">
                   <span>{item.product.name}</span>
-                  <span className="font-weight-bold">${parseFloat(item.product.price).toFixed(2)}</span>
+                  <span className="font-weight-bold">${parseFloat(item.total_price).toFixed(2)}</span>
                 </div>
               ))}
               <div className="d-flex justify-content-between border-top pt-2 mt-2">

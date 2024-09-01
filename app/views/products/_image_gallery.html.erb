@@ -1,8 +1,6 @@
-<%# app/views/products/_image_gallery.html.erb %>
-
 <div class="image-gallery">
   <div class="main-image-container">
-    <% main_image = find_main_image(product) %>
+    <% main_image = product.main_photos.first %>
     <% if main_image %>
       <%= image_tag url_for(main_image), alt: "Main product", class: "img-fluid main-image", id: "mainImage" %>
     <% else %>
@@ -12,16 +10,10 @@
     <% end %>
   </div>
   <div class="thumbnails-container mt-3">
-    <% product.components.each do |component| %>
-      <% component.variants.each do |variant| %>
-        <% if variant.photos.attached? %>
-          <% variant.photos.each_with_index do |photo, index| %>
-            <div class="thumbnail <%= 'active' if photo == main_image %>" data-full-image="<%= url_for(photo) %>">
-              <%= image_tag url_for(photo), alt: "Thumbnail #{index + 1}", class: "img-fluid" %>
-            </div>
-          <% end %>
-        <% end %>
-      <% end %>
+    <% product.main_photos.each_with_index do |photo, index| %>
+        <div class="thumbnail <%= 'active' if photo == main_image %>" data-full-image="<%= url_for(photo) %>">
+          <%= image_tag url_for(photo), alt: "Thumbnail #{index + 1}", class: "img-fluid" %>
+        </div>
     <% end %>
   </div>
 </div>

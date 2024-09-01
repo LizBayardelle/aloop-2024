@@ -21,9 +21,9 @@ const AdminProduct = ({ product, onUpdate, onEdit, csrfToken }) => {
   const cells = [
     <td key="name" className="bg-grey-darker text-nowrap"><strong>{product.name}</strong></td>,
     <td key="sku" className="bg-grey-darker"></td>,
-    <td key="photos" className="bg-grey-darker">--</td>,
+    <td key="photos" className="bg-grey-darker">{product.main_photos_count || 0}</td>,
     <td key="active" className="bg-grey-darker">{product.active ? 'Yes' : 'No'}</td>,
-    <td key="price" className="bg-grey-darker">${product.price}</td>,
+    <td key="price" className="bg-grey-darker">{product.price}</td>,
     <td key="vendor" className="bg-grey-darker"></td>,
     <td key="vendor-parts" className="bg-grey-darker"></td>,
     <td key="bike-models" className="bg-grey-darker"></td>,

@@ -25,22 +25,7 @@ const AdminVariant = ({ variant, onUpdate, onEdit, csrfToken }) => {
         {variant.name}
       </td>
       <td>{variant.sku}</td>
-      <td>
-        {variant.photo_urls && variant.photo_urls.length > 0 ? (
-          <div className="photo-thumbnails">
-            {variant.photo_urls.map(photo => (
-              <img 
-                key={photo.id}
-                src={photo.thumbnail} 
-                alt={`${variant.name} thumbnail`}
-                style={{ width: '30px', height: '30px', objectFit: 'cover' }}
-              />
-            ))}
-          </div>
-        ) : (
-          <span className="no-photo">None</span>
-        )}
-      </td>
+      <td>*pics*</td>
       <td>{variant.active ? 'Yes' : 'No'}</td>
       <td>${variant.price}</td>
       <td>{variant.vendor}</td>

@@ -10,7 +10,7 @@ class VariantSerializer < ActiveModel::Serializer
       {
         id: photo.id,
         url: generate_photo_url(photo),
-        thumbnail: generate_photo_url(photo, variant: :thumb)
+        thumbnail: generate_photo_url(photo)
       }
     end
   rescue => e
