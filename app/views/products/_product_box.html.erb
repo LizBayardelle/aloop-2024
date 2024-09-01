@@ -3,7 +3,7 @@
     <%= link_to product_path(product), class: "text-decoration-none" do %>
       <div class="position-relative">
         <% if product.main_photos_count == 0 %>
-          <% demo_picture_url = url_for(assets/placeholder.jpg) %>
+          <% demo_picture_url = asset_path('placeholder.jpg') %>
         <% else %>
           <% demo_picture_url = url_for(product.main_photos.first) %>
         <% end %>
