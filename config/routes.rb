@@ -46,6 +46,9 @@ Rails.application.routes.draw do
         collection do
           get 'images'
         end
+        member do
+          delete :remove_photo
+        end
       end
       resources :product_categories, only: [:index]
       resources :bike_models, only: [:index]

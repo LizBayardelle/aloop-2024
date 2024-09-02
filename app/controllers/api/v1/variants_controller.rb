@@ -36,8 +36,12 @@ class Api::V1::VariantsController < ApplicationController
       render json: image_urls
     end
     
+    
     def update
-      if @variant.update(variant_params)
+      if @variant.update(variant_params_without_photos)
+        if params[:variant][:photos].present?
+          @variant.photos.attach(params[:variant][:photos])
+        end
         render json: @variant
       else
         render json: @variant.errors, status: :unprocessable_entity
@@ -48,11 +52,36 @@ class Api::V1::VariantsController < ApplicationController
     def destroy
       @variant.destroy
     end
+
+    def remove_photo
+      @variant = Variant.find(params[:id])
+      photo = @variant.photos.find(params[:photo_id])
+      
+      if photo.purge
+        render json: { message: 'Photo successfully deleted' }, status: :ok
+      else
+        render json: { error: 'Failed to delete photo' }, status: :unprocessable_entity
+      end
+    end
   
     private
   
     def set_variant
       @variant = Variant.find(params[:id])
+    end
+
+    def variant_params_without_photos
+      params.require(:variant).permit(
+        :name,
+        :component_id,
+        :price,
+        :sku,
+        :vendor,
+        :vendor_parts_number,
+        :description,
+        :active,
+        bike_model_ids: []
+      )
     end
   
     def variant_params

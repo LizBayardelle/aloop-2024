@@ -10,7 +10,7 @@ class Variant < ApplicationRecord
   end
 
   def photos_urls
-    photos.map { |photo| Rails.application.routes.url_helpers.rails_blob_url(photo, only_path: false) }
+    photos.map { |photo| rails_blob_path(photo, only_path: true) }
   end
 
   def photos_count

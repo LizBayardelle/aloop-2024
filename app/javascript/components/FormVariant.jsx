@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
 const FormVariant = ({ onSubmit, onCancel, bikeModels, components, initialData, csrfToken }) => {
+  console.log("FormVariant rendered with initialData:", initialData);
+
   const [variant, setVariant] = useState({
     name: '',
     component_id: '',
@@ -11,7 +13,8 @@ const FormVariant = ({ onSubmit, onCancel, bikeModels, components, initialData, 
     description: '',
     active: false,
     bike_model_ids: [],
-    photos: []
+    photos_urls: [],
+    new_photos: []
   });
 
   useEffect(() => {
@@ -22,60 +25,88 @@ const FormVariant = ({ onSubmit, onCancel, bikeModels, components, initialData, 
           ...initialData,
           component_id: initialData.component_id ? initialData.component_id.toString() : '',
           active: initialData.active ?? false,
-          bike_model_ids: initialData.bike_model_ids || []
+          bike_model_ids: initialData.bike_model_ids || [],
+          photos_urls: initialData.photos_urls || [],
+          new_photos: []
         };
         return updatedVariant;
       });
+    } else {
+      console.log("No initial data provided");
     }
   }, [initialData]);
+
+  useEffect(() => {
+  }, [variant]);
 
   const handleChange = (e) => {
     const { name, value, type, checked, files } = e.target;
     if (type === 'file') {
-      setVariant(prev => ({ ...prev, [name]: Array.from(files) }));
+      console.log("File input changed:", files);
+      setVariant(prev => {
+        const updatedVariant = { ...prev, new_photos: [...prev.new_photos, ...Array.from(files)] };
+        console.log("Updated variant with new photos:", updatedVariant);
+        return updatedVariant;
+      });
     } else {
-      setVariant(prev => ({
-        ...prev,
-        [name]: type === 'checkbox' ? checked : value
-      }));
+      setVariant(prev => {
+        const updatedVariant = {
+          ...prev,
+          [name]: type === 'checkbox' ? checked : value
+        };
+        console.log(`Input changed - ${name}:`, updatedVariant[name]);
+        return updatedVariant;
+      });
     }
   };
 
-  const handleBikeModelChange = (e) => {
-    const { value, checked } = e.target;
+  const removeExistingPhoto = async (photoId, index) => {
+    try {
+      const response = await fetch(`/api/v1/variants/${initialData.id}/remove_photo`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken
+        },
+        body: JSON.stringify({ photo_id: photoId })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete photo');
+      }
+
+      setVariant(prev => ({
+        ...prev,
+        photos_urls: prev.photos_urls.filter((_, i) => i !== index)
+      }));
+    } catch (error) {
+      console.error('Error deleting photo:', error);
+    }
+  };
+
+  const removeNewPhoto = (index) => {
     setVariant(prev => ({
       ...prev,
-      bike_model_ids: checked
-        ? [...(prev.bike_model_ids || []), value]
-        : (prev.bike_model_ids || []).filter(id => id !== value)
+      new_photos: prev.new_photos.filter((_, i) => i !== index)
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const url = initialData ? `/api/v1/variants/${initialData.id}` : '/api/v1/variants';
-    const method = initialData ? 'PUT' : 'POST';
-  
     const formData = new FormData();
     Object.keys(variant).forEach(key => {
-      // Exclude id, created_at, and updated_at
-      if (!['id', 'created_at', 'updated_at'].includes(key)) {
-        if (key === 'photos') {
-          variant[key].forEach(photo => formData.append('variant[photos][]', photo));
-        } else if (key === 'bike_model_ids') {
-          (variant[key] || []).forEach(id => formData.append('variant[bike_model_ids][]', id));
-        } else {
-          formData.append(`variant[${key}]`, variant[key]);
-        }
+      if (key !== 'new_photos' && key !== 'photos_urls') {
+        formData.append(`variant[${key}]`, variant[key]);
       }
     });
-  
+    variant.new_photos.forEach(photo => formData.append('variant[photos][]', photo));
+
     try {
+      const url = initialData ? `/api/v1/variants/${initialData.id}` : '/api/v1/variants';
+      const method = initialData ? 'PUT' : 'POST';
       const response = await fetch(url, {
         method: method,
-        headers: { 
-          'X-CSRF-Token': csrfToken
-        },
+        headers: { 'X-CSRF-Token': csrfToken },
         body: formData,
       });
       if (!response.ok) throw new Error(`Failed to ${initialData ? 'update' : 'create'} variant`);
@@ -85,7 +116,6 @@ const FormVariant = ({ onSubmit, onCancel, bikeModels, components, initialData, 
       console.error(`Error ${initialData ? 'updating' : 'creating'} variant:`, error);
     }
   };
-
 
   return (
     <form onSubmit={handleSubmit} className="modal-content">
@@ -105,6 +135,55 @@ const FormVariant = ({ onSubmit, onCancel, bikeModels, components, initialData, 
                 <option key={component.id} value={component.id.toString()}>{component.name}</option>
               ))}
             </select>
+          </div>
+
+          <div className="form-group col-12">
+            <label htmlFor="photos">Variant Image</label>
+            <input type="file" className="form-control" id="photos" name="photos" onChange={handleChange} multiple accept="image/*" />
+            <div className="mt-2 d-flex flex-wrap">
+              {console.log("Rendering photos_urls:", variant.photos_urls)}
+              {variant.photos_urls && variant.photos_urls.length > 0 ? (
+                variant.photos_urls.map((photo, index) => (
+                  <div key={`existing-${photo.id}`} className="position-relative me-2 mb-2">
+                    <img 
+                      src={photo.url} 
+                      alt={`Variant ${index + 1}`} 
+                      style={{width: '100px', height: '100px', objectFit: 'cover'}} 
+                    />
+                    <button 
+                      type="button" 
+                      className="btn btn-sm btn-danger position-absolute top-0 end-0" 
+                      onClick={() => removeExistingPhoto(photo.id, index)}
+                    >
+                      X
+                    </button>
+                  </div>
+                ))
+              ) : (
+                <p></p>
+              )}
+              {console.log("Rendering new_photos:", variant.new_photos)}
+              {variant.new_photos && variant.new_photos.length > 0 ? (
+                variant.new_photos.map((file, index) => (
+                  <div key={`new-${index}`} className="position-relative me-2 mb-2">
+                    <img 
+                      src={URL.createObjectURL(file)} 
+                      alt={`New Upload ${index + 1}`} 
+                      style={{width: '100px', height: '100px', objectFit: 'cover'}} 
+                    />
+                    <button 
+                      type="button" 
+                      className="btn btn-sm btn-danger position-absolute top-0 end-0" 
+                      onClick={() => removeNewPhoto(index)}
+                    >
+                      X
+                    </button>
+                  </div>
+                ))
+              ) : (
+                <p></p>
+              )}
+            </div>
           </div>
 
           <div className="form-group col-6">
@@ -132,34 +211,16 @@ const FormVariant = ({ onSubmit, onCancel, bikeModels, components, initialData, 
             <textarea className="form-control" id="description" name="description" value={variant.description} onChange={handleChange}></textarea>
           </div>
 
-          <div className="form-group col-6">
-            <label>Bike Models</label>
-            {bikeModels.map(model => (
-              <div key={model.id} className="form-check">
-                <input
-                  type="checkbox"
-                  className="form-check-input"
-                  id={`bike_model_${model.id}`}
-                  name="bike_model_ids"
-                  value={model.id}
-                  checked={(variant.bike_model_ids || []).includes(model.id.toString())}
-                  onChange={handleBikeModelChange}
-                />
-                <label className="form-check-label" htmlFor={`bike_model_${model.id}`}>{model.name}</label>
-              </div>
-            ))}
-          </div>
           <div className="form-group col-12">
             <div className="form-check">
               <input type="checkbox" className="form-check-input" id="active" name="active" checked={variant.active} onChange={handleChange} />
               <label className="form-check-label" htmlFor="active">Display on Website</label>
             </div>
           </div>
-          <div className="form-group col-12">
-            <label htmlFor="photos">Variant Images</label>
-            <input type="file" className="form-control" id="photos" name="photos" onChange={handleChange} multiple />
-          </div>
+
+
         </div>
+
       </div>
       <div className="modal-footer">
         <button type="button" className="btn me-2" onClick={onCancel}>Close</button>
