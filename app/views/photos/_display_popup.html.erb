@@ -10,7 +10,7 @@
           <% if !photo.approved %>
             <%= link_to "Approve", approve_photo_path(photo), method: :post, class: "btn btn-black-outline" %>
           <% end %>
-          <%= link_to "Delete", photo_path(photo), method: :delete, class: "btn btn-black-outline", data: {confirm: "Are you sure you want to delete that photo?"} %>
+          <%= button_to "Delete", photo_path(photo), method: :delete, class: "btn btn-black-outline", data: {confirm: "Are you sure you want to delete that photo?"} %>
         <% end %>
 
       </div> <!-- modal body -->
