@@ -30,7 +30,7 @@
         <% @photos.where(approved: false).each do |photo| %>
           <div class="item <%= photo.kit %> col-lg-3 col-md-4 col-6 col-sm">
             <div data-bs-toggle="modal" data-bs-target="#photoModal<%= photo.id %>" style="height: 130px; overflow-y: hidden;">
-             <img class="w-100" src="<%= rails_blob_url(photo.image) %>" alt="">
+             <img class="w-100" src="<%= url_for(photo.image) %>" alt="">
             </div>
           </div>
           <%= render partial: "photos/display_popup", locals: { photo: photo } %>
@@ -56,7 +56,7 @@
     <% @photos.where(approved: true).each do |photo| %>
       <div class="item <%= photo.kit %> col-lg-3 col-md-4 col-6 col-sm">
         <div data-bs-toggle="modal" data-bs-target="#photoModal<%= photo.id %>" style="height: 130px; overflow-y: hidden;">
-         <img class="w-100" src="<%= rails_blob_url(photo.image) %>" alt="">
+         <img class="w-100" src="<%= url_for(photo.image) %>" alt="">
         </div>
       </div>
       <%= render partial: "photos/display_popup", locals: { photo: photo } %>
