@@ -9,7 +9,8 @@ class PhotosController < ApplicationController
 
   def create
     @photo = Photo.new(photo_params)
-
+    @photo.approved = true if current_user&.admin?
+    
     respond_to do |format|
       if @photo.save
         format.html { redirect_to photos_path, notice: "Photo was successfully created." }
