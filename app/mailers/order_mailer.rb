@@ -10,4 +10,12 @@ class OrderMailer < ApplicationMailer
       subject: "Order Confirmation - Aloop Offroad ##{@order['id'].to_s.rjust(6, '0')}"
     )
   end
+
+  def shipping_notification(order)
+    @order = order
+    mail(
+      to: order.customer_email,
+      subject: "Your Order Has Shipped - Aloop Offroad ##{@order.id.to_s.rjust(6, '0')}"
+    )
+  end
 end

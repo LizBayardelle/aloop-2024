@@ -1,0 +1,307 @@
+<div class="container-fluid py-4">
+  
+  <!-- Breadcrumbs -->
+  <nav aria-label="breadcrumb" class="admin-breadcrumb-nav mb-4">
+    <div class="container-fluid">
+      <ol class="breadcrumb bg-white border-bottom py-3 mb-0">
+        <%= link_to admin_dashboard_path, class: "breadcrumb-item admin-breadcrumb-link" do %>
+          <i class="fas fa-tachometer-alt me-1"></i>
+          Dashboard
+        <% end %>
+        <%= link_to admin_sales_path, class: "breadcrumb-item admin-breadcrumb-link" do %>
+          <i class="fas fa-chart-line me-1"></i>
+          Sales
+        <% end %>
+        <li class="breadcrumb-item active text-muted" aria-current="page">
+          <i class="fas fa-receipt me-1"></i>
+          Order #<%= @order.id.to_s.rjust(6, '0') %>
+        </li>
+      </ol>
+    </div>
+  </nav>
+
+  <!-- Order Header -->
+  <div class="row mb-4">
+    <div class="col">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h1 class="h2 mb-1">Order #<%= @order.id.to_s.rjust(6, '0') %></h1>
+          <p class="text-muted mb-0">
+            Placed on <%= @order.created_at.strftime('%B %d, %Y at %l:%M %p') %>
+            <% if @order.paid_at %>
+              • Paid on <%= @order.paid_at.strftime('%B %d, %Y at %l:%M %p') %>
+            <% end %>
+          </p>
+        </div>
+        <div class="d-flex gap-2">
+          <%= link_to admin_sales_path, class: "btn btn-outline-secondary" do %>
+            <i class="fas fa-arrow-left me-1"></i> Back to Sales
+          <% end %>
+          <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+              <i class="fas fa-cog me-1"></i> Actions
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#" onclick="window.print(); return false;"><i class="fas fa-print me-1"></i> Print Order</a></li>
+              <li>
+                <a class="dropdown-item" href="mailto:<%= @order.customer_email %>?subject=Regarding Your Order #<%= @order.id.to_s.rjust(6, '0') %>">
+                  <i class="fas fa-envelope me-1"></i> Email Customer
+                </a>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <% if @order.order_status != 'shipped' %>
+                  <%= button_to mark_order_shipped_path(@order), method: :patch, class: "dropdown-item border-0 bg-transparent text-start w-100", data: {confirm: "Mark this order as shipped? This will automatically send a shipping notification to #{@order.customer_email}."} do %>
+                    <i class="fas fa-truck me-1"></i> Mark as Shipped
+                  <% end %>
+                <% else %>
+                  <span class="dropdown-item text-muted">
+                    <i class="fas fa-check me-1"></i> Already Shipped
+                  </span>
+                <% end %>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Cards -->
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="card border-0 <%= @order.paypal_payment_status == 'COMPLETED' ? 'bg-success' : 'bg-warning' %> text-white">
+        <div class="card-body text-center">
+          <i class="fas fa-credit-card fa-2x mb-2"></i>
+          <h6>Payment Status</h6>
+          <h4><%= @order.paypal_payment_status || 'Pending' %></h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-0 <%= @order.order_status == 'shipped' ? 'bg-success' : 'bg-info' %> text-white">
+        <div class="card-body text-center">
+          <i class="fas fa-box fa-2x mb-2"></i>
+          <h6>Fulfillment</h6>
+          <h4><%= @order.order_status&.titleize || 'Pending' %></h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-0 bg-primary text-white">
+        <div class="card-body text-center">
+          <i class="fas fa-dollar-sign fa-2x mb-2"></i>
+          <h6>Total</h6>
+          <h4>$<%= sprintf('%.2f', @order.final_price) %></h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-0 bg-secondary text-white">
+        <div class="card-body text-center">
+          <i class="fas fa-shipping-fast fa-2x mb-2"></i>
+          <h6>Shipping</h6>
+          <h4>$<%= sprintf('%.2f', @order.shipping_cost || 0) %></h4>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Left Column: Order Items -->
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white">
+          <h5 class="mb-0">
+            <i class="fas fa-shopping-cart me-2"></i>
+            Order Items
+          </h5>
+        </div>
+        <div class="card-body p-0">
+          <% @order.order_items.each_with_index do |item, index| %>
+            <div class="p-4 <%= 'border-bottom' unless index == @order.order_items.count - 1 %>">
+              <div class="row align-items-center">
+                <div class="col-md-3">
+                  <% if item.product.main_photos.any? %>
+                    <img src="<%= url_for(item.product.main_photos.first) %>" class="img-fluid rounded" style="max-height: 100px;">
+                  <% else %>
+                    <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 100px;">
+                      <i class="fas fa-image text-muted fa-2x"></i>
+                    </div>
+                  <% end %>
+                </div>
+                <div class="col-md-6">
+                  <h6 class="fw-bold mb-1"><%= item.product.name %></h6>
+                  <p class="text-muted mb-2">Quantity: <%= item.quantity %></p>
+                  
+                  <% if item.specs.present? %>
+                    <div class="mb-2">
+                      <small class="text-muted fw-bold">Specifications:</small>
+                      <br>
+                      <small class="text-muted"><%= item.specs %></small>
+                    </div>
+                  <% end %>
+
+                  <% if item.notes.present? %>
+                    <div class="mb-2">
+                      <small class="text-muted fw-bold">Notes:</small>
+                      <br>
+                      <small class="text-muted"><%= item.notes %></small>
+                    </div>
+                  <% end %>
+
+                  <!-- Selected Variants -->
+                  <% if item.selected_variant_ids.present? %>
+                    <div class="mt-2">
+                      <small class="text-muted fw-bold">Selected Components:</small>
+                      <% 
+                        variant_ids = item.selected_variant_ids.is_a?(String) ? JSON.parse(item.selected_variant_ids) : item.selected_variant_ids
+                        variant_ids.each do |variant_id| 
+                      %>
+                        <% variant = Variant.find_by(id: variant_id) %>
+                        <% if variant %>
+                          <div class="badge bg-light text-dark me-1 mb-1">
+                            <%= variant.name %> 
+                            <% if variant.sku.present? %>
+                              (<%= variant.sku %>)
+                            <% end %>
+                          </div>
+                        <% end %>
+                      <% end %>
+                    </div>
+                  <% end %>
+                </div>
+                <div class="col-md-3 text-end">
+                  <h5 class="text-success mb-0">$<%= sprintf('%.2f', item.total_price) %></h5>
+                  <small class="text-muted">
+                    $<%= sprintf('%.2f', item.total_price.to_f / item.quantity) %> each
+                  </small>
+                </div>
+              </div>
+            </div>
+          <% end %>
+          
+          <!-- Order Total -->
+          <div class="p-4 bg-light">
+            <div class="row">
+              <div class="col-md-8">
+                <div class="d-flex justify-content-between mb-2">
+                  <span>Subtotal:</span>
+                  <span>$<%= sprintf('%.2f', @order.order_items.sum { |item| item.total_price.to_f }) %></span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                  <span>Shipping (<%= @order.shipping_method_name || 'Standard' %>):</span>
+                  <span>$<%= sprintf('%.2f', @order.shipping_cost || 0) %></span>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between fw-bold h5">
+                  <span>Total:</span>
+                  <span class="text-success">$<%= sprintf('%.2f', @order.final_price) %></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Customer & Shipping Info -->
+    <div class="col-lg-4">
+      <!-- Customer Information -->
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white">
+          <h6 class="mb-0">
+            <i class="fas fa-user me-2"></i>
+            Customer Information
+          </h6>
+        </div>
+        <div class="card-body">
+          <p class="mb-2"><strong>Name:</strong> <%= @order.ship_to_name %></p>
+          <p class="mb-2"><strong>Email:</strong> <%= @order.customer_email %></p>
+          <% if @order.paypal_payer_email && @order.paypal_payer_email != @order.customer_email %>
+            <p class="mb-0"><strong>PayPal Email:</strong> <%= @order.paypal_payer_email %></p>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Shipping Information -->
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white">
+          <h6 class="mb-0">
+            <i class="fas fa-shipping-fast me-2"></i>
+            Shipping Information
+          </h6>
+        </div>
+        <div class="card-body">
+          <address class="mb-3">
+            <%= @order.ship_to_name %><br>
+            <%= @order.address_line_1 %><br>
+            <% if @order.address_line_2.present? %>
+              <%= @order.address_line_2 %><br>
+            <% end %>
+            <%= @order.city %>, <%= @order.state %> <%= @order.postal_code %><br>
+            <%= @order.country %>
+          </address>
+          <p class="mb-2"><strong>Method:</strong> <%= @order.shipping_method_name || 'Standard' %></p>
+          <p class="mb-0"><strong>Cost:</strong> $<%= sprintf('%.2f', @order.shipping_cost || 0) %></p>
+        </div>
+      </div>
+
+      <!-- Payment Information -->
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white">
+          <h6 class="mb-0">
+            <i class="fas fa-credit-card me-2"></i>
+            Payment Information
+          </h6>
+        </div>
+        <div class="card-body">
+          <p class="mb-2"><strong>Method:</strong> PayPal</p>
+          <p class="mb-2"><strong>Status:</strong> 
+            <span class="badge <%= @order.paypal_payment_status == 'COMPLETED' ? 'bg-success' : 'bg-warning' %>">
+              <%= @order.paypal_payment_status || 'Pending' %>
+            </span>
+          </p>
+          <% if @order.paypal_order_id %>
+            <p class="mb-2"><strong>PayPal Order ID:</strong><br>
+              <small class="text-muted"><%= @order.paypal_order_id %></small>
+            </p>
+          <% end %>
+          <% if @order.paypal_transaction_id %>
+            <p class="mb-0"><strong>Transaction ID:</strong><br>
+              <small class="text-muted"><%= @order.paypal_transaction_id %></small>
+            </p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .admin-breadcrumb-nav {
+    margin-left: -1rem;
+    margin-right: -1rem;
+    margin-top: -1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  
+  .admin-breadcrumb-link {
+    color: #2e3d99 !important;
+    text-decoration: none !important;
+    font-weight: 500;
+  }
+  
+  .admin-breadcrumb-link:hover {
+    color: #1e2d89 !important;
+    text-decoration: none !important;
+  }
+  
+  .breadcrumb-item.active {
+    color: #6c757d !important;
+  }
+  
+  .breadcrumb-item + .breadcrumb-item::before {
+    color: #dee2e6;
+  }
+</style>

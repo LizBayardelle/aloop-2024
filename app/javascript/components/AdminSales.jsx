@@ -67,8 +67,22 @@ const AdminSales = () => {
     return orders.reduce((sum, order) => sum + parseFloat(order.final_price || 0), 0).toFixed(2);
   };
 
+  const formatCurrency = (amount) => {
+    return parseFloat(amount || 0).toFixed(2);
+  };
+
   return (
     <div className="p-4">
+      <style>{`
+        .clickable-row {
+          transition: background-color 0.2s ease;
+        }
+        .clickable-row:hover {
+          background-color: #f8f9fa !important;
+          transform: translateY(-1px);
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+      `}</style>
       {/* Controls Header */}
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
@@ -168,11 +182,6 @@ const AdminSales = () => {
           <Table className="mb-0" hover>
           <thead className="bg-light">
             <tr>
-                <th style={{cursor: 'pointer'}} onClick={() => sortOrders('created_at')} className="border-0">
-                  <div className="d-flex align-items-center">
-                    Created At {sortField === 'created_at' && <i className={`fas fa-sort-${sortDirection === 'asc' ? 'up' : 'down'} ms-1`}></i>}
-                  </div>
-                </th>
                 <th style={{cursor: 'pointer'}} onClick={() => sortOrders('paid_at')} className="border-0">
                   <div className="d-flex align-items-center">
                     Paid At {sortField === 'paid_at' && <i className={`fas fa-sort-${sortDirection === 'asc' ? 'up' : 'down'} ms-1`}></i>}
@@ -195,22 +204,24 @@ const AdminSales = () => {
                 </th>
                 <th style={{cursor: 'pointer'}} onClick={() => sortOrders('paypal_payment_status')} className="border-0">
                   <div className="d-flex align-items-center">
-                    Status {sortField === 'paypal_payment_status' && <i className={`fas fa-sort-${sortDirection === 'asc' ? 'up' : 'down'} ms-1`}></i>}
+                    Payment {sortField === 'paypal_payment_status' && <i className={`fas fa-sort-${sortDirection === 'asc' ? 'up' : 'down'} ms-1`}></i>}
+                  </div>
+                </th>
+                <th style={{cursor: 'pointer'}} onClick={() => sortOrders('order_status')} className="border-0">
+                  <div className="d-flex align-items-center">
+                    Fulfillment {sortField === 'order_status' && <i className={`fas fa-sort-${sortDirection === 'asc' ? 'up' : 'down'} ms-1`}></i>}
                   </div>
                 </th>
             </tr>
           </thead>
           <tbody>
             {orders.map(order => (
-              <tr key={order.id} className="align-middle">
-                <td>
-                  <div className="small text-muted">
-                    {new Date(order.created_at).toLocaleDateString()}
-                  </div>
-                  <div className="text-xs text-muted">
-                    {new Date(order.created_at).toLocaleTimeString()}
-                  </div>
-                </td>
+              <tr 
+                key={order.id} 
+                className="align-middle clickable-row" 
+                style={{cursor: 'pointer'}}
+                onClick={() => window.location.href = `/admin/orders/${order.id}`}
+              >
                 <td>
                   {order.paid_at ? (
                     <div>
@@ -227,17 +238,22 @@ const AdminSales = () => {
                   <div className="text-xs text-muted">Order #{order.id.toString().padStart(6, '0')}</div>
                 </td>
                 <td>
-                  <div className="fw-bold text-success">${parseFloat(order.final_price || 0).toFixed(2)}</div>
+                  <div className="fw-bold text-success">${formatCurrency(order.final_price)}</div>
                   <div className="text-xs text-muted">PayPal: {order.paypal_transaction_id ? order.paypal_transaction_id.slice(-8) : 'N/A'}</div>
                 </td>
                 <td>
-                  <div>${parseFloat(order.shipping_cost || 0).toFixed(2)}</div>
+                  <div>${formatCurrency(order.shipping_cost)}</div>
                   <div className="text-xs text-muted">{order.shipping_method_name || 'Standard'}</div>
                 </td>
                 <td>
                   <span className={`badge ${order.paypal_payment_status === 'COMPLETED' ? 'bg-success' : 
                     order.paypal_payment_status === 'PENDING' ? 'bg-warning' : 'bg-secondary'}`}>
                     {order.paypal_payment_status || 'Processing'}
+                  </span>
+                </td>
+                <td>
+                  <span className={`badge ${order.order_status === 'shipped' ? 'bg-success' : 'bg-info'}`}>
+                    {order.order_status ? order.order_status.charAt(0).toUpperCase() + order.order_status.slice(1) : 'Pending'}
                   </span>
                 </td>
               </tr>
