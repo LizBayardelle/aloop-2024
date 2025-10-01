@@ -20,11 +20,17 @@ class Api::V1::AdminNotificationsController < ApplicationController
     end
 
     begin
+      # Send admin notification
       AdminMailer.new_order_notification(order_data, order_items_data).deliver_now
       Rails.logger.info "Admin notification email sent successfully for order #{order.id}"
+      
+      # Send customer confirmation
+      OrderMailer.order_confirmation(order_data, order_items_data).deliver_now
+      Rails.logger.info "Customer confirmation email sent successfully for order #{order.id}"
+      
       head :ok
     rescue StandardError => e
-      Rails.logger.error "Failed to send admin notification for order #{order.id}: #{e.message}"
+      Rails.logger.error "Failed to send notification emails for order #{order.id}: #{e.message}"
       Rails.logger.error e.backtrace.join("\n")
       head :internal_server_error
     end

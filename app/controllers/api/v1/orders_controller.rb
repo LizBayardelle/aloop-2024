@@ -26,6 +26,11 @@ class Api::V1::OrdersController < ApplicationController
 		  if paypal_payment_amount.present?
 			@order.update(final_price: paypal_payment_amount)
 		  end
+		  
+		  # Associate order with current user if logged in
+		  if current_user && @order.user_id.nil?
+			@order.update(user_id: current_user.id)
+		  end
 	  
 		  if @order.paypal_payment_status == 'COMPLETED'
 			@order.update(paid_at: Time.current)

@@ -1,15 +1,113 @@
-<main class="my-5">
-	<header class="container text-center">
-		<% if @user.image.attached? %>
-			<div class="profile-image large mb-3 mx-auto">
-			  <img src="<%= url_for(@user.image) %>" />
-			</div>
-		<% end %>
-		<h1>My Profile</h1>
-		<small><%= link_to "Update My Information", edit_user_registration_path(@user) %></small>
-	</header>
+<div class="container my-5">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      
+      <!-- Profile Header -->
+      <div class="card mb-4">
+        <div class="card-body text-center">
+          <% if @user.image.attached? %>
+            <div class="profile-image large mb-3 mx-auto" style="width: 120px; height: 120px; border-radius: 50%; overflow: hidden;">
+              <img src="<%= url_for(@user.image) %>" style="width: 100%; height: 100%; object-fit: cover;" />
+            </div>
+          <% else %>
+            <div class="bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 120px; height: 120px; font-size: 48px;">
+              <%= @user.first_name ? @user.first_name.first.upcase : @user.email.first.upcase %>
+            </div>
+          <% end %>
+          <h2><%= @user.full_name.present? ? @user.full_name : @user.email.split('@').first.titleize %></h2>
+          <p class="text-muted"><%= @user.email %></p>
+          <p class="text-muted">Member since <%= @user.created_at.strftime('%B %Y') %></p>
+          <%= link_to "Edit Profile", edit_user_registration_path, class: "btn btn-outline-primary" %>
+        </div>
+      </div>
 
-	<section>
-		
-	</section>
-</main>
+      <!-- Quick Actions -->
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <div class="card h-100">
+            <div class="card-body text-center">
+              <i class="fas fa-shopping-bag fa-2x text-primary mb-3"></i>
+              <h5>Order History</h5>
+              <p class="text-muted">View your past purchases and track orders</p>
+              <%= link_to "View Orders", orders_user_path(@user), class: "btn btn-primary" %>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card h-100">
+            <div class="card-body text-center">
+              <i class="fas fa-store fa-2x text-primary mb-3"></i>
+              <h5>Continue Shopping</h5>
+              <p class="text-muted">Browse our latest products and kits</p>
+              <%= link_to "Shop Now", products_path, class: "btn btn-primary" %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Orders Summary -->
+      <% recent_orders = @user.orders.where(paid: true).order(created_at: :desc).limit(3) %>
+      <% if recent_orders.any? %>
+        <div class="card">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Recent Orders</h5>
+            <%= link_to "View All", orders_user_path(@user), class: "btn btn-sm btn-outline-primary" %>
+          </div>
+          <div class="card-body">
+            <% recent_orders.each do |order| %>
+              <div class="d-flex justify-content-between align-items-center py-2 <%= 'border-bottom' unless order == recent_orders.last %>">
+                <div>
+                  <strong>Order #<%= order.id.to_s.rjust(6, '0') %></strong>
+                  <br>
+                  <small class="text-muted"><%= order.created_at.strftime('%B %d, %Y') %></small>
+                </div>
+                <div class="text-end">
+                  <span class="badge <%= order.paypal_payment_status == 'COMPLETED' ? 'bg-success' : 'bg-warning' %>">
+                    <%= order.paypal_payment_status || 'Processing' %>
+                  </span>
+                  <br>
+                  <strong>$<%= order.final_price %></strong>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% else %>
+        <div class="card">
+          <div class="card-body text-center">
+            <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+            <h5>No Orders Yet</h5>
+            <p class="text-muted">Start shopping to see your orders here!</p>
+            <%= link_to "Browse Products", products_path, class: "btn btn-primary" %>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Account Info -->
+      <div class="card mt-4">
+        <div class="card-header">
+          <h5 class="mb-0">Account Information</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <p><strong>Email:</strong> <%= @user.email %></p>
+              <p><strong>Name:</strong> <%= @user.full_name.present? ? @user.full_name : 'Not provided' %></p>
+            </div>
+            <div class="col-md-6">
+              <p><strong>Member since:</strong> <%= @user.created_at.strftime('%B %d, %Y') %></p>
+              <p><strong>Total Orders:</strong> <%= @user.orders.where(paid: true).count %></p>
+            </div>
+          </div>
+          <div class="mt-3">
+            <%= link_to "Update Profile", edit_user_registration_path, class: "btn btn-outline-primary me-2" %>
+            <% if @user.admin? %>
+              <%= link_to "Admin Dashboard", admin_dashboard_path, class: "btn btn-outline-success" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

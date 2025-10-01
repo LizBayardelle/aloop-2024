@@ -1,8 +1,13 @@
 class UsersController < ApplicationController
+  before_action :authenticate_user!, only: [:orders]
   before_action :set_user, only: %i[ show ]
 
   def show
     @new_order_item = OrderItem.new
+  end
+
+  def orders
+    @orders = current_user.orders.where(paid: true).order(created_at: :desc)
   end
 
   def authorize_user

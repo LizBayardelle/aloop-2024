@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -11,9 +11,32 @@ const validationSchema = Yup.object().shape({
   state: Yup.string().required('Required'),
   postal_code: Yup.string().required('Required'),
   country: Yup.string().required('Required'),
+  create_account: Yup.boolean(),
+  password: Yup.string().when('create_account', {
+    is: true,
+    then: () => Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
+    otherwise: () => Yup.string()
+  }),
+  password_confirmation: Yup.string().when('create_account', {
+    is: true,
+    then: () => Yup.string()
+      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .required('Password confirmation is required'),
+    otherwise: () => Yup.string()
+  })
 });
 
 const CheckoutShippingInfo = ({ order, onUpdateOrder, onNext, onBack }) => {
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  
+  useEffect(() => {
+    // Check if user is logged in by looking for user session indicators
+    const userSignedIn = document.querySelector('meta[name="user-signed-in"]')?.content === 'true' ||
+                        document.querySelector('[data-user-id]')?.dataset.userId ||
+                        document.body.dataset.userSignedIn === 'true';
+    setIsUserLoggedIn(userSignedIn);
+  }, []);
+  
   const fetchShippingRates = async (orderId, retries = 3) => {
     try {
       const response = await axios.get(`/api/v1/orders/${orderId}/shipping_rates`);
@@ -29,8 +52,54 @@ const CheckoutShippingInfo = ({ order, onUpdateOrder, onNext, onBack }) => {
 
   const handleSubmit = async (values, { setSubmitting, setErrors }) => {
     try {
-      // First, update the order with the new shipping info
-      const updatedOrderResponse = await axios.patch(`/api/v1/orders/${order.id}`, { order: { ...values, shipping_info: true } });
+      // Check if user is already logged in before attempting registration
+      const isLoggedIn = document.querySelector('meta[name="current-user-id"]')?.content;
+      
+      // Only attempt account creation if not logged in and checkbox is checked
+      if (values.create_account && !isLoggedIn) {
+        try {
+          // Split name into first and last name
+          const nameParts = values.ship_to_name.split(' ');
+          const firstName = nameParts[0] || '';
+          const lastName = nameParts.slice(1).join(' ') || '';
+          
+          const registrationData = {
+            user: {
+              email: values.customer_email,
+              password: values.password,
+              password_confirmation: values.password_confirmation,
+              first_name: firstName,
+              last_name: lastName
+            }
+          };
+          
+          const registrationResponse = await axios.post('/users', registrationData);
+          // Store user info if registration successful
+          if (registrationResponse.data.user) {
+            // User is now logged in via devise
+            console.log('Account created successfully');
+            // Refresh the page to update the session
+            window.location.reload();
+            return;
+          }
+        } catch (registrationError) {
+          if (registrationError.response?.status === 302) {
+            // Already logged in, continue with checkout
+            console.log('User already logged in, continuing with checkout');
+          } else if (registrationError.response?.data?.errors) {
+            setErrors({ submit: 'Account creation failed: ' + Object.values(registrationError.response.data.errors).join(', ') });
+            return;
+          }
+        }
+      }
+      
+      // Continue with order update (remove password fields from order data)
+      const { create_account, password, password_confirmation, ...orderData } = values;
+      
+      // Update the order with the new shipping info
+      const updatedOrderResponse = await axios.patch(`/api/v1/orders/${order.id}`, { 
+        order: { ...orderData, shipping_info: true } 
+      });
       const updatedOrder = updatedOrderResponse.data;
   
       // Update the order state in the parent component
@@ -67,11 +136,14 @@ const CheckoutShippingInfo = ({ order, onUpdateOrder, onNext, onBack }) => {
           state: order.state || '',
           postal_code: order.postal_code || '',
           country: order.country || '',
+          create_account: false,
+          password: '',
+          password_confirmation: ''
         }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting, errors }) => (
+        {({ isSubmitting, errors, values }) => (
           <Form>
             <div className="row">
               <div className="col-12 col-md-6 mb-3">
@@ -106,6 +178,34 @@ const CheckoutShippingInfo = ({ order, onUpdateOrder, onNext, onBack }) => {
                 <ErrorMessage name="country" component="div" className="text-danger" />
               </div>
             </div>
+            
+            {/* Account Creation Section - Only show if not logged in */}
+            {!isUserLoggedIn && (
+              <div className="card mb-3 mt-4">
+                <div className="card-body">
+                  <div className="form-check mb-3">
+                    <Field type="checkbox" name="create_account" className="form-check-input" id="createAccount" />
+                    <label className="form-check-label" htmlFor="createAccount">
+                      Create an account to track your orders
+                    </label>
+                  </div>
+                  
+                  {values.create_account && (
+                    <div className="row">
+                      <div className="col-12 col-md-6 mb-3">
+                        <Field name="password" type="password" className="form-control" placeholder="Password" />
+                        <ErrorMessage name="password" component="div" className="text-danger" />
+                      </div>
+                      <div className="col-12 col-md-6 mb-3">
+                        <Field name="password_confirmation" type="password" className="form-control" placeholder="Confirm Password" />
+                        <ErrorMessage name="password_confirmation" component="div" className="text-danger" />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+            
             {errors.submit && <div className="alert alert-danger">{errors.submit}</div>}
             <div className="d-flex justify-content-between mt-4">
               <button type="button" onClick={onBack} className="btn btn-secondary">Back</button>

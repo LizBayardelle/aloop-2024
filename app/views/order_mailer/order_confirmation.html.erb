@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; color: #333; }
+        .header { background-color: #2c3e50; color: white; padding: 20px; text-align: center; }
+        .container { padding: 20px; max-width: 600px; margin: 0 auto; }
+        .section { margin-bottom: 30px; }
+        h1 { margin: 0; }
+        h2 { color: #2c3e50; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { padding: 12px; text-align: left; }
+        .items-table th { background-color: #ecf0f1; font-weight: bold; }
+        .items-table td { border-bottom: 1px solid #ecf0f1; }
+        .total-row { font-weight: bold; font-size: 1.2em; border-top: 2px solid #2c3e50; }
+        .footer { background-color: #ecf0f1; padding: 20px; text-align: center; margin-top: 30px; }
+        .button { background-color: #3498db; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Thank You for Your Order!</h1>
+    </div>
+
+    <div class="container">
+        <div class="section">
+            <p>Hi <%= @order['ship_to_name'] %>,</p>
+            <p>We've received your order and will begin processing it right away. Your order details are below:</p>
+        </div>
+
+        <div class="section">
+            <h2>Order Information</h2>
+            <table>
+                <tr><td><strong>Order Number:</strong></td><td>#<%= @order['id'].to_s.rjust(6, '0') %></td></tr>
+                <tr><td><strong>Order Date:</strong></td><td><%= @order['created_at'] ? DateTime.parse(@order['created_at'].to_s).strftime('%B %d, %Y at %l:%M %p') : Date.current.strftime('%B %d, %Y') %></td></tr>
+                <tr><td><strong>Payment Method:</strong></td><td>PayPal</td></tr>
+                <tr><td><strong>Transaction ID:</strong></td><td><%= @order['paypal_transaction_id'] || 'Processing' %></td></tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>Order Summary</h2>
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% @order_items.each do |item| %>
+                        <tr>
+                            <td><%= item['product_name'] %></td>
+                            <td><%= item['quantity'] %></td>
+                            <td>$<%= item['total_price'] %></td>
+                        </tr>
+                    <% end %>
+                    <tr>
+                        <td colspan="2">Shipping (<%= @order['shipping_method_name'] %>)</td>
+                        <td>$<%= @order['shipping_cost'] %></td>
+                    </tr>
+                    <tr class="total-row">
+                        <td colspan="2">Total</td>
+                        <td>$<%= @order['final_price'] %></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>Shipping Address</h2>
+            <p>
+                <%= @order['ship_to_name'] %><br>
+                <%= @order['address_line_1'] %><br>
+                <% if @order['address_line_2'].present? %>
+                    <%= @order['address_line_2'] %><br>
+                <% end %>
+                <%= @order['city'] %>, <%= @order['state'] %> <%= @order['postal_code'] %><br>
+                <%= @order['country'] %>
+            </p>
+        </div>
+
+        <div class="section">
+            <p><strong>What's Next?</strong></p>
+            <p>We'll send you another email when your order ships with tracking information.</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Questions about your order? Contact us at <a href="mailto:sales@aloop.com">sales@aloop.com</a></p>
+        <p>&copy; <%= Date.current.year %> Aloop Offroad. All rights reserved.</p>
+        <p><a href="https://aloop.com">Visit our website</a></p>
+    </div>
+</body>
+</html>

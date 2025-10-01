@@ -1,0 +1,61 @@
+<nav aria-label="breadcrumb" class="admin-breadcrumb-nav mb-4">
+  <div class="container-fluid">
+    <ol class="breadcrumb bg-white border-bottom py-3 mb-0">
+      <%= link_to admin_dashboard_path, class: "breadcrumb-item admin-breadcrumb-link #{'active' if current_page?(admin_dashboard_path)}" do %>
+        <i class="fas fa-tachometer-alt me-1"></i>
+        Dashboard
+      <% end %>
+      
+      <% case controller.action_name %>
+      <% when 'products' %>
+        <li class="breadcrumb-item active text-muted" aria-current="page">
+          <i class="fas fa-box me-1"></i>
+          Products
+        </li>
+      <% when 'users' %>
+        <li class="breadcrumb-item active text-muted" aria-current="page">
+          <i class="fas fa-users me-1"></i>
+          Users
+        </li>
+      <% when 'sales' %>
+        <li class="breadcrumb-item active text-muted" aria-current="page">
+          <i class="fas fa-chart-line me-1"></i>
+          Sales
+        </li>
+      <% when 'blog' %>
+        <li class="breadcrumb-item active text-muted" aria-current="page">
+          <i class="fas fa-blog me-1"></i>
+          Blog
+        </li>
+      <% end %>
+    </ol>
+  </div>
+</nav>
+
+<style>
+  .admin-breadcrumb-nav {
+    margin-left: -1rem;
+    margin-right: -1rem;
+    margin-top: -1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  
+  .admin-breadcrumb-link {
+    color: #2e3d99 !important;
+    text-decoration: none !important;
+    font-weight: 500;
+  }
+  
+  .admin-breadcrumb-link:hover {
+    color: #1e2d89 !important;
+    text-decoration: none !important;
+  }
+  
+  .breadcrumb-item.active {
+    color: #6c757d !important;
+  }
+  
+  .breadcrumb-item + .breadcrumb-item::before {
+    color: #dee2e6;
+  }
+</style>

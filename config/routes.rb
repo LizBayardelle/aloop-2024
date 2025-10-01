@@ -4,7 +4,11 @@ Rails.application.routes.draw do
   root 'home#index'
   
   devise_for :users, :controllers => { registrations: 'registrations' }
-  resources :users, only: [:show]
+  resources :users, only: [:show] do
+    member do
+      get 'orders'
+    end
+  end
   post "users/:id/authorize_user" => "users#authorize_user", as: "authorize_user"
 
   get 'admin/dashboard'
