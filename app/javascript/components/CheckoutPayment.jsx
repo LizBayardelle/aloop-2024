@@ -50,7 +50,12 @@ const CheckoutPayment = ({ order, onUpdateOrder, onNext, onBack }) => {
               ...paypalDetails
             };
             await onUpdateOrder(updatedOrder);
-            await sendAdminNotification(updatedOrder);
+            try {
+              await sendAdminNotification(updatedOrder);
+            } catch (notificationError) {
+              console.error('Admin notification failed, but payment was successful:', notificationError);
+              // Continue to next step even if notification fails
+            }
             onNext();
           });
         },
@@ -65,7 +70,13 @@ const CheckoutPayment = ({ order, onUpdateOrder, onNext, onBack }) => {
   useEffect(() => {
     if (!paypalLoaded) {
       const script = document.createElement('script');
-      script.src = `https://www.paypal.com/sdk/js?client-id=ATJK2vV0aAd9g8iShFQ2LccUACGyFaKJ0fn0nj9skdi506uCQFDrMF5mAil5P7JSBGGaIDUQcbFQkULD&currency=USD`;
+      const paypalClientId = window.PAYPAL_CLIENT_ID;
+      if (!paypalClientId) {
+        console.error('PayPal Client ID not found. Please check your environment configuration.');
+        setError('Payment system configuration error. Please contact support.');
+        return;
+      }
+      script.src = `https://www.paypal.com/sdk/js?client-id=${paypalClientId}&currency=USD`;
       script.async = true;
       script.onload = () => setPaypalLoaded(true);
       document.body.appendChild(script);
