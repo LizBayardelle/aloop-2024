@@ -15,7 +15,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center"><img class="img-fluid rounded-1 my-5" src="https://aloopphotobucket.s3.us-west-1.amazonaws.com/Images/GP+Garage+XR650L.jpg" alt="..." /></div>
+                <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center"><img class="img-fluid rounded-1 my-5" src="https://aloopphotobucket.s3.us-west-1.amazonaws.com/Images/GP+Garage+XR650L.jpg" alt="Aloop XR650L Kit" loading="lazy" /></div>
             </div>
         </div>
     </header>
@@ -101,75 +101,40 @@
             </div> 
 
             <div class="row gx-5">
-                <% Blog.all.limit(3).each do |blog| %>
+                <% Blog.where(published: true).order(created_at: :desc).limit(3).each do |blog| %>
                     <%= render partial: "blogs/blog_card", locals: { blog: blog } %>
                 <% end %>
             </div>
-
-
-            <!-- Call to action-->
-            <aside class="bg-red rounded-1 p-4 p-sm-5 mt-5">
-                <div class="d-flex align-items-center justify-content-between flex-column flex-xl-row text-center text-xl-start">
-                    <div class="mb-4 mb-xl-0">
-                        <div class="fs-3 fw-bold text-white">New products, delivered to you.</div>
-                        <div class="text-white-50">Sign up for our newsletter for the latest updates.</div>
-                    </div>
-                    <div class="ms-xl-4">
-                        <div class="input-group mb-2">
-                            <input class="form-control" type="text" placeholder="Email address..." aria-label="Email address..." aria-describedby="button-newsletter" />
-                            <button class="btn btn-black" id="button-newsletter" type="button">Sign up</button>
-                        </div>
-                        <div class="small text-white-50">We care about privacy, and will never share your data.</div>
-                    </div>
-                </div>
-            </aside>
         </div>
     </section>
 
 
 
-    <section>
+    <section class="py-5">
         <div class="container">
             <h2 class="text-center pb-4">Aloop Bikes from Around the Web</h2>
-
-            <iframe id="curator-feed-frame" style="width: 100%; height: 500px; border: none;"></iframe>
-
-            <script type="text/javascript">
-            document.addEventListener('DOMContentLoaded', function() {
-                var iframe = document.getElementById('curator-feed-frame');
-                var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-
-                iframeDoc.open();
-                iframeDoc.write(`
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"><\/script>
-                        <script src="https://cdn.curator.io/published/65414202-ebc8-4b03-90ae-5b54dab3ee4d.js"><\/script>
-                    </head>
-                    <body>
-                        <div id="curator-feed-aloop-offroad-layout"></div>
-                    </body>
-                    </html>
-                `);
-                iframeDoc.close();
-            });
-            </script>
+            <div id="curator-feed-aloop-offroad-layout" style="min-height: 500px;"></div>
         </div>
     </section>
 
+    <script src="https://cdn.curator.io/published/65414202-ebc8-4b03-90ae-5b54dab3ee4d.js"></script>
 
 
 
-    <% if @videos != [] %>
-        <section class="text-center container py-5">
-            <h2 class="pb-4">Videos</h2>
+
+    <% if @videos.any? %>
+        <section class="container py-5">
+            <h2 class="text-center pb-4">Videos</h2>
+            <div class="row g-4">
                 <% @videos.each do |video| %>
-                    <div class="py-3">
-                        <%= video.video_url.html_safe %>
-                    </div> <!-- col -->
+                    <div class="col-lg-6">
+                        <div class="ratio ratio-16x9">
+                            <%= video.video_url.html_safe %>
+                        </div>
+                    </div>
                 <% end %>
-        </section> <!-- row -->
+            </div>
+        </section>
     <% end %>
 
 
