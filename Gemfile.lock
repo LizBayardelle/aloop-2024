@@ -1761,6 +1761,7 @@ GEM
     nokogiri (1.16.7-x86_64-linux)
       racc (~> 1.4)
     orm_adapter (0.5.0)
+    pagy (6.5.0)
     paypal-checkout-sdk (1.0.5)
       paypalhttp (~> 1.0.1)
     paypal-sdk-rest (1.7.5)
@@ -1924,6 +1925,7 @@ DEPENDENCIES
   listen (~> 3.3)
   mini_magick
   money-rails
+  pagy (~> 6.0)
   paypal-checkout-sdk
   paypal-sdk-rest
   pg (~> 1.1)

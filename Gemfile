@@ -40,6 +40,9 @@ gem 'mini_magick'
 gem 'aws-sdk' , '~> 3'
 gem 'aws-sdk-s3', require: false
 
+# FOR PAGINATION
+gem 'pagy', '~> 6.0'
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'

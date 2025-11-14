@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  include Pagy::Frontend
   protect_from_forgery with: :exception
   before_action :set_current_order
   before_action :set_active_storage_current_host

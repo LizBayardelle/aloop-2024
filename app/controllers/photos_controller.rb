@@ -1,9 +1,11 @@
 class PhotosController < ApplicationController
+  include Pagy::Backend
   before_action :set_photo, only: %i[ update destroy ]
 
 
   def index
-    @photos = Photo.all
+    @unapproved_photos = Photo.where(approved: false).order(created_at: :desc) if current_user&.admin?
+    @pagy, @approved_photos = pagy(Photo.where(approved: true).order(created_at: :desc), items: 50)
   end
 
 
