@@ -4,28 +4,39 @@
   /* Breadcrumb Styles */
   .breadcrumb {
     background: transparent;
-    padding: 0.75rem 0;
-    margin: 0;
-    font-size: 0.95rem;
+    padding: 0;
+    margin: 0 0 2rem 0;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 
   .breadcrumb-item + .breadcrumb-item::before {
-    content: "›";
-    color: #6c757d;
-    font-size: 1.2rem;
+    content: "/";
+    color: #dee2e6;
+    font-weight: 300;
   }
 
   .breadcrumb-item a {
-    color: #2e3d99;
-    transition: color 0.3s ease;
+    color: #6c757d;
+    text-decoration: none;
+    transition: color 0.2s ease;
   }
 
   .breadcrumb-item a:hover {
-    color: #1e2d89;
+    color: #2e3d99;
   }
 
   .breadcrumb-item.active {
-    color: #6c757d;
+    color: #212529;
+    font-weight: 500;
   }
 
   /* Product Detail Page Styles */
