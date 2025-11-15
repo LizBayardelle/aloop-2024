@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
-const AdminVariant = ({ variant, onUpdate, onEdit, csrfToken }) => {
+const AdminVariant = ({ variant, onUpdate, onEditVariant, csrfToken }) => {
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this variant?')) {
       try {
@@ -18,31 +18,49 @@ const AdminVariant = ({ variant, onUpdate, onEdit, csrfToken }) => {
     }
   };
 
-
-  
-
   return (
-    <tr>
-      <td>
-        <i className="fa-solid fa-angles-right color-red" style={{ marginRight: "10px", marginLeft: "30px" }}></i>
-        {variant.name}
-      </td>
-      <td>{variant.sku}</td>
-      <td>{variant.photos_count || 0}</td>
-      <td>{variant.active ? 'Yes' : 'No'}</td>
-      <td>${variant.price}</td>
-      <td>{variant.vendor}</td>
-      <td>{variant.vendor_parts_number}</td>
-      <td>{variant.bike_models?.map(model => model.name).join(', ')}</td>
-      <td className="text-end">
-        <button onClick={() => onEdit(variant)} className="me-2 bg-white">
-          <i className="fas fa-pen color-red bg-white p-0"></i>
-        </button>
-        <button onClick={handleDelete}>
-          <i className="fas fa-trash-alt color-red bg-white p-0"></i>
-        </button>
-      </td>
-    </tr>
+    <div className="admin-variant-card">
+      <div className="admin-variant-header">
+        <div className="admin-variant-name">{variant.name}</div>
+        <div className="admin-variant-actions">
+          <button onClick={() => onEditVariant(variant)} className="admin-action-btn" title="Edit variant">
+            <i className="fas fa-pen"></i>
+          </button>
+          <button onClick={handleDelete} className="admin-action-btn admin-action-delete" title="Delete variant">
+            <i className="fas fa-trash-alt"></i>
+          </button>
+        </div>
+      </div>
+      <div className="admin-variant-details">
+        <span className="admin-variant-detail-inline">
+          <strong>SKU:</strong> {variant.sku || '—'}
+        </span>
+        <span className="admin-variant-detail-inline">
+          <strong>Price:</strong> ${variant.price || '0.00'}
+        </span>
+        <span className="admin-variant-detail-inline">
+          <strong>Photos:</strong> {variant.photos_count || 0}
+        </span>
+        <span className="admin-variant-detail-inline">
+          <strong>Status:</strong>
+          <span className={`admin-meta-badge ${variant.active ? 'active' : 'inactive'}`}>
+            {variant.active ? 'Active' : 'Inactive'}
+          </span>
+        </span>
+        <span className="admin-variant-detail-inline">
+          <strong>Vendor:</strong> {variant.vendor || '—'}
+        </span>
+        <span className="admin-variant-detail-inline">
+          <strong>Vendor Part #:</strong> {variant.vendor_parts_number || '—'}
+        </span>
+        <span className="admin-variant-detail-inline">
+          <strong>Bike Models:</strong>
+          {variant.bike_models?.length > 0
+            ? variant.bike_models.map(model => model.name).join(', ')
+            : '—'}
+        </span>
+      </div>
+    </div>
   );
 };
 

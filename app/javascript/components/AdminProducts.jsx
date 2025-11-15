@@ -88,22 +88,22 @@ const AdminProducts = () => {
   };
 
   return (
-    <div className="container py-5">
-      <header className="text-center mb-3">
-        <button className="btn btn-primary me-2" onClick={() => setShowProductForm(true)}>
-          Add a New Product
+    <div>
+      <div className="d-flex justify-content-end gap-2 mb-4">
+        <button className="btn btn-blue" onClick={() => setShowProductForm(true)}>
+          <i className="fas fa-plus me-2"></i>Add Product
         </button>
-        <button className="btn btn-secondary me-2" onClick={() => setShowComponentForm(true)}>
-          Add a New Component
+        <button className="btn btn-blue-outline" onClick={() => setShowComponentForm(true)}>
+          <i className="fas fa-plus me-2"></i>Add Component
         </button>
-        <button className="btn btn-info" onClick={() => setShowVariantForm(true)}>
-          Add a New Variant
+        <button className="btn btn-blue-outline" onClick={() => setShowVariantForm(true)}>
+          <i className="fas fa-plus me-2"></i>Add Variant
         </button>
-      </header>
+      </div>
 
-      <AdminProductList 
-        products={products} 
-        onUpdate={fetchProducts} 
+      <AdminProductList
+        products={products}
+        onUpdate={fetchProducts}
         onEditProduct={handleEditProduct}
         onEditComponent={handleEditComponent}
         onEditVariant={handleEditVariant}
@@ -111,9 +111,9 @@ const AdminProducts = () => {
       />
 
       <Modal isOpen={showProductForm} onClose={closeAllForms}>
-        <FormProduct 
-          onSubmit={handleFormSubmit} 
-          onCancel={closeAllForms} 
+        <FormProduct
+          onSubmit={handleFormSubmit}
+          onCancel={closeAllForms}
           categories={categories}
           initialData={editingItem}
           csrfToken={csrfToken}
@@ -121,9 +121,9 @@ const AdminProducts = () => {
       </Modal>
 
       <Modal isOpen={showComponentForm} onClose={closeAllForms}>
-        <FormComponent 
-          onSubmit={handleFormSubmit} 
-          onCancel={closeAllForms} 
+        <FormComponent
+          onSubmit={handleFormSubmit}
+          onCancel={closeAllForms}
           products={products}
           initialData={editingItem}
           csrfToken={csrfToken}
@@ -131,9 +131,9 @@ const AdminProducts = () => {
       </Modal>
 
       <Modal isOpen={showVariantForm} onClose={closeAllForms}>
-        <FormVariant 
-          onSubmit={handleFormSubmit} 
-          onCancel={closeAllForms} 
+        <FormVariant
+          onSubmit={handleFormSubmit}
+          onCancel={closeAllForms}
           bikeModels={bikeModels}
           components={products.flatMap(p => p.components || [])}
           initialData={editingItem}

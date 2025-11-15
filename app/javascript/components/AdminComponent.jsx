@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
+import AdminVariant from './AdminVariant';
 
-const AdminComponent = ({ component, onUpdate, onEdit, csrfToken }) => {
+const AdminComponent = ({ component, onUpdate, onEditComponent, onEditVariant, csrfToken }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this component?')) {
       try {
@@ -18,29 +21,50 @@ const AdminComponent = ({ component, onUpdate, onEdit, csrfToken }) => {
     }
   };
 
-  const cells = [
-    <td key="name" className="bg-grey">
-      <i className="fa-solid fa-angles-right color-blue" style={{ marginRight: "10px", marginLeft: "10px" }}></i>
-      {component.name}
-    </td>,
-    <td key="sku" className="bg-grey"></td>,
-    <td key="photos" className="bg-grey"></td>,
-    <td key="active" className="bg-grey">{component.active ? 'Yes' : 'No'}</td>,
-    <td key="price" className="bg-grey"></td>,
-    <td key="vendor" className="bg-grey"></td>,
-    <td key="vendor-parts" className="bg-grey"></td>,
-    <td key="bike-models" className="bg-grey"></td>,
-    <td key="actions" className="text-end bg-grey">
-      <button onClick={() => onEdit(component)} className="me-2 bg-transparent">
-        <i className="fas fa-pen color-blue bg-transparent p-0"></i>
-      </button>
-      <button onClick={handleDelete} className="bg-transparent">
-        <i className="fas fa-trash-alt color-blue bg-transparent p-0"></i>
-      </button>
-    </td>
-  ];
+  return (
+    <div className="admin-component-card">
+      <div className="admin-component-header">
+        <div className="d-flex align-items-center flex-grow-1">
+          <button
+            className="admin-expand-btn"
+            onClick={() => setIsExpanded(!isExpanded)}
+          >
+            <i className={`fas fa-chevron-${isExpanded ? 'down' : 'right'}`}></i>
+          </button>
+          <div className="admin-component-info">
+            <h4 className="admin-component-name">{component.name}</h4>
+            <div className="admin-component-meta">
+              <span className={`admin-meta-badge ${component.active ? 'active' : 'inactive'}`}>
+                {component.active ? 'Active' : 'Inactive'}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="admin-component-actions">
+          <button onClick={() => onEditComponent(component)} className="admin-action-btn" title="Edit component">
+            <i className="fas fa-pen"></i>
+          </button>
+          <button onClick={handleDelete} className="admin-action-btn admin-action-delete" title="Delete component">
+            <i className="fas fa-trash-alt"></i>
+          </button>
+        </div>
+      </div>
 
-  return <tr>{cells}</tr>;
+      {isExpanded && component.variants && component.variants.length > 0 && (
+        <div className="admin-component-variants">
+          {component.variants.map(variant => (
+            <AdminVariant
+              key={variant.id}
+              variant={variant}
+              onUpdate={onUpdate}
+              onEditVariant={onEditVariant}
+              csrfToken={csrfToken}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default AdminComponent;

@@ -187,8 +187,9 @@ const FormVariant = ({ onSubmit, onCancel, bikeModels, components, initialData, 
           </div>
 
           <div className="form-group col-6">
-            <label htmlFor="price">Price</label>
+            <label htmlFor="price">Additional Price</label>
             <input type="number" step="0.01" className="form-control" id="price" name="price" value={variant.price} onChange={handleChange} required />
+            <small className="form-text text-muted">This amount will be added to the product's base price.</small>
           </div>
 
           <div className="form-group col-6">

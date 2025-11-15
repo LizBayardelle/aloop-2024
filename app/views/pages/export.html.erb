@@ -1,59 +1,49 @@
 <main class="flex-shrink-0">
-
-
-    <header class="py-5">
+    <section class="py-5">
         <div class="container px-5">
-            <div class="text-center mb-5">
-                <h1 class="fw-bolder">
-                    Exports
-                </h1>
-                <p class="h3">
-                    Overseas orders are no problem!
-                </p>
-                <p class="fw-normal text-muted">
+            <div class="export-header">
+                <h1>Exports</h1>
+                <p class="subtitle">Overseas orders are no problem!</p>
+                <p>
                     We've sold thousands of our Aloop 4SMX kits to customers in over 40 countries! Most shipments are sent via US Mail Global Express Mail, and can arrive in under 1 week, no matter where in the world you live.
                 </p>
             </div>
-        </div> <!-- container -->
-    </header>
+        </div>
+    </section>
 
-
-
-    <section class="py-5 bg-tires">
-        <div class="container px-5 my-5 text-center">
-            <div class="w-sm-75 mx-auto">
-                <p class="lead color-white fw-bolder">
-                    We usually ship overseas orders via US Mail Global Express Mail service. It takes about 3-5 days to reach Europe and 7-10 days to reach Asia and Australia. Cost for Global Express Mail shipping is usually about $150&nbsp;USD&nbsp;per&nbsp;kit.
+    <section class="py-5">
+        <div class="container px-5">
+            <div class="export-info">
+                <p>
+                    We usually ship overseas orders via US Mail Global Express Mail service. It takes about 3-5 days to reach Europe and 7-10 days to reach Asia and Australia. Cost for Global Express Mail shipping is usually about $150 USD per kit.
                 </p>
-                <p class="lead color-white fw-bolder">
-                    The kit comes in two boxes so it does not travel as an oversize parcel. With Global Express Mail we can track the progress of the packages and it's been a very reliable method to get&nbsp;our&nbsp;products&nbsp;overseas.
+                <p>
+                    The kit comes in two boxes so it does not travel as an oversize parcel. With Global Express Mail we can track the progress of the packages and it's been a very reliable method to get our products overseas.
                 </p>
             </div>
         </div>
     </section>
 
+    <section class="py-5">
+        <div class="container px-5">
+            <div class="text-center">
+                <h2 class="fw-bolder mb-3" style="font-size: 2rem;">Overseas Distributors</h2>
+                <p class="text-muted mb-4">
+                    We also have a distributor in Japan that stocks Aloop 4SMX kits.
+                </p>
 
+                <a href="http://www.chsports.com" class="distributor-card">
+                    <%= image_tag "japan.jpg", alt: "Chane Sports" %>
+                    <h4>Chane Sports</h4>
+                </a>
 
-    <section class="py-5 bg-white">
-        <div class="container px-5 my-5 text-center">
-            <h2 class="display-4 fw-bolder mb-4">Overseas Distributors</h2>
-            <p class="fw-normal">
-                We also have a distributor in Japan that stocks Aloop 4SMX kits.
-            </p>
-
-            <a href="http://www.chsports.com" class="text-center" style="text-decoration: none;">
-                <div class="raised-box mx-auto py-3" style="width: 250px">
-                    <%= image_tag "japan.jpg", style: "width: 200px; margin: 40px 0 35px 0", alt: "Chane Sports" %>
-                    <h4 style="text-decoration: none;">Chane Sports</h4>
+                <div class="export-contact">
+                    <h3>Questions? Want more info or to get in touch?</h3>
+                    <%= link_to "Contact Us", root_path, class: "btn btn-lg btn-blue-outline" %>
                 </div>
-            </a>
-
-            <p class="h3 mt-5">Questions? Want more info or to get in touch?</p>
-            <%= link_to "Contact Us", root_path, class: "btn btn-lg btn-blue-outline mt-3" %>
+            </div>
         </div>
     </section>
 
-
     <%= render partial: "layouts/ways_to_order" %>
-
 </main>

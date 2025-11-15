@@ -155,17 +155,18 @@ const FormProduct = ({ onSubmit, onCancel, categories, initialData, csrfToken })
         </div>
 
         <div className="form-group col-sm-4 pb-4">
-          <label htmlFor="price">Price</label>
-          <input 
-            type="number" 
-            step="0.01" 
-            className="form-control" 
-            id="price" 
-            name="price" 
-            value={product.price} 
-            onChange={handleChange} 
-            required 
+          <label htmlFor="price">Base Price</label>
+          <input
+            type="number"
+            step="0.01"
+            className="form-control"
+            id="price"
+            name="price"
+            value={product.price}
+            onChange={handleChange}
+            required
           />
+          <small className="form-text text-muted">This is the default price. Variant prices will add to this amount.</small>
         </div>
         
         <div className="form-group pb-4">

@@ -10,14 +10,14 @@
               <img src="<%= url_for(@user.image) %>" style="width: 100%; height: 100%; object-fit: cover;" />
             </div>
           <% else %>
-            <div class="bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 120px; height: 120px; font-size: 48px;">
+            <div class="bg-blue text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 120px; height: 120px; font-size: 48px;">
               <%= @user.first_name ? @user.first_name.first.upcase : @user.email.first.upcase %>
             </div>
           <% end %>
           <h2><%= @user.full_name.present? ? @user.full_name : @user.email.split('@').first.titleize %></h2>
           <p class="text-muted"><%= @user.email %></p>
           <p class="text-muted">Member since <%= @user.created_at.strftime('%B %Y') %></p>
-          <%= link_to "Edit Profile", edit_user_registration_path, class: "btn btn-outline-primary" %>
+          <%= link_to "Edit Profile", edit_user_registration_path, class: "btn btn-blue-outline" %>
         </div>
       </div>
 
@@ -26,20 +26,20 @@
         <div class="col-md-6">
           <div class="card h-100">
             <div class="card-body text-center">
-              <i class="fas fa-shopping-bag fa-2x text-primary mb-3"></i>
+              <i class="fas fa-shopping-bag fa-2x text-blue mb-3"></i>
               <h5>Order History</h5>
               <p class="text-muted">View your past purchases and track orders</p>
-              <%= link_to "View Orders", orders_user_path(@user), class: "btn btn-primary" %>
+              <%= link_to "View Orders", orders_user_path(@user), class: "btn btn-blue" %>
             </div>
           </div>
         </div>
         <div class="col-md-6">
           <div class="card h-100">
             <div class="card-body text-center">
-              <i class="fas fa-store fa-2x text-primary mb-3"></i>
+              <i class="fas fa-store fa-2x text-blue mb-3"></i>
               <h5>Continue Shopping</h5>
               <p class="text-muted">Browse our latest products and kits</p>
-              <%= link_to "Shop Now", products_path, class: "btn btn-primary" %>
+              <%= link_to "Shop Now", products_path, class: "btn btn-blue" %>
             </div>
           </div>
         </div>
@@ -51,7 +51,7 @@
         <div class="card">
           <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Recent Orders</h5>
-            <%= link_to "View All", orders_user_path(@user), class: "btn btn-sm btn-outline-primary" %>
+            <%= link_to "View All", orders_user_path(@user), class: "btn btn-sm btn-blue-outline" %>
           </div>
           <div class="card-body">
             <% recent_orders.each do |order| %>
@@ -78,7 +78,7 @@
             <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
             <h5>No Orders Yet</h5>
             <p class="text-muted">Start shopping to see your orders here!</p>
-            <%= link_to "Browse Products", products_path, class: "btn btn-primary" %>
+            <%= link_to "Browse Products", products_path, class: "btn btn-blue" %>
           </div>
         </div>
       <% end %>
@@ -100,9 +100,9 @@
             </div>
           </div>
           <div class="mt-3">
-            <%= link_to "Update Profile", edit_user_registration_path, class: "btn btn-outline-primary me-2" %>
+            <%= link_to "Update Profile", edit_user_registration_path, class: "btn btn-blue-outline me-2" %>
             <% if @user.admin? %>
-              <%= link_to "Admin Dashboard", admin_dashboard_path, class: "btn btn-outline-success" %>
+              <%= link_to "Admin Dashboard", admin_dashboard_path, class: "btn btn-blue" %>
             <% end %>
           </div>
         </div>
