@@ -1,11 +1,7 @@
-<header class="container text-center py-5">
+<header class="container text-center py-4">
   <h1 class="display-3 fw-bold mb-3">Customer Images</h1>
-  <p class="lead text-muted mb-3">See real builds from hundreds of our happy customers</p>
-  <% photo_count = Photo.where(approved: true).count %>
-  <div class="mb-4">
-    <span class="badge bg-blue fs-5 px-4 py-2 text-white"><%= photo_count %>+ Customer Builds</span>
-  </div>
-  <button type="button" class="btn btn-blue btn-lg px-5 py-3" data-bs-toggle="modal" data-bs-target="#newPhotoModal">
+  <p class="lead text-muted mb-2"><%= Photo.where(approved: true).count %>+ builds from our happy customers</p>
+  <button type="button" class="btn btn-red btn-lg px-5 py-3 mb-3" data-bs-toggle="modal" data-bs-target="#newPhotoModal">
     <i class="fas fa-camera me-2"></i> Submit Your Photo
   </button>
 
