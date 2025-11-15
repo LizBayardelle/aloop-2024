@@ -1,79 +1,308 @@
 <%# app/views/products/show.html.erb %>
 
-<div class="container py-5">
-  <div class="row">
-    <div class="col-sm-6">
+<style>
+  /* Product Detail Page Styles */
+  .product-detail-gallery .main-image-container {
+    position: relative;
+    width: 100%;
+    padding-top: 75%;
+    background: #f8f9fa;
+    overflow: hidden;
+  }
 
-      <div class="image-gallery">
-        <div class="main-image-container">
+  .product-detail-gallery .main-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .product-detail-gallery .no-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .product-detail-gallery .thumbnails-container {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 4px;
+  }
+
+  .product-detail-gallery .thumbnail {
+    flex: 0 0 auto;
+    width: 100px;
+    height: 100px;
+    border: 3px solid transparent;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .product-detail-gallery .thumbnail:hover {
+    border-color: rgba(46, 61, 153, 0.3);
+  }
+
+  .product-detail-gallery .thumbnail.active {
+    border-color: #2e3d99;
+  }
+
+  .product-detail-gallery .thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .product-detail-info {
+    padding: 1rem 0;
+  }
+
+  .product-detail-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+  }
+
+  .product-detail-price {
+    background: linear-gradient(135deg, #2e3d99 0%, #4a5cb8 100%);
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .product-detail-price .price-label {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.8);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+  }
+
+  .product-detail-price .price-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+  }
+
+  .product-detail-description {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #495057;
+    margin-bottom: 2rem;
+  }
+
+  .product-detail-actions {
+    margin-top: 2rem;
+  }
+
+  /* Customization Modal Styles */
+  .customize-modal {
+    border: none;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .total-price-banner {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-left: 4px solid #2e3d99;
+  }
+
+  .text-blue {
+    color: #2e3d99;
+  }
+
+  .component-title {
+    font-weight: 600;
+    color: #212529;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #e9ecef;
+  }
+
+  .variant-card {
+    background: white;
+    border: 3px solid #e9ecef;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    height: 100%;
+  }
+
+  .variant-card:hover {
+    border-color: rgba(46, 61, 153, 0.4);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .variant-card.active {
+    border-color: #2e3d99;
+    background: #f8f9ff;
+    box-shadow: 0 4px 16px rgba(46, 61, 153, 0.2);
+  }
+
+  .variant-card-inner {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    position: relative;
+  }
+
+  .variant-image {
+    flex: 0 0 80px;
+    height: 80px;
+    margin-right: 1rem;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f8f9fa;
+  }
+
+  .variant-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .variant-info {
+    flex: 1;
+  }
+
+  .variant-name {
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 0.25rem;
+    font-size: 1rem;
+  }
+
+  .variant-price {
+    color: #6c757d;
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .variant-check {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    color: #2e3d99;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .variant-card.active .variant-check {
+    opacity: 1;
+  }
+</style>
+
+<div class="container py-5">
+  <div class="row g-5">
+    <div class="col-lg-6">
+      <div class="product-detail-gallery">
+        <div class="main-image-container rounded shadow-sm">
           <% main_image = @product.main_photos.first %>
           <% if main_image %>
-            <%= image_tag url_for(main_image), alt: "Main product", class: "img-fluid main-image", id: "mainImage" %>
+            <%= image_tag url_for(main_image), alt: @product.name, class: "img-fluid main-image", id: "mainImage" %>
           <% else %>
             <div class="no-image">
+              <i class="fas fa-image fa-3x text-muted mb-3"></i>
               <span>No image available</span>
             </div>
           <% end %>
         </div>
-        <div class="thumbnails-container mt-3">
-          <% @product.main_photos.each_with_index do |photo, index| %>
-            <div class="thumbnail <%= 'active' if photo == main_image %>" data-full-image="<%= url_for(photo) %>">
-              <%= image_tag url_for(photo), alt: "Thumbnail #{index + 1}", class: "img-fluid" %>
-            </div>
-          <% end %>
+        <% if @product.main_photos.count > 1 %>
+          <div class="thumbnails-container mt-3">
+            <% @product.main_photos.each_with_index do |photo, index| %>
+              <div class="thumbnail <%= 'active' if photo == main_image %>" data-full-image="<%= url_for(photo) %>">
+                <%= image_tag url_for(photo), alt: "#{@product.name} - Image #{index + 1}", loading: "lazy" %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="product-detail-info">
+        <h1 class="product-detail-title"><%= @product.name %></h1>
+        <div class="product-detail-price">
+          <span class="price-label">Starting at</span>
+          <span class="price-value"><%= number_to_currency(@product.price) %></span>
+        </div>
+        <div class="product-detail-description">
+          <%= @product.description.html_safe %>
+        </div>
+        <div class="product-detail-actions">
+          <button class="btn btn-blue btn-lg w-100" data-bs-toggle="modal" data-bs-target="#customizeModal">
+            <i class="fas fa-cog me-2"></i> Customize & Add to Cart
+          </button>
         </div>
       </div>
-      <p class="h2 mt-4"><%= number_to_currency(@product.price) %></p>
-
-      <div class="text-center pt-3">
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#customizeModal">
-          Customize and Add to Cart
-        </button>
-      </div>
-
-    </div>
-    <div class="col-sm-6">
-      <h1 class="pb-2"><%= @product.name %></h1>
-      <p class="h4"><%= @product.description.html_safe %></p>
     </div>
   </div>
 </div>
 
 <div class="modal fade" id="customizeModal" tabindex="-1" aria-labelledby="customizeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="customizeModalLabel">Customize Your <%= @product.name %></h5>
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content customize-modal">
+      <div class="modal-header border-0 pb-0">
+        <div>
+          <h3 class="modal-title fw-bold" id="customizeModalLabel">Customize Your <%= @product.name %></h3>
+          <p class="text-muted mb-0">Select your options below</p>
+        </div>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-        <h3 class="text-center">Total Price: <span id="totalPrice"><%= number_to_currency(@product.price) %></span></h3>
-        
+      <div class="modal-body pt-2">
+        <div class="total-price-banner mb-4 p-4 rounded bg-light">
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="h5 mb-0">Total Price:</span>
+            <span class="h3 mb-0 text-blue fw-bold" id="totalPrice"><%= number_to_currency(@product.price) %></span>
+          </div>
+        </div>
+
         <%= form_with(model: OrderItem.new, url: order_items_path, local: false, id: 'addToCartForm') do |form| %>
           <%= form.hidden_field :product_id, value: @product.id %>
           <%= form.hidden_field :quantity, value: 1 %>
           <%= form.hidden_field :specs, id: 'specsField' %>
           <%= form.hidden_field :selected_variant_ids, id: 'selectedVariantIdsField' %>
           <%= form.hidden_field :total_price, id: 'totalPriceField' %>
-          
+
           <% @product.components.each do |component| %>
-            <div class="component-section" data-component-id="<%= component.id %>">
-              <h4 class="mt-3">Choose a <span class="font-weight-bold"><%= component.name %></span></h4>
-              <div class="row">
+            <div class="component-section mb-5" data-component-id="<%= component.id %>">
+              <h5 class="component-title mb-3">
+                <i class="fas fa-cog me-2 text-blue"></i>
+                Choose a <%= component.name %>
+              </h5>
+              <div class="row g-3">
                 <% component.variants.each do |variant| %>
-                  <div class="col-6 mb-3">
-                    <div class="selectbox" data-variant-id="<%= variant.id %>" data-price="<%= variant.price %>" data-name="<%= variant.name %>">
-                      <div class="row">
-                        <div class="col-4">
+                  <div class="col-md-6">
+                    <div class="variant-card" data-variant-id="<%= variant.id %>" data-price="<%= variant.price %>" data-name="<%= variant.name %>">
+                      <div class="variant-card-inner">
+                        <div class="variant-image">
                           <% if variant.photos.attached? && variant.photos.first.present? %>
-                            <%= image_tag url_for(variant.photos.first), class: 'img-fluid', style: 'height: 70px; width: auto; object-fit: cover;', alt: variant.name %>
+                            <%= image_tag url_for(variant.photos.first), alt: variant.name, loading: "lazy" %>
                           <% else %>
-                            <%= image_tag 'placeholder.jpg', class: 'img-fluid', style: 'height: 70px; width: auto; object-fit: cover;', alt: 'Placeholder' %>
+                            <%= image_tag 'placeholder.jpg', alt: 'No image' %>
                           <% end %>
                         </div>
-                        <div class="col-8 text-left">
-                          <strong><%= variant.name %></strong>
-                          <p><%= number_to_currency(variant.price) %></p>
+                        <div class="variant-info">
+                          <h6 class="variant-name"><%= variant.name %></h6>
+                          <p class="variant-price"><%= number_to_currency(variant.price) %></p>
+                        </div>
+                        <div class="variant-check">
+                          <i class="fas fa-check-circle"></i>
                         </div>
                       </div>
                     </div>
@@ -83,9 +312,9 @@
             </div>
           <% end %>
 
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <%= form.submit "Add to Cart", class: "btn btn-primary" %>
+          <div class="modal-footer border-0 pt-4">
+            <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Cancel</button>
+            <%= form.submit "Add to Cart", class: "btn btn-blue btn-lg px-5" %>
           </div>
         <% end %>
       </div>
@@ -118,20 +347,19 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   // Variant selection functionality
-  selectboxes.forEach(box => {
-    box.addEventListener('click', function() {
+  const variantCards = document.querySelectorAll('.variant-card');
+  variantCards.forEach(card => {
+    card.addEventListener('click', function() {
       selectVariant(this);
     });
   });
-  
-  function selectVariant(variantBox) {
-    const componentSection = variantBox.closest('.component-section');
-    componentSection.querySelectorAll('.selectbox').forEach(b => {
-      b.classList.remove('active');
-      b.style.border = 'none';
+
+  function selectVariant(variantCard) {
+    const componentSection = variantCard.closest('.component-section');
+    componentSection.querySelectorAll('.variant-card').forEach(c => {
+      c.classList.remove('active');
     });
-    variantBox.classList.add('active');
-    variantBox.style.border = '3px solid blue';
+    variantCard.classList.add('active');
     updateTotalPrice();
     updateSpecs();
     updateSelectedVariantIds();
@@ -139,31 +367,30 @@ document.addEventListener('DOMContentLoaded', function() {
   
   function updateTotalPrice() {
     let total = basePrice;
-    document.querySelectorAll('.selectbox.active').forEach(box => {
-      total += parseFloat(box.dataset.price);
+    document.querySelectorAll('.variant-card.active').forEach(card => {
+      total += parseFloat(card.dataset.price);
     });
     const formattedTotal = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(total);
     totalPriceElement.textContent = formattedTotal;
-    totalPriceField.value = total.toFixed(2); 
+    totalPriceField.value = total.toFixed(2);
   }
-
 
   function updateSpecs() {
     const specs = [];
     document.querySelectorAll('.component-section').forEach(section => {
-      const componentName = section.querySelector('h4 span').textContent;
-      const selectedVariant = section.querySelector('.selectbox.active');
+      const componentName = section.querySelector('h5').textContent.replace('Choose a ', '').trim();
+      const selectedVariant = section.querySelector('.variant-card.active');
       if (selectedVariant) {
         specs.push(`${componentName}: ${selectedVariant.dataset.name}`);
       }
     });
     specsField.value = specs.join('\n');
   }
-  
+
   function updateSelectedVariantIds() {
     const ids = [];
-    document.querySelectorAll('.selectbox.active').forEach(box => {
-      ids.push(box.dataset.variantId);
+    document.querySelectorAll('.variant-card.active').forEach(card => {
+      ids.push(card.dataset.variantId);
     });
     selectedVariantIdsField.value = ids.join(',');
   }
@@ -180,7 +407,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Auto-select single variants
   function autoSelectSingleVariants() {
     document.querySelectorAll('.component-section').forEach(section => {
-      const variants = section.querySelectorAll('.selectbox');
+      const variants = section.querySelectorAll('.variant-card');
       if (variants.length === 1) {
         selectVariant(variants[0]);
       }
