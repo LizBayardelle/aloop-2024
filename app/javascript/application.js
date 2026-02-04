@@ -53,10 +53,9 @@ try {
 	document.addEventListener('DOMContentLoaded', () => {
 	const adminSalesContainer = document.getElementById('admin-sales-root');
 	if (adminSalesContainer) {
-		const orders = JSON.parse(adminSalesContainer.getAttribute('data-orders'));
 		const root = createRoot(adminSalesContainer);
 		root.render(
-		<AdminSales initialOrders={orders} />
+		<AdminSales />
 		);
 	}
 	});
