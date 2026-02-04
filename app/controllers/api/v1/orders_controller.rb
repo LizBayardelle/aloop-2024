@@ -6,8 +6,36 @@ class Api::V1::OrdersController < ApplicationController
   
 
 	def index
-		@orders = Order.where(paypal_payment_status: "COMPLETED").order(created_at: :desc)
-		render json: @orders
+		base_scope = Order.where(paypal_payment_status: "COMPLETED")
+
+		if params[:search].present?
+			term = "%#{params[:search]}%"
+			base_scope = base_scope.where(
+				"ship_to_name ILIKE :t OR customer_email ILIKE :t OR paypal_order_id ILIKE :t OR paypal_transaction_id ILIKE :t OR shipping_method_name ILIKE :t OR CAST(id AS TEXT) LIKE :t",
+				t: term
+			)
+		end
+
+		stats = {
+			total_order_count: base_scope.count,
+			total_revenue: base_scope.sum(:final_price).to_f.round(2),
+			completed_count: base_scope.where(paypal_payment_status: "COMPLETED").count
+		}
+
+		page = [params.fetch(:page, 1).to_i, 1].max
+		per_page = [params.fetch(:per_page, 20).to_i, 100].min
+		total_count = stats[:total_order_count]
+		total_pages = (total_count / per_page.to_f).ceil
+
+		@orders = base_scope.order(created_at: :desc)
+			.offset((page - 1) * per_page)
+			.limit(per_page)
+
+		render json: {
+			orders: @orders,
+			meta: { page: page, per_page: per_page, total_count: total_count, total_pages: total_pages },
+			stats: stats
+		}
 	end
 
 	def show

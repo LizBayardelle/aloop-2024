@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Table, Form, InputGroup, FormControl, Button, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 
@@ -8,21 +8,32 @@ const AdminSales = () => {
   const [sortField, setSortField] = useState('created_at');
   const [sortDirection, setSortDirection] = useState('desc');
   const [filterTerm, setFilterTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [stats, setStats] = useState({ total_order_count: 0, total_revenue: 0, completed_count: 0 });
 
-  useEffect(() => {
-    fetchOrders();
-  }, []);
-
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async (page = 1, search = '') => {
     try {
-      const response = await axios.get('/api/v1/orders');
-      setOrders(response.data);
+      setLoading(true);
+      const response = await axios.get('/api/v1/orders', {
+        params: { page, per_page: 20, search: search || undefined }
+      });
+      setOrders(response.data.orders);
+      setCurrentPage(response.data.meta.page);
+      setTotalPages(response.data.meta.total_pages);
+      setTotalCount(response.data.meta.total_count);
+      setStats(response.data.stats);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching orders:', error);
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchOrders();
+  }, [fetchOrders]);
 
   const sortOrders = (field) => {
     const direction = field === sortField && sortDirection === 'asc' ? 'desc' : 'asc';
@@ -36,35 +47,21 @@ const AdminSales = () => {
     setSortDirection(direction);
   };
 
-  const filterOrders = (term) => {
-    setFilterTerm(term);
-    if (term === '') {
-      fetchOrders();
-    } else {
-      const filteredOrders = orders.filter(order => 
-        order.ship_to_name.toLowerCase().includes(term.toLowerCase()) ||
-        order.customer_email.toLowerCase().includes(term.toLowerCase()) ||
-        order.id.toString().includes(term) ||
-        order.paypal_order_id?.toLowerCase().includes(term.toLowerCase()) ||
-        order.paypal_transaction_id?.toLowerCase().includes(term.toLowerCase()) ||
-        order.shipping_method_name?.toLowerCase().includes(term.toLowerCase())
-      );
-      setOrders(filteredOrders);
-    }
+  useEffect(() => {
+    const debounce = setTimeout(() => {
+      setCurrentPage(1);
+      fetchOrders(1, filterTerm);
+    }, 300);
+    return () => clearTimeout(debounce);
+  }, [filterTerm, fetchOrders]);
+
+  const handlePageChange = (page) => {
+    fetchOrders(page, filterTerm);
   };
 
-  if (loading) {
-    return <Spinner animation="border" role="status" className="d-block mx-auto" />;
-  }
-
-  const handleRefresh = async () => {
-    setLoading(true);
-    await fetchOrders();
+  const handleRefresh = () => {
     setFilterTerm('');
-  };
-
-  const calculateTotalRevenue = () => {
-    return orders.reduce((sum, order) => sum + parseFloat(order.final_price || 0), 0).toFixed(2);
+    fetchOrders(1, '');
   };
 
   const formatCurrency = (amount) => {
@@ -89,10 +86,10 @@ const AdminSales = () => {
           <h5 className="mb-1">Order Management</h5>
           <small className="text-muted">Real-time order tracking and analytics</small>
         </div>
-        <Button 
-          variant="outline-primary" 
+        <Button
+          variant="outline-primary"
           size="sm"
-          onClick={handleRefresh} 
+          onClick={handleRefresh}
           disabled={loading}
           className="d-flex align-items-center"
         >
@@ -108,7 +105,7 @@ const AdminSales = () => {
             <div className="card-body text-center">
               <i className="fas fa-shopping-cart fa-2x mb-2"></i>
               <h6 className="text-uppercase">Total Orders</h6>
-              <h3 className="font-weight-bold">{orders.length}</h3>
+              <h3 className="font-weight-bold">{stats.total_order_count}</h3>
             </div>
           </div>
         </div>
@@ -117,7 +114,7 @@ const AdminSales = () => {
             <div className="card-body text-center">
               <i className="fas fa-dollar-sign fa-2x mb-2"></i>
               <h6 className="text-uppercase">Revenue</h6>
-              <h3 className="font-weight-bold">${calculateTotalRevenue()}</h3>
+              <h3 className="font-weight-bold">${formatCurrency(stats.total_revenue)}</h3>
             </div>
           </div>
         </div>
@@ -126,7 +123,7 @@ const AdminSales = () => {
             <div className="card-body text-center">
               <i className="fas fa-check-circle fa-2x mb-2"></i>
               <h6 className="text-uppercase">Completed</h6>
-              <h3 className="font-weight-bold">{orders.filter(o => o.paypal_payment_status === 'COMPLETED').length}</h3>
+              <h3 className="font-weight-bold">{stats.completed_count}</h3>
             </div>
           </div>
         </div>
@@ -140,13 +137,13 @@ const AdminSales = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Search Section */}
       <div className="card border-0 shadow-sm mb-4">
         <div className="card-body">
           <div className="row align-items-center">
             <div className="col-md-8">
-              <Form>
+              <Form onSubmit={(e) => e.preventDefault()}>
                 <InputGroup>
                   <InputGroup.Text>
                     <i className="fas fa-search text-muted"></i>
@@ -154,10 +151,10 @@ const AdminSales = () => {
                   <FormControl
                     placeholder="Search orders by name, email, order ID, PayPal ID, or shipping method..."
                     value={filterTerm}
-                    onChange={(e) => filterOrders(e.target.value)}
+                    onChange={(e) => setFilterTerm(e.target.value)}
                   />
                   {filterTerm && (
-                    <Button variant="outline-secondary" onClick={() => filterOrders('')}>
+                    <Button variant="outline-secondary" onClick={() => setFilterTerm('')}>
                       <i className="fas fa-times"></i>
                     </Button>
                   )}
@@ -166,7 +163,7 @@ const AdminSales = () => {
             </div>
             <div className="col-md-4 text-md-end mt-2 mt-md-0">
               <small className="text-muted">
-                Showing {orders.length} order{orders.length !== 1 ? 's' : ''}
+                Showing {orders.length} of {totalCount} order{totalCount !== 1 ? 's' : ''}
               </small>
             </div>
           </div>
@@ -215,10 +212,24 @@ const AdminSales = () => {
             </tr>
           </thead>
           <tbody>
-            {orders.map(order => (
-              <tr 
-                key={order.id} 
-                className="align-middle clickable-row" 
+            {loading ? (
+              <tr>
+                <td colSpan="6" className="text-center py-4">
+                  <Spinner animation="border" size="sm" className="me-2" />
+                  Loading orders...
+                </td>
+              </tr>
+            ) : orders.length === 0 ? (
+              <tr>
+                <td colSpan="6" className="text-center py-4 text-muted">
+                  No orders found{filterTerm ? ` matching "${filterTerm}"` : ''}.
+                </td>
+              </tr>
+            ) : (
+              orders.map(order => (
+              <tr
+                key={order.id}
+                className="align-middle clickable-row"
                 style={{cursor: 'pointer'}}
                 onClick={() => window.location.href = `/admin/orders/${order.id}`}
               >
@@ -246,7 +257,7 @@ const AdminSales = () => {
                   <div className="text-xs text-muted">{order.shipping_method_name || 'Standard'}</div>
                 </td>
                 <td>
-                  <span className={`badge ${order.paypal_payment_status === 'COMPLETED' ? 'bg-success' : 
+                  <span className={`badge ${order.paypal_payment_status === 'COMPLETED' ? 'bg-success' :
                     order.paypal_payment_status === 'PENDING' ? 'bg-warning' : 'bg-secondary'}`}>
                     {order.paypal_payment_status || 'Processing'}
                   </span>
@@ -257,10 +268,37 @@ const AdminSales = () => {
                   </span>
                 </td>
               </tr>
-            ))}
+            )))}
           </tbody>
         </Table>
         </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="card-footer bg-white d-flex justify-content-between align-items-center">
+            <small className="text-muted">
+              Page {currentPage} of {totalPages}
+            </small>
+            <div className="d-flex gap-2">
+              <Button
+                variant="outline-secondary"
+                size="sm"
+                disabled={currentPage <= 1 || loading}
+                onClick={() => handlePageChange(currentPage - 1)}
+              >
+                <i className="fas fa-chevron-left me-1"></i> Previous
+              </Button>
+              <Button
+                variant="outline-secondary"
+                size="sm"
+                disabled={currentPage >= totalPages || loading}
+                onClick={() => handlePageChange(currentPage + 1)}
+              >
+                Next <i className="fas fa-chevron-right ms-1"></i>
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
