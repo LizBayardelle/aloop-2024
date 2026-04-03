@@ -692,32 +692,46 @@ min-height: 15rem;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(4px);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
   }
-  
+
   .modal-content {
     background-color: white;
-    padding: 20px;
-    border-radius: 4px;
+    padding: 24px;
+    border-radius: 12px;
     max-width: 1100px;
     width: 95%;
     max-height: 90vh;
     overflow-y: auto;
     position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
   }
-  
+
   .modal-close {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 24px;
+    top: 12px;
+    right: 16px;
+    font-size: 28px;
     background: none;
     border: none;
     cursor: pointer;
+    color: #999;
+    transition: color 0.15s;
+    &:hover { color: #333; }
+  }
+
+  .modal-form-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #2e3d99;
+    margin: 0 0 1.25rem 0;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #eef0f7;
   }
 
 
@@ -1476,231 +1490,353 @@ min-height: 15rem;
   transform: translateX(5px);
 }
 
-/* Admin Product List */
-.admin-product-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
+/* ========================================
+   Admin Products - Redesigned UI
+   ======================================== */
 
-/* Product Cards */
-.admin-product-card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  overflow: hidden;
-  transition: box-shadow 0.3s ease;
-}
-
-.admin-product-card:hover {
-  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-}
-
-.admin-product-header {
+/* Page Header */
+.admin-products-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.5rem;
-  border-bottom: 2px solid #2e3d99;
-  background: #e9ecef;
+  margin-bottom: 1.5rem;
 }
 
-.admin-product-name {
-  font-size: 1.25rem;
+.admin-products-stats {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.admin-stat {
+  font-size: 1rem;
   font-weight: 700;
   color: #2e3d99;
-  margin: 0 0 0.5rem 0;
 }
 
-.admin-product-meta {
+.admin-stat-sep {
+  color: #ccc;
+}
+
+.admin-stat-subtle {
+  font-size: 0.875rem;
+  color: #999;
+}
+
+.admin-btn-primary {
+  background: #2e3d99;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  &:hover { background: #232f78; }
+}
+
+/* Empty State */
+.admin-empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #aaa;
+  i { font-size: 3rem; margin-bottom: 1rem; display: block; }
+  p { font-size: 1rem; margin: 0; }
+}
+
+/* Product List */
+.admin-product-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* ---- Product Card (ap-*) ---- */
+.ap-card {
+  background: white;
+  border-radius: 10px;
+  border: 1px solid #e4e7ed;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+  &:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+}
+
+.ap-card--inactive {
+  opacity: 0.6;
+}
+
+.ap-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  gap: 1rem;
+}
+
+.ap-header-left { flex: 1; min-width: 0; }
+
+.ap-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.35rem;
+}
+
+.ap-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.ap-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.15rem 0.55rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.ap-badge--inactive {
+  background: #fff0f0;
+  color: #c0392b;
+}
+
+.ap-meta {
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
   align-items: center;
 }
 
-.admin-meta-item {
-  font-size: 0.875rem;
-  color: #6c757d;
+.ap-meta-item {
+  font-size: 0.8rem;
+  color: #888;
+  i { margin-right: 0.3rem; font-size: 0.7rem; }
 }
 
-.admin-meta-badge {
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
-  text-transform: uppercase;
+.ap-actions {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+  flex-shrink: 0;
 }
 
-.admin-meta-badge.active {
-  background: #d4edda;
-  color: #155724;
+.ap-action-btn {
+  background: transparent;
+  border: 1px solid #e0e0e0;
+  color: #666;
+  padding: 0.4rem 0.55rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.15s;
+  &:hover {
+    background: #f0f1f8;
+    color: #2e3d99;
+    border-color: #c5cadf;
+  }
 }
 
-.admin-meta-badge.inactive {
-  background: #f8d7da;
-  color: #721c24;
+.ap-action-btn--danger:hover {
+  background: #fff0f0;
+  color: #c0392b;
+  border-color: #f5c6cb;
 }
 
-.admin-expand-btn {
+.ap-action-btn--sm {
+  padding: 0.25rem 0.4rem;
+  font-size: 0.7rem;
+}
+
+.ap-collapse-btn {
   background: transparent;
   border: none;
-  color: #2e3d99;
-  font-size: 1rem;
-  padding: 0.5rem;
-  margin-right: 1rem;
+  color: #aaa;
+  padding: 0.4rem 0.3rem;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  font-size: 0.75rem;
+  transition: color 0.15s;
+  &:hover { color: #2e3d99; }
 }
 
-.admin-expand-btn:hover {
-  transform: scale(1.1);
+/* Product Body / Component Area */
+.ap-body {
+  border-top: 1px solid #f0f0f0;
+  padding: 0.75rem 1.25rem 1rem;
+  background: #fafbfd;
 }
 
-.admin-product-actions {
+.ap-components {
   display: flex;
+  flex-direction: column;
   gap: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
-.admin-action-btn {
+.ap-empty-hint {
+  font-size: 0.8rem;
+  color: #bbb;
+  padding: 0.5rem 0;
+  margin-bottom: 0.5rem;
+  i { margin-right: 0.4rem; }
+}
+
+.ap-add-child-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   background: transparent;
-  border: 1px solid #dee2e6;
+  border: 1px dashed #c5cadf;
   color: #2e3d99;
-  padding: 0.5rem 0.75rem;
+  padding: 0.35rem 0.9rem;
   border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s;
+  &:hover {
+    background: #eef0f7;
+    border-color: #2e3d99;
+  }
 }
 
-.admin-action-btn:hover {
-  background: #2e3d99;
-  color: white;
-  border-color: #2e3d99;
-}
-
-.admin-action-btn.admin-action-delete:hover {
-  background: #dc3545;
-  border-color: #dc3545;
-}
-
-/* Component Cards */
-.admin-product-components {
-  padding: 1rem;
-  background: #e9ecef;
-}
-
-.admin-component-card {
+/* ---- Component Card (ac-*) ---- */
+.ac-card {
   background: white;
   border-radius: 8px;
-  margin-bottom: 1rem;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-}
-
-.admin-component-card:last-child {
-  margin-bottom: 0;
-}
-
-.admin-component-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 1.25rem;
-  border-left: 4px solid #2e3d99;
-}
-
-.admin-component-name {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #212529;
-  margin: 0 0 0.25rem 0;
-}
-
-.admin-component-meta {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-.admin-component-actions {
-  display: flex;
-  gap: 0.5rem;
-}
-
-/* Variant Cards */
-.admin-component-variants {
-  padding: 1rem;
-  background: #e9ecef;
-}
-
-.admin-variant-card {
-  background: white;
-  border-radius: 6px;
-  margin-bottom: 0.75rem;
-  border: 1px solid #e9ecef;
+  border: 1px solid #e8eaef;
   overflow: hidden;
 }
 
-.admin-variant-card:last-child {
-  margin-bottom: 0;
-}
-
-.admin-variant-header {
+.ac-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 1rem;
-  background: #2e3d99;
-  border-bottom: 1px solid #2e3d99;
+  padding: 0.6rem 0.9rem;
+  gap: 0.75rem;
 }
 
-.admin-variant-name {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: white;
-}
-
-.admin-variant-actions {
+.ac-header-left {
   display: flex;
-  gap: 0.25rem;
-}
-
-.admin-variant-header .admin-action-btn {
-  border-color: white;
-  color: white;
-}
-
-.admin-variant-header .admin-action-btn:hover {
-  background: white;
-  color: #2e3d99;
-  border-color: white;
-}
-
-.admin-variant-header .admin-action-btn.admin-action-delete:hover {
-  background: #dc3545;
-  color: white;
-  border-color: #dc3545;
-}
-
-.admin-variant-details {
-  padding: 1rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  align-items: center;
-  font-size: 0.875rem;
-}
-
-.admin-variant-detail-inline {
-  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  flex: 1;
+  min-width: 0;
 }
 
-.admin-variant-detail-inline strong {
-  color: #6c757d;
+.ac-toggle-btn {
+  background: transparent;
+  border: none;
+  color: #aaa;
+  padding: 0.2rem;
+  cursor: pointer;
+  font-size: 0.7rem;
+  transition: color 0.15s;
+  &:hover { color: #2e3d99; }
+}
+
+.ac-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.ac-count {
+  background: #eef0f7;
+  color: #2e3d99;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.1rem 0.45rem;
+  border-radius: 10px;
+  min-width: 1.3rem;
+  text-align: center;
+}
+
+.ac-actions {
+  display: flex;
+  gap: 0.3rem;
+  align-items: center;
+}
+
+.ac-add-btn {
+  background: transparent;
+  border: 1px dashed #c5cadf;
+  color: #2e3d99;
+  padding: 0.25rem 0.5rem;
+  border-radius: 5px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  &:hover {
+    background: #eef0f7;
+    border-color: #2e3d99;
+  }
+}
+
+/* Variant Area inside Component */
+.ac-variants {
+  border-top: 1px solid #f0f0f0;
+  background: #fafbfd;
+  padding: 0.5rem 0.75rem;
+}
+
+.ac-empty-hint {
+  font-size: 0.75rem;
+  color: #bbb;
+  padding: 0.25rem 0;
+  text-align: center;
+}
+
+/* ---- Variant Row (av-*) ---- */
+.av-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 0.5rem;
+  border-radius: 5px;
+  transition: background 0.1s;
+  &:hover { background: #f0f1f8; }
+  & + & { border-top: 1px solid #f0f0f0; }
+}
+
+.av-info {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.av-name {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.av-price {
+  font-size: 0.75rem;
+  color: #2e7d32;
   font-weight: 600;
 }
 
-.admin-variant-detail-inline .admin-meta-badge {
-  margin-left: 0.25rem;
+.av-sku {
+  font-size: 0.7rem;
+  color: #999;
+  font-family: monospace;
+}
+
+.av-actions {
+  display: flex;
+  gap: 0.25rem;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.av-row:hover .av-actions {
+  opacity: 1;
 }

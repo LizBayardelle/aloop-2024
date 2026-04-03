@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const FormComponent = ({ onSubmit, onCancel, products, initialData, csrfToken }) => {
+const FormComponent = ({ onSubmit, onCancel, products, initialData, prefillProductId, prefillProductName, csrfToken }) => {
   const [component, setComponent] = useState({
     name: '',
     product_id: '',
@@ -15,8 +15,10 @@ const FormComponent = ({ onSubmit, onCancel, products, initialData, csrfToken })
         ...rest,
         product_id: rest.product_id ? rest.product_id.toString() : ''
       });
+    } else if (prefillProductId) {
+      setComponent(prev => ({ ...prev, product_id: prefillProductId.toString() }));
     }
-  }, [initialData]);
+  }, [initialData, prefillProductId]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -31,13 +33,12 @@ const FormComponent = ({ onSubmit, onCancel, products, initialData, csrfToken })
     const url = initialData ? `/api/v1/components/${initialData.id}` : '/api/v1/components';
     const method = initialData ? 'PUT' : 'POST';
 
-    // Create a new object without id, created_at, updated_at, and variants
     const { id, created_at, updated_at, variants, ...submittableComponent } = component;
 
     try {
       const response = await fetch(url, {
         method: method,
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'X-CSRF-Token': csrfToken
         },
@@ -51,9 +52,13 @@ const FormComponent = ({ onSubmit, onCancel, products, initialData, csrfToken })
     }
   };
 
+  const isProductLocked = !initialData && prefillProductId;
+  const title = initialData ? 'Edit Component' : (prefillProductName ? `Add Component to ${prefillProductName}` : 'New Component');
+
   return (
     <form onSubmit={handleSubmit} className="modal-content">
       <div className="modal-body">
+        <h4 className="modal-form-title">{title}</h4>
         <div className="form-inputs spaced">
 
           <div className="form-group">
@@ -61,15 +66,19 @@ const FormComponent = ({ onSubmit, onCancel, products, initialData, csrfToken })
             <input type="text" className="form-control" id="name" name="name" value={component.name} onChange={handleChange} required />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="product_id">Product</label>
-            <select className="form-control" id="product_id" name="product_id" value={component.product_id} onChange={handleChange} required>
-              <option value="">Select a product</option>
-              {products.map(product => (
-                <option key={product.id} value={product.id.toString()}>{product.name}</option>
-              ))}
-            </select>
-          </div>
+          {isProductLocked ? (
+            <input type="hidden" name="product_id" value={component.product_id} />
+          ) : (
+            <div className="form-group">
+              <label htmlFor="product_id">Product</label>
+              <select className="form-control" id="product_id" name="product_id" value={component.product_id} onChange={handleChange} required>
+                <option value="">Select a product</option>
+                {products.map(product => (
+                  <option key={product.id} value={product.id.toString()}>{product.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
 
           <div className="form-group">
             <label htmlFor="description">Description</label>
@@ -86,7 +95,7 @@ const FormComponent = ({ onSubmit, onCancel, products, initialData, csrfToken })
         </div>
       </div>
       <div className="modal-footer">
-        <button type="button" className="btn me-2" onClick={onCancel}>Close</button>
+        <button type="button" className="btn me-2" onClick={onCancel}>Cancel</button>
         <button type="submit" className="btn">{initialData ? 'Update' : 'Create'} Component</button>
       </div>
     </form>

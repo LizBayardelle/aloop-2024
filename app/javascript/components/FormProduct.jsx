@@ -12,6 +12,7 @@ const FormProduct = ({ onSubmit, onCancel, categories, initialData, csrfToken })
     height: '',
     width: '',
     depth: '',
+    weight: '',
     subtitle: '',
     price: '',
     size: '',
@@ -249,19 +250,24 @@ const FormProduct = ({ onSubmit, onCancel, categories, initialData, csrfToken })
         </div>
         
         
-        <div className="form-group col-sm-4 pb-4">
-          <label htmlFor="height">Height</label>
+        <div className="form-group col-sm-3 pb-4">
+          <label htmlFor="height">Height (in)</label>
           <input type="number" className="form-control" id="height" name="height" value={product.height} onChange={handleChange} />
         </div>
-        
-        <div className="form-group col-sm-4 pb-4">
-          <label htmlFor="width">Width</label>
+
+        <div className="form-group col-sm-3 pb-4">
+          <label htmlFor="width">Width (in)</label>
           <input type="number" className="form-control" id="width" name="width" value={product.width} onChange={handleChange} />
         </div>
-        
-        <div className="form-group col-sm-4 pb-4">
-          <label htmlFor="depth">Depth</label>
+
+        <div className="form-group col-sm-3 pb-4">
+          <label htmlFor="depth">Depth (in)</label>
           <input type="number" className="form-control" id="depth" name="depth" value={product.depth} onChange={handleChange} />
+        </div>
+
+        <div className="form-group col-sm-3 pb-4">
+          <label htmlFor="weight">Weight (lbs)</label>
+          <input type="number" step="0.01" className="form-control" id="weight" name="weight" value={product.weight} onChange={handleChange} />
         </div>
         
         <div className="form-group pb-4">

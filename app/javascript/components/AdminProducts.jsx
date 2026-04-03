@@ -61,9 +61,19 @@ const AdminProducts = () => {
     setShowProductForm(true);
   };
 
+  const handleAddComponentToProduct = (product) => {
+    setEditingItem({ _prefillProductId: product.id, _prefillProductName: product.name });
+    setShowComponentForm(true);
+  };
+
   const handleEditComponent = (component) => {
     setEditingItem(component);
     setShowComponentForm(true);
+  };
+
+  const handleAddVariantToComponent = (component) => {
+    setEditingItem({ _prefillComponentId: component.id, _prefillComponentName: component.name });
+    setShowVariantForm(true);
   };
 
   const handleEditVariant = (variant) => {
@@ -87,17 +97,18 @@ const AdminProducts = () => {
     setEditingItem(null);
   };
 
+  const activeCount = products.filter(p => p.active).length;
+
   return (
     <div>
-      <div className="d-flex justify-content-end gap-2 mb-4">
-        <button className="btn btn-blue" onClick={() => setShowProductForm(true)}>
-          <i className="fas fa-plus me-2"></i>Add Product
-        </button>
-        <button className="btn btn-blue-outline" onClick={() => setShowComponentForm(true)}>
-          <i className="fas fa-plus me-2"></i>Add Component
-        </button>
-        <button className="btn btn-blue-outline" onClick={() => setShowVariantForm(true)}>
-          <i className="fas fa-plus me-2"></i>Add Variant
+      <div className="admin-products-header">
+        <div className="admin-products-stats">
+          <span className="admin-stat">{products.length} product{products.length !== 1 ? 's' : ''}</span>
+          <span className="admin-stat-sep">/</span>
+          <span className="admin-stat-subtle">{activeCount} active</span>
+        </div>
+        <button className="admin-btn-primary" onClick={() => { setEditingItem(null); setShowProductForm(true); }}>
+          <i className="fas fa-plus me-2"></i>New Product
         </button>
       </div>
 
@@ -105,7 +116,9 @@ const AdminProducts = () => {
         products={products}
         onUpdate={fetchProducts}
         onEditProduct={handleEditProduct}
+        onAddComponent={handleAddComponentToProduct}
         onEditComponent={handleEditComponent}
+        onAddVariant={handleAddVariantToComponent}
         onEditVariant={handleEditVariant}
         csrfToken={csrfToken}
       />
@@ -115,7 +128,7 @@ const AdminProducts = () => {
           onSubmit={handleFormSubmit}
           onCancel={closeAllForms}
           categories={categories}
-          initialData={editingItem}
+          initialData={editingItem?._prefillProductId ? null : editingItem}
           csrfToken={csrfToken}
         />
       </Modal>
@@ -125,7 +138,9 @@ const AdminProducts = () => {
           onSubmit={handleFormSubmit}
           onCancel={closeAllForms}
           products={products}
-          initialData={editingItem}
+          initialData={editingItem?._prefillProductId ? null : editingItem}
+          prefillProductId={editingItem?._prefillProductId}
+          prefillProductName={editingItem?._prefillProductName}
           csrfToken={csrfToken}
         />
       </Modal>
@@ -136,7 +151,9 @@ const AdminProducts = () => {
           onCancel={closeAllForms}
           bikeModels={bikeModels}
           components={products.flatMap(p => p.components || [])}
-          initialData={editingItem}
+          initialData={editingItem?._prefillComponentId ? null : editingItem}
+          prefillComponentId={editingItem?._prefillComponentId}
+          prefillComponentName={editingItem?._prefillComponentName}
           csrfToken={csrfToken}
         />
       </Modal>
