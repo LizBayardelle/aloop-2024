@@ -2,7 +2,7 @@ class ProductSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
 
   attributes :id, :name, :description, :active, :meta_title, :meta_keywords,
-             :height, :width, :depth, :subtitle, :price, :size, :application_notes,
+             :height, :width, :depth, :weight, :subtitle, :price, :size, :application_notes,
              :display_price, :all_photos_urls, :main_photos_urls, :main_photos_count
 
   has_many :components, serializer: ComponentSerializer

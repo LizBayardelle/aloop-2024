@@ -123,14 +123,7 @@ class Api::V1::OrdersController < ApplicationController
 		  country: @order.country,
 		  email: @order.customer_email
 		},
-		parcels: {
-		  length: 5,
-		  width: 2,
-		  height: 5,
-		  distance_unit: :in,
-		  weight: 2,
-		  mass_unit: :lb
-		}
+		parcels: calculate_parcel(@order)
 	  }
   
 	  begin
@@ -161,6 +154,33 @@ class Api::V1::OrdersController < ApplicationController
 
   
 	private
+
+	def calculate_parcel(order)
+		items = order.order_items.includes(:product)
+
+		total_weight = 0.0
+		max_length = 0
+		max_width = 0
+		total_height = 0
+
+		items.each do |item|
+		  product = item.product
+		  total_weight += (product.weight || 0) * item.quantity
+		  max_length = [max_length, product.depth || 0].max
+		  max_width = [max_width, product.width || 0].max
+		  total_height += (product.height || 0) * item.quantity
+		end
+
+		# Fallback minimums so Shippo doesn't reject the request
+		{
+		  length: [max_length, 1].max,
+		  width: [max_width, 1].max,
+		  height: [total_height, 1].max,
+		  distance_unit: :in,
+		  weight: [total_weight, 0.1].max,
+		  mass_unit: :lb
+		}
+	end
 
 	def set_order
 		@order = Order.find(params[:id])

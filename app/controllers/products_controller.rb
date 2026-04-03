@@ -79,6 +79,7 @@ class ProductsController < ApplicationController
         :height,
         :width,
         :depth,
+        :weight,
         :subtitle,
         product_category_ids: []
       )
