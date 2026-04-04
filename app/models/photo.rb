@@ -7,10 +7,18 @@ class Photo < ApplicationRecord
   scope :with_valid_images, -> { joins(image_attachment: :blob) }
 
   def thumbnail
-    image.variant(resize_to_fill: [400, 400], format: :webp, saver: { quality: 80 })
+    if image.variable?
+      image.variant(resize_to_fill: [400, 400], format: :webp, saver: { quality: 80 })
+    else
+      image
+    end
   end
 
   def display_image
-    image.variant(resize_to_limit: [1200, 1200], format: :webp, saver: { quality: 85 })
+    if image.variable?
+      image.variant(resize_to_limit: [1200, 1200], format: :webp, saver: { quality: 85 })
+    else
+      image
+    end
   end
 end
