@@ -29,8 +29,8 @@ Rails.application.configure do
     enable_starttls_auto: true
   }
 
-  # Add this line to allow ActiveStorage URL generation in serializers
-  config.active_storage.resolve_model_to_route = :rails_storage_proxy
+  # Serve images directly from S3 (redirect) instead of proxying through Rails
+  config.active_storage.resolve_model_to_route = :rails_storage_redirect
   
   # Code is not reloaded between requests.
   config.enable_reloading = false

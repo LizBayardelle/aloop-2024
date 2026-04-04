@@ -3,8 +3,8 @@ class PhotosController < ApplicationController
 
 
   def index
-    @unapproved_photos = Photo.where(approved: false).order(created_at: :desc).limit(100) if current_user&.admin?
-    @approved_photos = Photo.where(approved: true).order(created_at: :desc).limit(200)
+    @unapproved_photos = Photo.with_attached_image.with_valid_images.where(approved: false).order(created_at: :desc).limit(100) if current_user&.admin?
+    @approved_photos = Photo.with_attached_image.with_valid_images.where(approved: true).order(created_at: :desc).limit(200)
   end
 
 

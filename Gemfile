@@ -39,6 +39,7 @@ gem 'image_processing', '~> 1.2'
 gem 'mini_magick'
 gem 'aws-sdk' , '~> 3'
 gem 'aws-sdk-s3', require: false
+gem 'active_storage_validations'
 
 group :development do
   gem 'better_errors'
