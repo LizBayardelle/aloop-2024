@@ -29,8 +29,8 @@ Rails.application.configure do
     enable_starttls_auto: true
   }
 
-  # Serve images directly from S3 (redirect) instead of proxying through Rails
-  config.active_storage.resolve_model_to_route = :rails_storage_redirect
+  # Proxy images through Rails (required when S3 bucket blocks public access)
+  config.active_storage.resolve_model_to_route = :rails_storage_proxy
   
   # Code is not reloaded between requests.
   config.enable_reloading = false
