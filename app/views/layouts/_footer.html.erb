@@ -1,26 +1,69 @@
-<footer class="w-100 py-4 flex-shrink-0 bg-grey">
-        <div class="container py-4">
-            <div class="row gy-4 gx-5">
-                <div class="col-12 col-sm-2 text-center">
-                    <img class="w-100" src="https://aloopphotobucket.s3.us-west-1.amazonaws.com/Images/Logo/Logo.png" />
-                </div>
-                <div class="col-12 col-sm-10">
-                    <h5 class="color-red mb-3 thin">Contact Aloop</h5>
-                    <p class="small mb-2">
-                    	Our office hours vary greatly by season and workload, but your business is very important to us. You can contact us by text message at 303-550-2582, or by email at sales@aloop.com. We try to respond to all inquiries within 24 hours or less.
-					</p>
-					<p class="small mb-3">
-						We are located in the USA Mountain Time Zone (GMT-7hrs).
-                    </p>
+<footer class="aloop-footer">
+  <div class="container">
+    <div class="row gy-4">
 
-                    <h5 class="color-red mb-3 thin">Overseas Orders</h5>
-                    <p class="small mb-2">
-                    	Overseas orders are no problem!
-					</p>
-					<p class="small mb-3">
-						We've sold thousands of our Aloop 4SMX kits to customers in over 40 countries! Most shipments are sent via US Mail Global Express Mail, and can arrive in under 1 week, no matter where in the world you live.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </footer>
+      <!-- Brand -->
+      <div class="col-lg-3 col-md-4">
+        <img class="aloop-footer-logo mb-3" src="https://aloopphotobucket.s3.us-west-1.amazonaws.com/Images/Logo/Logo.png" alt="Aloop Offroad" />
+        <p class="aloop-footer-tagline">Premium supermoto conversion kits shipped worldwide since 2005.</p>
+      </div>
+
+      <!-- Contact -->
+      <div class="col-lg-5 col-md-8">
+        <h6 class="aloop-footer-heading">Contact Aloop</h6>
+        <p class="aloop-footer-text">
+          Our office hours vary greatly by season and workload, but your business is very important to us. You can text us at <strong>303-550-2582</strong> or email <a href="mailto:sales@aloop.com">sales@aloop.com</a>. We respond within 24 hours.
+        </p>
+        <p class="aloop-footer-text mb-0">We are located in the USA Mountain Time Zone (GMT-7hrs).</p>
+      </div>
+
+      <!-- Overseas -->
+      <div class="col-lg-4 col-md-12">
+        <h6 class="aloop-footer-heading">Overseas Orders</h6>
+        <p class="aloop-footer-text">
+          We've sold thousands of Aloop 4SMX kits to customers in over 40 countries! Most shipments arrive in under 1 week via US Mail Global Express Mail.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Bottom -->
+    <div class="aloop-footer-bottom">
+      <span>&copy; <%= Date.today.year %> Aloop Offroad. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .aloop-footer {
+    background: #f2f2f2;
+    padding: 2.5rem 0 0;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: #555;
+  }
+  .aloop-footer a { color: #2e3d99; text-decoration: none; }
+  .aloop-footer a:hover { color: #cd2127; }
+
+  .aloop-footer-logo { max-width: 130px; }
+  .aloop-footer-tagline { font-size: 0.82rem; color: #888; }
+
+  .aloop-footer-heading {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #cd2127;
+    margin-bottom: 0.75rem;
+  }
+  .aloop-footer-text { font-size: 0.84rem; margin-bottom: 0.5rem; }
+
+  .aloop-footer-bottom {
+    margin-top: 2rem;
+    padding: 1rem 0;
+    border-top: 1px solid #ddd;
+    font-size: 0.78rem;
+    color: #999;
+    text-align: center;
+  }
+</style>

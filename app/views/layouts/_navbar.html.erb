@@ -1,28 +1,53 @@
-<nav class="navbar navbar-expand-md px-3 navbar-light bg-white">
-  <div class="container-fluid">
+<nav class="navbar navbar-expand-lg aloop-nav">
+  <div class="container">
 
-    <div id="slide">
-    <%= link_to root_path, class: "navbar-brand" do %>
-      <img style="height: 35px; margin-right: 0px" src="https://aloopphotobucket.s3.us-west-1.amazonaws.com/Images/Logo/Logo+(Symbol).png" />
-      <img style="height: 40px" src="https://aloopphotobucket.s3.us-west-1.amazonaws.com/Images/Logo/Logo+(Text).png" />
+    <%= link_to root_path, class: "navbar-brand d-flex align-items-center" do %>
+      <img class="aloop-nav-logo-icon" src="https://aloopphotobucket.s3.us-west-1.amazonaws.com/Images/Logo/Logo+(Symbol).png" alt="Aloop" />
+      <img class="aloop-nav-logo-text d-none d-sm-inline" src="https://aloopphotobucket.s3.us-west-1.amazonaws.com/Images/Logo/Logo+(Text).png" alt="Aloop Offroad" />
     <% end %>
+
+    <div class="d-flex align-items-center gap-3 d-lg-none">
+      <%= link_to page_path("cart"), class: "aloop-nav-cart-mobile" do %>
+        <i class="fas fa-shopping-cart"></i>
+        <% if @current_order.order_number_of_items != 0 %>
+          <span class="aloop-nav-cart-badge"><%= @current_order.order_number_of_items %></span>
+        <% end %>
+      <% end %>
+      <button class="navbar-toggler aloop-nav-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars"></i>
+      </button>
     </div>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
+      <ul class="navbar-nav ms-auto aloop-nav-links">
 
         <li class="nav-item dropdown">
-          <%= link_to "Kits", page_path("kits"), class: "nav-link dropdown-toggle", id: "navbarDropdownMenuLink", 'data-toggle': "dropdown", 'aria-haspopup': "true", 'aria-expanded': "false" %>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <%= link_to "XR250 and XR400", page_path("XR250_XR400"), class: "dropdown-item" %>
-            <%= link_to "XR600", page_path("XR600"), class: "dropdown-item" %>
-            <%= link_to "XR650L", page_path("XR650L"), class: "dropdown-item" %>
-            <%= link_to "Graphics", page_path("graphics"), class: "dropdown-item" %>
-            <%= link_to "Color Coded Key Covers", products_path, class: "dropdown-item" %>
-            <%= link_to "Rear Fenders", products_path, class: "dropdown-item" %>
-            <%= link_to "Replacement Parts", products_path, class: "dropdown-item" %>
+          <%= link_to "Kits", page_path("kits"), class: "nav-link dropdown-toggle", id: "kitsDropdown", 'data-toggle': "dropdown", 'aria-haspopup': "true", 'aria-expanded': "false" %>
+          <div class="dropdown-menu aloop-dropdown" aria-labelledby="kitsDropdown">
+            <div class="aloop-dropdown-label">Conversion Kits</div>
+            <%= link_to page_path("XR250_XR400"), class: "dropdown-item" do %>
+              <i class="fas fa-motorcycle aloop-dropdown-icon"></i> XR250 & XR400
+            <% end %>
+            <%= link_to page_path("XR600"), class: "dropdown-item" do %>
+              <i class="fas fa-motorcycle aloop-dropdown-icon"></i> XR600
+            <% end %>
+            <%= link_to page_path("XR650L"), class: "dropdown-item" do %>
+              <i class="fas fa-motorcycle aloop-dropdown-icon"></i> XR650L
+            <% end %>
+            <div class="dropdown-divider"></div>
+            <div class="aloop-dropdown-label">Accessories</div>
+            <%= link_to page_path("graphics"), class: "dropdown-item" do %>
+              <i class="fas fa-paint-brush aloop-dropdown-icon"></i> Graphics
+            <% end %>
+            <%= link_to products_path, class: "dropdown-item" do %>
+              <i class="fas fa-key aloop-dropdown-icon"></i> Color Coded Key Covers
+            <% end %>
+            <%= link_to products_path, class: "dropdown-item" do %>
+              <i class="fas fa-cog aloop-dropdown-icon"></i> Rear Fenders
+            <% end %>
+            <%= link_to products_path, class: "dropdown-item" do %>
+              <i class="fas fa-wrench aloop-dropdown-icon"></i> Replacement Parts
+            <% end %>
           </div>
         </li>
 
@@ -32,59 +57,230 @@
         <li class="nav-item"><%= link_to "Export", page_path("export"), class: "nav-link" %></li>
         <li class="nav-item"><%= link_to "Blog", blogs_path, class: "nav-link" %></li>
 
+      </ul>
+
+      <ul class="navbar-nav aloop-nav-right">
         <% if current_user && current_user.admin %>
           <li class="nav-item dropdown">
-            <%= link_to "Admin", admin_dashboard_path, class: "nav-link dropdown-toggle", id: "navbarDropdownMenuLink", 'data-toggle': "dropdown", 'aria-haspopup': "true", 'aria-expanded': "false" %>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <%= link_to "Products", admin_products_path, class: "dropdown-item" %>
-              <%= link_to "Sales", admin_sales_path, class: "dropdown-item" %>
-              <%= link_to "Users", admin_users_path, class: "dropdown-item" %>
-              <%= link_to "Photos", admin_photos_path, class: "dropdown-item" %>
-              <%= link_to "Blog", admin_blog_path, class: "dropdown-item" %>
+            <%= link_to "Admin", admin_dashboard_path, class: "nav-link dropdown-toggle", id: "adminDropdown", 'data-toggle': "dropdown", 'aria-haspopup': "true", 'aria-expanded': "false" %>
+            <div class="dropdown-menu dropdown-menu-end aloop-dropdown" aria-labelledby="adminDropdown">
+              <%= link_to admin_products_path, class: "dropdown-item" do %>
+                <i class="fas fa-box aloop-dropdown-icon"></i> Products
+              <% end %>
+              <%= link_to admin_sales_path, class: "dropdown-item" do %>
+                <i class="fas fa-chart-line aloop-dropdown-icon"></i> Sales
+              <% end %>
+              <%= link_to admin_users_path, class: "dropdown-item" do %>
+                <i class="fas fa-users aloop-dropdown-icon"></i> Users
+              <% end %>
+              <%= link_to admin_photos_path, class: "dropdown-item" do %>
+                <i class="fas fa-camera aloop-dropdown-icon"></i> Photos
+              <% end %>
+              <%= link_to admin_blog_path, class: "dropdown-item" do %>
+                <i class="fas fa-blog aloop-dropdown-icon"></i> Blog
+              <% end %>
             </div>
           </li>
         <% end %>
 
         <% if current_user %>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              My Account
+            <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fas fa-user-circle me-1"></i> Account
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <%= link_to "My Account", user_path(current_user), class: "dropdown-item" %>
-              <%= link_to "Order History", orders_user_path(current_user), class: "dropdown-item" %>
-              <%= button_to "Sign Out", destroy_user_session_path, :method => :delete, class: "dropdown-item", style: "text-transform: uppercase" %>
+            <div class="dropdown-menu dropdown-menu-end aloop-dropdown" aria-labelledby="accountDropdown">
+              <%= link_to user_path(current_user), class: "dropdown-item" do %>
+                <i class="fas fa-user aloop-dropdown-icon"></i> My Account
+              <% end %>
+              <%= link_to orders_user_path(current_user), class: "dropdown-item" do %>
+                <i class="fas fa-receipt aloop-dropdown-icon"></i> Order History
+              <% end %>
+              <div class="dropdown-divider"></div>
+              <%= button_to destroy_user_session_path, method: :delete, class: "dropdown-item" do %>
+                <i class="fas fa-sign-out-alt aloop-dropdown-icon"></i> Sign Out
+              <% end %>
             </div>
           </li>
         <% else %>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              My Account
+            <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fas fa-user-circle me-1"></i> Account
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <%= link_to "Create an Account", new_user_registration_path, class: "dropdown-item" %>
-              <%= link_to "Sign In", new_user_session_path, class: "dropdown-item" %>
+            <div class="dropdown-menu dropdown-menu-end aloop-dropdown" aria-labelledby="accountDropdown">
+              <%= link_to new_user_session_path, class: "dropdown-item" do %>
+                <i class="fas fa-sign-in-alt aloop-dropdown-icon"></i> Sign In
+              <% end %>
+              <%= link_to new_user_registration_path, class: "dropdown-item" do %>
+                <i class="fas fa-user-plus aloop-dropdown-icon"></i> Create Account
+              <% end %>
             </div>
           </li>
         <% end %>
 
-        <li>
-          <%= link_to page_path("cart"), class: "position-relative w-0" do %>
-            <i class='fas fa-shopping-cart'></i>            
+        <li class="nav-item d-none d-lg-flex align-items-center">
+          <%= link_to page_path("cart"), class: "aloop-nav-cart" do %>
+            <i class="fas fa-shopping-cart"></i>
             <% if @current_order.order_number_of_items != 0 %>
-              <span class="position-absolute translate-middle badge rounded-pill bg-danger">
-                <%= @current_order.order_number_of_items %>
-              </span>
+              <span class="aloop-nav-cart-badge"><%= @current_order.order_number_of_items %></span>
             <% end %>
           <% end %>
         </li>
-
       </ul>
     </div>
   </div>
 </nav>
 
+<style>
+  /* Nav Container */
+  .aloop-nav {
+    background: #fff;
+    padding: 0.6rem 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+  }
 
+  /* Logo */
+  .aloop-nav-logo-icon { height: 32px; }
+  .aloop-nav-logo-text { height: 36px; margin-left: 4px; }
 
+  /* Toggler */
+  .aloop-nav-toggler {
+    border: none;
+    background: none;
+    font-size: 1.25rem;
+    color: #1a1a2e;
+    padding: 0.25rem;
+  }
+  .aloop-nav-toggler:focus { box-shadow: none; }
 
+  /* Nav Links */
+  .aloop-nav-links .nav-link {
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: #1a1a2e;
+    padding: 0.5rem 0.85rem;
+    position: relative;
+    transition: color 0.2s ease;
+  }
+  .aloop-nav-links .nav-link:hover,
+  .aloop-nav-links .nav-link:focus { color: #2e3d99; }
 
+  /* Red underline hover */
+  .aloop-nav-links .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0.85rem;
+    right: 0.85rem;
+    height: 2px;
+    background: #cd2127;
+    transform: scaleX(0);
+    transition: transform 0.25s ease;
+  }
+  .aloop-nav-links .nav-link:hover::after { transform: scaleX(1); }
+
+  /* Right nav */
+  .aloop-nav-right .nav-link {
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: #1a1a2e;
+    padding: 0.5rem 0.85rem;
+    transition: color 0.2s ease;
+  }
+  .aloop-nav-right .nav-link:hover { color: #2e3d99; }
+
+  /* Dropdown */
+  .aloop-dropdown {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    padding: 0.5rem 0;
+    min-width: 220px;
+    animation: aloop-dropdown-in 0.15s ease;
+  }
+  @keyframes aloop-dropdown-in {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .aloop-dropdown .dropdown-item {
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.55rem 1.25rem;
+    color: #333;
+    transition: all 0.12s ease;
+  }
+  .aloop-dropdown .dropdown-item:hover {
+    background: #f0f1f8;
+    color: #2e3d99;
+    padding-left: 1.4rem;
+  }
+  .aloop-dropdown .dropdown-divider {
+    margin: 0.35rem 1rem;
+    border-color: #eee;
+  }
+  .aloop-dropdown-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #999;
+    padding: 0.5rem 1.25rem 0.25rem;
+  }
+  .aloop-dropdown-icon {
+    width: 18px;
+    text-align: center;
+    margin-right: 0.5rem;
+    font-size: 0.78rem;
+    color: #999;
+  }
+  .aloop-dropdown .dropdown-item:hover .aloop-dropdown-icon { color: #2e3d99; }
+
+  /* Cart */
+  .aloop-nav-cart,
+  .aloop-nav-cart-mobile {
+    position: relative;
+    color: #1a1a2e;
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+  .aloop-nav-cart:hover,
+  .aloop-nav-cart-mobile:hover { color: #2e3d99; }
+  .aloop-nav-cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: #cd2127;
+    color: #fff;
+    font-size: 0.6rem;
+    font-weight: 700;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Desktop: hover-open dropdowns */
+  @media (min-width: 992px) {
+    .aloop-nav .nav-item .dropdown-menu { display: none; }
+    .aloop-nav .nav-item:hover .dropdown-menu { display: block; margin-top: 0; }
+  }
+
+  /* Mobile */
+  @media (max-width: 991px) {
+    .aloop-nav-links { padding: 0.75rem 0; border-top: 1px solid #f0f0f0; margin-top: 0.75rem; }
+    .aloop-nav-links .nav-link { padding: 0.6rem 0; font-size: 0.85rem; }
+    .aloop-nav-links .nav-link::after { display: none; }
+    .aloop-nav-right { padding-top: 0.5rem; border-top: 1px solid #f0f0f0; }
+    .aloop-nav-right .nav-link { padding: 0.6rem 0; font-size: 0.85rem; }
+    .aloop-dropdown { box-shadow: none; background: #f8f9fa; border-radius: 8px; margin: 0.25rem 0; }
+  }
+</style>
