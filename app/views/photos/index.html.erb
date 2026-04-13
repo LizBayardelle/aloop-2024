@@ -168,6 +168,14 @@
   document.addEventListener('DOMContentLoaded', function() {
     var kitLabels = { kit1: 'XR250 / XR400', kit2: 'XR600', kit3: 'SuperMotard & XR650L' };
 
+    // Hide cards with broken images
+    document.querySelectorAll('.photo-card-inner img').forEach(function(img) {
+      img.addEventListener('error', function() {
+        var card = this.closest('.col-xl-3, .col-xl-2');
+        if (card) card.style.display = 'none';
+      });
+    });
+
     // Filter functionality
     var filterButtons = document.querySelectorAll('.filter-btn');
     filterButtons.forEach(function(button) {
