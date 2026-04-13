@@ -3,8 +3,8 @@ class PhotosController < ApplicationController
 
 
   def index
-    @unapproved_photos = Photo.with_attached_image.with_valid_images.where(approved: false).order(created_at: :desc).limit(100) if current_user&.admin?
-    @approved_photos = Photo.with_attached_image.with_valid_images.where(approved: true).order(created_at: :desc).limit(200)
+    @unapproved_photos = Photo.with_attached_image.where(approved: false).order(created_at: :desc).limit(100) if current_user&.admin?
+    @approved_photos = Photo.with_attached_image.where(approved: true).order(created_at: :desc).limit(200)
   end
 
 
@@ -27,10 +27,10 @@ class PhotosController < ApplicationController
   def update
     respond_to do |format|
       if @photo.update(photo_params)
-        format.html { redirect_to photos_path, notice: "Photo was successfully updated." }
+        format.html { redirect_back fallback_location: photos_path, notice: "Photo was successfully updated." }
         format.json { render :show, status: :ok, location: @photo }
       else
-        format.html { render :edit, status: :unprocessable_entity }
+        format.html { redirect_back fallback_location: photos_path, alert: "Photo could not be updated." }
         format.json { render json: @photo.errors, status: :unprocessable_entity }
       end
     end

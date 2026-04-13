@@ -1,0 +1,509 @@
+<div class="container-fluid py-4 admin-photos-page">
+
+  <!-- Breadcrumbs -->
+  <%= render 'shared/admin_breadcrumbs' %>
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-start mb-4">
+    <div>
+      <h1 class="h2 fw-bold mb-1">Photo Management</h1>
+      <p class="text-muted mb-0">Approve, manage, and organize customer gallery photos</p>
+    </div>
+    <%= link_to photos_path, class: "btn btn-blue px-4", target: "_blank" do %>
+      <i class="fas fa-external-link-alt me-2"></i>View Public Gallery
+    <% end %>
+  </div>
+
+  <!-- Stats -->
+  <div class="row g-3 mb-5">
+    <div class="col-md-4">
+      <div class="admin-photos-stat-card">
+        <div class="admin-photos-stat-icon" style="background: rgba(46,61,153,0.1); color: #2e3d99;">
+          <i class="fas fa-images"></i>
+        </div>
+        <div>
+          <div class="admin-photos-stat-number"><%= @approved_photos.count + @unapproved_photos.count %></div>
+          <div class="admin-photos-stat-label">Total Photos</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="admin-photos-stat-card">
+        <div class="admin-photos-stat-icon" style="background: rgba(25,135,84,0.1); color: #198754;">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <div>
+          <div class="admin-photos-stat-number"><%= @approved_photos.count %></div>
+          <div class="admin-photos-stat-label">Approved</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="admin-photos-stat-card">
+        <div class="admin-photos-stat-icon" style="background: rgba(255,193,7,0.15); color: #cc9a06;">
+          <i class="fas fa-clock"></i>
+        </div>
+        <div>
+          <div class="admin-photos-stat-number"><%= @unapproved_photos.count %></div>
+          <div class="admin-photos-stat-label">Pending Review</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pending Approval -->
+  <% if @unapproved_photos.any? %>
+    <div class="mb-5">
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <h4 class="fw-bold mb-0">Pending Review</h4>
+        <span class="admin-photos-badge-pending"><%= @unapproved_photos.count %></span>
+      </div>
+      <div class="row g-3">
+        <% @unapproved_photos.each do |photo| %>
+          <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+            <div class="admin-photos-card admin-photos-card--pending">
+              <div class="admin-photos-card-img">
+                <% if photo.image.attached? %>
+                  <img src="<%= url_for(photo.thumbnail) %>" alt="Pending photo" loading="lazy">
+                <% else %>
+                  <div class="admin-photos-card-placeholder">
+                    <i class="fas fa-image"></i>
+                  </div>
+                <% end %>
+                <div class="admin-photos-card-overlay">
+                  <% if photo.image.attached? %>
+                    <button type="button" class="admin-photos-overlay-btn" data-bs-toggle="modal" data-bs-target="#adminPhotoModal" onclick="document.getElementById('adminModalImage').src='<%= url_for(photo.image) %>'">
+                      <i class="fas fa-expand"></i>
+                    </button>
+                  <% end %>
+                </div>
+                <span class="admin-photos-status-dot admin-photos-status-dot--pending" title="Pending"></span>
+              </div>
+              <div class="admin-photos-card-body">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                  <span class="admin-photos-kit-badge"><%= photo.kit&.gsub('kit', 'Kit ') || 'Untagged' %></span>
+                  <span class="text-muted" style="font-size: 0.7rem;"><%= photo.created_at.strftime('%b %-d, %Y') %></span>
+                </div>
+                <% if photo.comments.present? %>
+                  <p class="admin-photos-comment"><%= truncate(photo.comments, length: 60) %></p>
+                <% end %>
+                <div class="d-flex gap-2">
+                  <%= link_to approve_photo_path(photo), method: :post, class: "admin-photos-action-btn admin-photos-action-btn--approve flex-grow-1", title: "Approve" do %>
+                    <i class="fas fa-check me-1"></i>Approve
+                  <% end %>
+                  <button type="button" class="admin-photos-action-btn admin-photos-action-btn--edit" data-bs-toggle="modal" data-bs-target="#editPhotoModal<%= photo.id %>" title="Edit">
+                    <i class="fas fa-pen"></i>
+                  </button>
+                  <%= link_to photo_path(photo), method: :delete, class: "admin-photos-action-btn admin-photos-action-btn--delete", title: "Delete", data: { confirm: "Delete this photo?" } do %>
+                    <i class="fas fa-trash"></i>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Approved Photos -->
+  <div class="mb-4">
+    <div class="d-flex align-items-center gap-3 mb-3">
+      <h4 class="fw-bold mb-0">Approved</h4>
+      <span class="admin-photos-badge-approved"><%= @approved_photos.count %></span>
+    </div>
+    <div class="row g-3">
+      <% @approved_photos.each do |photo| %>
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+          <div class="admin-photos-card">
+            <div class="admin-photos-card-img">
+              <% if photo.image.attached? %>
+                <img src="<%= url_for(photo.thumbnail) %>" alt="Approved photo" loading="lazy">
+              <% else %>
+                <div class="admin-photos-card-placeholder">
+                  <i class="fas fa-image"></i>
+                </div>
+              <% end %>
+              <div class="admin-photos-card-overlay">
+                <% if photo.image.attached? %>
+                  <button type="button" class="admin-photos-overlay-btn" data-bs-toggle="modal" data-bs-target="#adminPhotoModal" onclick="document.getElementById('adminModalImage').src='<%= url_for(photo.image) %>'">
+                    <i class="fas fa-expand"></i>
+                  </button>
+                <% end %>
+              </div>
+              <span class="admin-photos-status-dot admin-photos-status-dot--approved" title="Approved"></span>
+            </div>
+            <div class="admin-photos-card-body">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="admin-photos-kit-badge"><%= photo.kit&.gsub('kit', 'Kit ') || 'Untagged' %></span>
+                <span class="text-muted" style="font-size: 0.7rem;"><%= photo.created_at.strftime('%b %-d, %Y') %></span>
+              </div>
+              <% if photo.comments.present? %>
+                <p class="admin-photos-comment"><%= truncate(photo.comments, length: 60) %></p>
+              <% end %>
+              <div class="d-flex justify-content-end gap-2">
+                <button type="button" class="admin-photos-action-btn admin-photos-action-btn--edit" data-bs-toggle="modal" data-bs-target="#editPhotoModal<%= photo.id %>" title="Edit">
+                  <i class="fas fa-pen"></i>
+                </button>
+                <%= link_to photo_path(photo), method: :delete, class: "admin-photos-action-btn admin-photos-action-btn--delete", title: "Delete", data: { confirm: "Delete this photo?" } do %>
+                  <i class="fas fa-trash"></i>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modals -->
+<% (@unapproved_photos + @approved_photos).each do |photo| %>
+  <div class="modal fade" id="editPhotoModal<%= photo.id %>" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border: none; border-radius: 16px; overflow: hidden;">
+        <%= simple_form_for(photo, url: photo_path(photo), method: :patch) do |f| %>
+
+          <div class="modal-header border-0 pb-0 pt-4 px-4 d-flex align-items-start">
+            <div class="flex-grow-1">
+              <h4 class="fw-bold mb-1">Edit Photo</h4>
+              <p class="text-muted mb-0" style="font-size: 0.85rem;">Photo #<%= photo.id %> &middot; Submitted <%= photo.created_at.strftime('%b %-d, %Y') %></p>
+            </div>
+            <button type="button" class="btn-close mt-1" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <div class="modal-body px-4 pt-3 pb-2">
+            <!-- Thumbnail Preview -->
+            <% if photo.image.attached? %>
+              <div class="text-center mb-3">
+                <img src="<%= url_for(photo.thumbnail) %>" alt="Photo" style="max-height: 180px; border-radius: 10px; object-fit: cover;">
+              </div>
+            <% end %>
+
+            <!-- Bike Model -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold" style="font-size: 0.85rem;">Bike Model</label>
+              <div class="photo-model-options">
+                <% [['XR250 / XR400', 'kit1'], ['XR600', 'kit2'], ['SuperMotard & XR650L', 'kit3']].each do |label, value| %>
+                  <label class="photo-model-option">
+                    <%= f.radio_button :kit, value, class: "photo-model-radio", checked: photo.kit == value %>
+                    <span class="photo-model-label">
+                      <i class="fas fa-motorcycle me-1"></i> <%= label %>
+                    </span>
+                  </label>
+                <% end %>
+              </div>
+            </div>
+
+            <!-- Comments -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold" style="font-size: 0.85rem;">Comments</label>
+              <%= f.text_area :comments, class: "form-control photo-comments-input", rows: 3, placeholder: "Description of the build..." %>
+            </div>
+
+            <!-- Approval Toggle -->
+            <div class="d-flex align-items-center justify-content-between p-3 rounded-3" style="background: #f8f9fa;">
+              <div>
+                <div class="fw-semibold" style="font-size: 0.85rem;">Approved</div>
+                <div class="text-muted" style="font-size: 0.78rem;">Visible on the public gallery</div>
+              </div>
+              <div class="form-check form-switch mb-0">
+                <%= f.check_box :approved, class: "form-check-input admin-photos-toggle", role: "switch" %>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer border-0 px-4 pb-4 pt-2">
+            <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Cancel</button>
+            <%= f.submit "Save Changes", class: "btn btn-blue px-4" %>
+          </div>
+
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<!-- Preview Modal -->
+<div class="modal fade" id="adminPhotoModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content admin-photos-modal-content">
+      <button type="button" class="btn-close btn-close-white admin-photos-modal-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-body p-0">
+        <img id="adminModalImage" class="admin-photos-modal-img" src="" alt="Photo preview">
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Stats */
+  .admin-photos-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    transition: transform 0.15s ease;
+  }
+  .admin-photos-stat-card:hover { transform: translateY(-2px); }
+  .admin-photos-stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+  .admin-photos-stat-number { font-size: 1.5rem; font-weight: 700; line-height: 1.2; color: #1a1a2e; }
+  .admin-photos-stat-label { font-size: 0.8rem; color: #6c757d; font-weight: 500; }
+
+  /* Badges */
+  .admin-photos-badge-pending {
+    background: #fff3cd;
+    color: #856404;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.2rem 0.65rem;
+    border-radius: 50px;
+  }
+  .admin-photos-badge-approved {
+    background: #d1e7dd;
+    color: #0f5132;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.2rem 0.65rem;
+    border-radius: 50px;
+  }
+
+  /* Photo Cards */
+  .admin-photos-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    transition: all 0.2s ease;
+  }
+  .admin-photos-card:hover {
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    transform: translateY(-3px);
+  }
+  .admin-photos-card--pending {
+    border-left: 3px solid #ffc107;
+  }
+
+  /* Card Image */
+  .admin-photos-card-img {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: #f8f9fa;
+  }
+  .admin-photos-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  .admin-photos-card:hover .admin-photos-card-img img {
+    transform: scale(1.05);
+  }
+  .admin-photos-card-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ccc;
+    font-size: 2rem;
+  }
+
+  /* Overlay */
+  .admin-photos-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .admin-photos-card:hover .admin-photos-card-overlay { opacity: 1; }
+  .admin-photos-overlay-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .admin-photos-overlay-btn:hover {
+    background: #fff;
+    color: #1a1a2e;
+  }
+
+  /* Status Dot */
+  .admin-photos-status-dot {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+  }
+  .admin-photos-status-dot--pending { background: #ffc107; }
+  .admin-photos-status-dot--approved { background: #198754; }
+
+  /* Card Body */
+  .admin-photos-card-body { padding: 0.75rem; }
+  .admin-photos-kit-badge {
+    background: #f0f0f5;
+    color: #2e3d99;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .admin-photos-comment {
+    font-size: 0.78rem;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Action Buttons */
+  .admin-photos-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.35rem 0.65rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    border: none;
+    cursor: pointer;
+  }
+  .admin-photos-action-btn--approve {
+    background: #d1e7dd;
+    color: #0f5132;
+  }
+  .admin-photos-action-btn--approve:hover {
+    background: #198754;
+    color: #fff;
+  }
+  .admin-photos-action-btn--edit {
+    background: #f0f0f5;
+    color: #2e3d99;
+  }
+  .admin-photos-action-btn--edit:hover {
+    background: #2e3d99;
+    color: #fff;
+  }
+  .admin-photos-action-btn--delete {
+    background: #f8f9fa;
+    color: #999;
+  }
+  .admin-photos-action-btn--delete:hover {
+    background: #dc3545;
+    color: #fff;
+  }
+
+  /* Model Selection (shared with public modal) */
+  .photo-model-options {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .photo-model-option { cursor: pointer; margin: 0; }
+  .photo-model-radio { display: none; }
+  .photo-model-label {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.45rem 0.85rem;
+    border-radius: 8px;
+    border: 1.5px solid #dee2e6;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: #555;
+    transition: all 0.15s ease;
+    background: #fff;
+  }
+  .photo-model-label:hover {
+    border-color: #2e3d99;
+    color: #2e3d99;
+  }
+  .photo-model-radio:checked + .photo-model-label {
+    background: #2e3d99;
+    border-color: #2e3d99;
+    color: #fff;
+  }
+
+  /* Comments Input */
+  .photo-comments-input {
+    border-radius: 10px;
+    border: 1.5px solid #dee2e6;
+    font-size: 0.88rem;
+    resize: none;
+    transition: border-color 0.15s ease;
+  }
+  .photo-comments-input:focus {
+    border-color: #2e3d99;
+    box-shadow: 0 0 0 3px rgba(46,61,153,0.1);
+  }
+
+  /* Toggle Switch */
+  .admin-photos-toggle {
+    width: 2.5rem;
+    height: 1.3rem;
+    cursor: pointer;
+  }
+  .admin-photos-toggle:checked {
+    background-color: #2e3d99;
+    border-color: #2e3d99;
+  }
+  .admin-photos-toggle:focus {
+    box-shadow: 0 0 0 3px rgba(46,61,153,0.15);
+    border-color: #2e3d99;
+  }
+
+  /* Modal */
+  .admin-photos-modal-content {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+  .admin-photos-modal-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    z-index: 10;
+    opacity: 0.8;
+  }
+  .admin-photos-modal-close:hover { opacity: 1; }
+  .admin-photos-modal-img {
+    width: 100%;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: 8px;
+  }
+</style>

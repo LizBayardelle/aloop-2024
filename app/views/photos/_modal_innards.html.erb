@@ -1,33 +1,192 @@
 <%= simple_form_for(photo) do |f| %>
 
-  <div class="modal-header">
-    <h5 class="modal-title" id="newPhotoModalLabel">Submit a Photo</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <div class="modal-header border-0 pb-0 pt-4 px-4 d-flex align-items-start">
+    <div class="flex-grow-1">
+      <h4 class="fw-bold mb-1">Share Your Build</h4>
+      <p class="text-muted mb-0" style="font-size: 0.9rem;">Show off your bike to the Aloop community</p>
+    </div>
+    <button type="button" class="btn-close mt-1" data-bs-dismiss="modal" aria-label="Close"></button>
   </div>
 
-  <div class="modal-body">
-      <%= f.error_notification %>
-      <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+  <div class="modal-body px-4 pt-3 pb-2">
+    <%= f.error_notification %>
+    <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
-      <div class="form-inputs spaced row">
-        <div class="form-group col-sm-6">
-          <%= f.label "What model is your bike?" %><br>
-          <%= f.select :kit, options_for_select([['XR250/XR400' ,'kit1'], ['XR600', 'kit2'], ['SuperMotard and XR650L', 'kit3']]), input_html: { class: "form-control" } %>
-        </div>
-        <div class="form-group col-sm-6">
-          <%= f.label "Image" %><br>
-          <%= f.file_field :image %>
-        </div>
-        <div class="form-group col-12">
-          <%= f.input :comments, input_html: { class: "form-control" } %>
-        </div>
+    <!-- Image Upload -->
+    <div class="photo-upload-zone mb-3" id="photoUploadZone" onclick="document.getElementById('photoFileInput').click();">
+      <div class="photo-upload-preview" id="photoUploadPreview" style="display: none;">
+        <img id="photoPreviewImg" src="" alt="Preview">
+        <button type="button" class="photo-upload-clear" id="photoUploadClear" onclick="event.stopPropagation(); clearPhotoPreview();">
+          <i class="fas fa-times"></i>
+        </button>
       </div>
+      <div class="photo-upload-prompt" id="photoUploadPrompt">
+        <div class="photo-upload-icon">
+          <i class="fas fa-cloud-upload-alt"></i>
+        </div>
+        <p class="fw-semibold mb-1">Click to upload your photo</p>
+        <p class="text-muted mb-0" style="font-size: 0.8rem;">JPG, PNG, GIF, or WebP &middot; Max 10MB</p>
+      </div>
+      <%= f.file_field :image, id: "photoFileInput", accept: "image/jpeg,image/png,image/gif,image/webp", style: "display: none;", onchange: "previewPhoto(this);" %>
+    </div>
 
+    <!-- Bike Model -->
+    <div class="mb-3">
+      <label class="form-label fw-semibold" style="font-size: 0.85rem;">What bike do you ride?</label>
+      <div class="photo-model-options">
+        <% [['XR250 / XR400', 'kit1'], ['XR600', 'kit2'], ['SuperMotard & XR650L', 'kit3']].each do |label, value| %>
+          <label class="photo-model-option">
+            <%= f.radio_button :kit, value, class: "photo-model-radio" %>
+            <span class="photo-model-label">
+              <i class="fas fa-motorcycle me-1"></i> <%= label %>
+            </span>
+          </label>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Comments -->
+    <div class="mb-2">
+      <label class="form-label fw-semibold" style="font-size: 0.85rem;">Tell us about your build <span class="text-muted fw-normal">(optional)</span></label>
+      <%= f.text_area :comments, class: "form-control photo-comments-input", placeholder: "Year, mods, story behind the build...", rows: 3 %>
+    </div>
   </div>
 
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-    <%= f.submit "Submit Photo", class: "btn btn-black-outline" %>
+  <div class="modal-footer border-0 px-4 pb-4 pt-2">
+    <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Cancel</button>
+    <%= f.submit "Submit Photo", class: "btn btn-red px-4" %>
   </div>
 
 <% end %>
+
+<script>
+  function previewPhoto(input) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('photoPreviewImg').src = e.target.result;
+        document.getElementById('photoUploadPreview').style.display = 'block';
+        document.getElementById('photoUploadPrompt').style.display = 'none';
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+  function clearPhotoPreview() {
+    document.getElementById('photoFileInput').value = '';
+    document.getElementById('photoPreviewImg').src = '';
+    document.getElementById('photoUploadPreview').style.display = 'none';
+    document.getElementById('photoUploadPrompt').style.display = 'flex';
+  }
+</script>
+
+<style>
+  /* Upload Zone */
+  .photo-upload-zone {
+    border: 2px dashed #dee2e6;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    overflow: hidden;
+    position: relative;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fafbfc;
+  }
+  .photo-upload-zone:hover {
+    border-color: #2e3d99;
+    background: #f0f1f8;
+  }
+  .photo-upload-prompt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    text-align: center;
+  }
+  .photo-upload-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(46,61,153,0.08);
+    color: #2e3d99;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    margin-bottom: 0.75rem;
+  }
+  .photo-upload-preview {
+    width: 100%;
+    aspect-ratio: 16/10;
+    position: relative;
+  }
+  .photo-upload-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+  .photo-upload-clear {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    font-size: 0.75rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease;
+  }
+  .photo-upload-clear:hover { background: rgba(220,53,69,0.9); }
+
+  /* Model Selection */
+  .photo-model-options {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .photo-model-option { cursor: pointer; margin: 0; }
+  .photo-model-radio { display: none; }
+  .photo-model-label {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.45rem 0.85rem;
+    border-radius: 8px;
+    border: 1.5px solid #dee2e6;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: #555;
+    transition: all 0.15s ease;
+    background: #fff;
+  }
+  .photo-model-label:hover {
+    border-color: #2e3d99;
+    color: #2e3d99;
+  }
+  .photo-model-radio:checked + .photo-model-label {
+    background: #2e3d99;
+    border-color: #2e3d99;
+    color: #fff;
+  }
+
+  /* Comments */
+  .photo-comments-input {
+    border-radius: 10px;
+    border: 1.5px solid #dee2e6;
+    font-size: 0.88rem;
+    resize: none;
+    transition: border-color 0.15s ease;
+  }
+  .photo-comments-input:focus {
+    border-color: #2e3d99;
+    box-shadow: 0 0 0 3px rgba(46,61,153,0.1);
+  }
+</style>

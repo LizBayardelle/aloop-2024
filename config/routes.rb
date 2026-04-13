@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   get 'admin/sales'
   get 'admin/blog'
   get 'admin/products'
+  get 'admin/photos'
   get 'admin/orders/:id', to: 'admin#order_detail', as: 'admin_order'
   patch 'admin/orders/:id/mark_shipped', to: 'admin#mark_order_shipped', as: 'mark_order_shipped'
 

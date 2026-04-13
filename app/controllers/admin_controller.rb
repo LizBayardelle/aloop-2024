@@ -15,6 +15,11 @@ class AdminController < ApplicationController
   def sales
   end
 
+  def photos
+    @approved_photos = Photo.with_attached_image.where(approved: true).order(created_at: :desc)
+    @unapproved_photos = Photo.with_attached_image.where(approved: false).order(created_at: :desc)
+  end
+
   def blog
     @blogs = Blog.order("created_at DESC").all
   end

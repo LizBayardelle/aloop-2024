@@ -4,8 +4,6 @@ class Photo < ApplicationRecord
   validates :image, content_type: { in: %w[image/jpeg image/png image/gif image/webp], message: "must be a JPEG, PNG, GIF, or WebP" },
                     size: { less_than: 10.megabytes, message: "must be less than 10MB" }
 
-  scope :with_valid_images, -> { joins(image_attachment: :blob) }
-
   def thumbnail
     if image.variable?
       image.variant(resize_to_fill: [400, 400], format: :webp, saver: { quality: 80 })
